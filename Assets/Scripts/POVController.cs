@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class POVController : MonoBehaviour
 {
-    [SerializeField] CinemachineVirtualCameraBase _virtualCamera;
+    [SerializeField] CinemachineVirtualCamera _virtualCamera;
     [SerializeField] bool _cursorLock = true;
     [SerializeField] GameObject _head;
-    public CinemachineVirtualCameraBase VirtualCamera { get { return _virtualCamera; } }
+    public CinemachineVirtualCamera VirtualCamera { get { return _virtualCamera; } }
     public bool Enabled { get; set; } = true;
     Quaternion _headRotation, _bodyRotation;
     float _xSensitivity = 3f, _ySensitivity = 3f;

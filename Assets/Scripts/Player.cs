@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,14 +15,16 @@ public class Player : MonoBehaviour
     float _totalFallTime = 0f;
     public PlayerAnimation PlayerAnim { get; private set; }
     public PlayerState State = PlayerState.Idle;
+    CinemachineBasicMultiChannelPerlin _headBob;
     void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _headBob = POVController.VirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         PlayerAnim = transform.GetComponentInChildren<PlayerAnimation>();
     }
     void Update()
     {
-        if(State == PlayerState.Hide)
+        if(State == PlayerState.Hide)   //  ‰B‚ê‚Ä‚¢‚é‚È‚çRigidbody‚É‚æ‚éˆÚ“®‚ðŠ®‘S‚ÉŽ~‚ß‚é
         {
             _rb.constraints = RigidbodyConstraints.FreezeAll;
         }
@@ -36,6 +39,16 @@ public class Player : MonoBehaviour
         var horizontal = Input.GetAxisRaw("Horizontal") * _moveSpeed;
         var vertical = Input.GetAxisRaw("Vertical") * _moveSpeed;
         Vector3 inputVector = new Vector3(horizontal, 0, vertical);
+        if(inputVector.magnitude > 0)
+        {
+            _headBob.m_AmplitudeGain = 1;
+            _headBob.m_FrequencyGain = 1;
+        }
+        else
+        {
+            _headBob.m_AmplitudeGain = 0.25f;
+            _headBob.m_FrequencyGain = 0.5f;
+        }
         inputVector = transform.TransformDirection(inputVector);
         if (_checkGround.IsGrounded)
         {
