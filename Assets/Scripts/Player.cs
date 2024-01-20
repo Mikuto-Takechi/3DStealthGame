@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -16,8 +17,10 @@ public class Player : MonoBehaviour
     public PlayerAnimation PlayerAnim { get; private set; }
     public PlayerState State = PlayerState.Idle;
     CinemachineBasicMultiChannelPerlin _headBob;
+    IntReactiveProperty _footSteps = new();
     void Awake()
     {
+        _footSteps.Where(n => n < 0).Subscribe(_ => AudioManager.Instance.PlayFootStep()).AddTo(this);
         _rb = GetComponent<Rigidbody>();
         _headBob = POVController.VirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         PlayerAnim = transform.GetComponentInChildren<PlayerAnimation>();
@@ -39,24 +42,26 @@ public class Player : MonoBehaviour
         var horizontal = Input.GetAxisRaw("Horizontal") * _moveSpeed;
         var vertical = Input.GetAxisRaw("Vertical") * _moveSpeed;
         Vector3 inputVector = new Vector3(horizontal, 0, vertical);
-        if(inputVector.magnitude > 0)
+        if(inputVector.magnitude > 0)   //  移動量が0より大きかったらカメラの揺れを大きくする
         {
             _headBob.m_AmplitudeGain = 1;
             _headBob.m_FrequencyGain = 1;
+            _headBob.m_NoiseProfile.GetSignal(Time.time, out Vector3 pos, out Quaternion rot);
+            _footSteps.Value = Math.Sign(pos.y) * 1;
         }
         else
         {
             _headBob.m_AmplitudeGain = 0.25f;
             _headBob.m_FrequencyGain = 0.5f;
         }
-        inputVector = transform.TransformDirection(inputVector);
-        if (_checkGround.IsGrounded)
+        inputVector = transform.TransformDirection(inputVector);    //  ベクトルを自分の向きに合わせる
+        if (_checkGround.IsGrounded)    //  接地しているなら法線ベクトルで地形に沿ったベクトルを出す
         {
             _totalFallTime = 0;
             var onPlane = Vector3.ProjectOnPlane(inputVector, _checkGround.NormalVector);
             _rb.velocity = onPlane;
         }
-        else
+        else    //  接地していなければy軸のvelocityを徐々に増やす
         {
             _totalFallTime += Time.deltaTime;
             inputVector.y = _gravity * _totalFallTime;
