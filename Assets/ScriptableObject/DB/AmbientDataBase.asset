@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff8898dd2596e374c9e7ff5943179d18, type: 3}
+  m_Name: AmbientDataBase
+  m_EditorClassIdentifier: 
+  Name: Ambient
+  Summary: "\u74B0\u5883\u97F3"
+  Clips:
+  - Name: Chase
+    Clip: {fileID: 8300000, guid: 2f8a8957cc52b074da8451e262024cca, type: 3}
+  - Name: HeartBeat
+    Clip: {fileID: 8300000, guid: 62e6c023178090d4ab1c87c21dbfdb92, type: 3}

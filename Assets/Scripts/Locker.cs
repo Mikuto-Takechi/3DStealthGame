@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -31,12 +31,12 @@ public class Locker : Interactable
     {
         if (_isInteract) return;
         _isInteract = true;
-        InteractionMessage.Instance.WriteText("[E] ‰B‚ê‚é");
+        InteractionMessage.Instance.WriteText("[E] éš ã‚Œã‚‹");
         this.UpdateAsObservable().First(_ => Input.GetButtonDown("Interact"))
             .Subscribe(_ => 
             {
                 _player = player;
-                player.State = PlayerState.Hide;
+                player.State.Value = PlayerState.Hide;
                 _dummyPlayer?.SetActive(true);
                 EnterTheLocker();
             }).AddTo(_subscriptions);
@@ -52,10 +52,10 @@ public class Locker : Interactable
     {
         _subscriptions.ForEach(sub => sub.Dispose());
         _directors[0].stopped -= HidingInLocker;
-        _player.POVController.Enabled = false;
-        _player.POVController.SetRotation(0, transform.localEulerAngles.y);
+        _player.PovController.Enabled = false;
+        _player.PovController.SetRotation(0, transform.localEulerAngles.y);
         _directors[1].Play();
-        InteractionMessage.Instance.WriteText("[E] o‚é");
+        InteractionMessage.Instance.WriteText("[E] å‡ºã‚‹");
         this.UpdateAsObservable().Where(_ => Input.GetButtonDown("Interact")).Take(1)
             .Subscribe(ExitFromLocker).AddTo(_subscriptions);
     }
@@ -69,8 +69,8 @@ public class Locker : Interactable
     void Exit(PlayableDirector playableDirector)
     {
         _directors[2].stopped -= Exit;
-        _player.State = PlayerState.Idle;
-        _player.POVController.Enabled = true;
+        _player.State.Value = PlayerState.Idle;
+        _player.PovController.Enabled = true;
         _dummyPlayer?.SetActive(false);
         _player = null;
     }
@@ -79,8 +79,8 @@ public class Locker : Interactable
         CinemachineBrain main = Camera.main.GetComponent<CinemachineBrain>();
         _directors.ToList().ForEach(director => 
         {
-            // Timeline‚©‚çCinemachineTrack‚Ìƒgƒ‰ƒbƒN‚Ö‚ÌŽQÆ‚ðŽæ“¾‚µ‚Ä
-            // MainCamera‚Ìî•ñ‚ð—¬‚µž‚Þ
+            // Timelineã‹ã‚‰CinemachineTrackã®ãƒˆãƒ©ãƒƒã‚¯ã¸ã®å‚ç…§ã‚’å–å¾—ã—ã¦
+            // MainCameraã®æƒ…å ±ã‚’æµã—è¾¼ã‚€
             var binding = director.playableAsset.outputs.First(c => c.streamName == "Cinemachine Track");
             director.SetGenericBinding(binding.sourceObject, main);
         });

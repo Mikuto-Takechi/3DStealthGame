@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,7 +23,7 @@ public class InteractionMessage : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"{nameof(InteractionMessage)}‚ªƒV[ƒ“ã‚É–³‚¢‚Ì‚Å•ÏX‚ğ‰Á‚¦‚é‚±‚Æ‚ª‚Å‚«‚Ü‚¹‚ñ");
+            Debug.LogWarning($"{nameof(InteractionMessage)}ãŒã‚·ãƒ¼ãƒ³ä¸Šã«ç„¡ã„ã®ã§å¤‰æ›´ã‚’åŠ ãˆã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“");
         }
     }
 }

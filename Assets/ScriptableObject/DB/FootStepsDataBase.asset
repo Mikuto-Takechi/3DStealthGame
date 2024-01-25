@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b08a8dfddc0e9e44abd3f90a4d1c277, type: 3}
+  m_Name: FootStepsDataBase
+  m_EditorClassIdentifier: 
+  Name: FootSteps
+  Summary: "\u8DB3\u97F3"
+  AudioGroups:
+  - Name: Player
+    Clips:
+    - {fileID: 8300000, guid: e8ebb2b3a81f834498eb36814130a2b2, type: 3}
+    - {fileID: 8300000, guid: b4937371f1a93974696312ba06967526, type: 3}
+    - {fileID: 8300000, guid: 2cfb7cb66eaf610419dd4af30fe5c8f2, type: 3}
+    - {fileID: 8300000, guid: f9c66d91db752e64fa57ceeee504095d, type: 3}
+    - {fileID: 8300000, guid: 7510236fec098a04a849f610d567e9b9, type: 3}
+  - Name: Parasite
+    Clips:
+    - {fileID: 8300000, guid: 5e9317fe8f4ec764da9d6add62b37dc5, type: 3}
+    - {fileID: 8300000, guid: 4cf0822873368e1439fded82fea82065, type: 3}
+    - {fileID: 8300000, guid: 1d6bcd424c397fd40bd578ec309e1405, type: 3}
+    - {fileID: 8300000, guid: a395fac4612f3df4b8238083c0ecdd83, type: 3}

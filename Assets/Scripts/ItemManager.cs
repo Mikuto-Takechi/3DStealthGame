@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UniRx.Triggers;
@@ -15,13 +15,16 @@ public class ItemManager : MonoBehaviour
     {
         this.UpdateAsObservable()
             .Select(_ => Input.GetAxisRaw("Mouse ScrollWheel"))
-            .Subscribe(axis => 
-            {
-                _hotbar.Scroll(axis, _items, CheckItem);
-            });
+            .Subscribe(axis => _hotbar.Scroll(axis, _items, CheckItem)).AddTo(this);
+        this.UpdateAsObservable()
+            .Where(_ => Input.GetButtonDown("Use"))
+            .Subscribe(UseItem).AddTo(this);
         _hotbar.UpdateSlots(_items);
         CheckItem();
     }
+    /// <summary>
+    /// ホットバーで選択しているアイテムを見て手にセットする
+    /// </summary>
     void CheckItem()
     {
         var item = _items[_hotbar.SelectIndex].Object;
@@ -34,6 +37,15 @@ public class ItemManager : MonoBehaviour
         else
         {
             _armsAnimator.SetBool("GrabItem", false);
+        }
+    }
+
+    void UseItem(Unit _)
+    {
+        if (!_grabItem) return;
+        if (_grabItem.TryGetComponent(out ITool tool))
+        {
+            tool.Use();
         }
     }
 }

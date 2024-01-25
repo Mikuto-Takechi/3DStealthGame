@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 33012785063044670}
   - component: {fileID: 23035564008676742}
   - component: {fileID: 95363276851437522}
-  m_Layer: 0
+  - component: {fileID: 4161468342383339224}
+  m_Layer: 7
   m_Name: MyFlashLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1002705123656268}
   serializedVersion: 2
   m_LocalRotation: {x: -0.39196956, y: 0.60719496, z: 0.50871736, w: -0.46784708}
-  m_LocalPosition: {x: -0.031, y: -0.078, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -109,6 +110,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4161468342383339224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002705123656268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9c4f1ffb9bc801429b8f7bac217424e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _light: {fileID: 108038271100546340}
+  _intensity: 10
 --- !u!1 &1175331865632600
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,7 +134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4520318622635210}
   - component: {fileID: 108038271100546340}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WhiteLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}

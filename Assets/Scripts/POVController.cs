@@ -1,17 +1,21 @@
-using Cinemachine;
+ï»¿using Cinemachine;
 using UnityEngine;
 
-public class POVController : MonoBehaviour
+public class PovController : MonoBehaviour
 {
     [SerializeField] CinemachineVirtualCamera _virtualCamera;
     [SerializeField] bool _cursorLock = true;
     [SerializeField] GameObject _head;
-    public CinemachineVirtualCamera VirtualCamera { get { return _virtualCamera; } }
+    public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
     public bool Enabled { get; set; } = true;
     Quaternion _headRotation, _bodyRotation;
-    float _xSensitivity = 3f, _ySensitivity = 3f;
-    //•Ï”‚ÌéŒ¾(Šp“x‚Ì§ŒÀ—p)
-    float _minX = -90f, _maxX = 90f;
+    readonly float _xSensitivity = 3f;
+
+    readonly float _ySensitivity = 3f;
+
+    //å¤‰æ•°ã®å®£è¨€(è§’åº¦ã®åˆ¶é™ç”¨)
+    readonly float _minX = -90f;
+    readonly float _maxX = 90f;
 
     void Start()
     {
@@ -29,7 +33,7 @@ public class POVController : MonoBehaviour
             _headRotation *= Quaternion.Euler(-yRot, 0, 0);
             _bodyRotation *= Quaternion.Euler(0, xRot, 0);
 
-            //Update‚Ì’†‚Åì¬‚µ‚½ŠÖ”‚ğŒÄ‚Ô
+            //Updateã®ä¸­ã§ä½œæˆã—ãŸé–¢æ•°ã‚’å‘¼ã¶
             _headRotation = ClampRotation(_headRotation);
             _head.transform.localRotation = _headRotation;
             transform.localRotation = _bodyRotation;
@@ -58,10 +62,10 @@ public class POVController : MonoBehaviour
         }
     }
 
-    //Šp“x§ŒÀŠÖ”‚Ìì¬
+    //è§’åº¦åˆ¶é™é–¢æ•°ã®ä½œæˆ
     Quaternion ClampRotation(Quaternion q)
     {
-        //q = x,y,z,w (x,y,z‚ÍƒxƒNƒgƒ‹i—Ê‚ÆŒü‚«jFw‚ÍƒXƒJƒ‰[iÀ•W‚Æ‚Í–³ŠÖŒW‚Ì—Êj)
+        //q = x,y,z,w (x,y,zã¯ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆé‡ã¨å‘ãï¼‰ï¼šwã¯ã‚¹ã‚«ãƒ©ãƒ¼ï¼ˆåº§æ¨™ã¨ã¯ç„¡é–¢ä¿‚ã®é‡ï¼‰)
 
         q.x /= q.w;
         q.y /= q.w;
@@ -76,7 +80,7 @@ public class POVController : MonoBehaviour
 
         return q;
     }
-    /// <summary>POV‚ÌŠp“x‚ğŠO•”‚©‚çİ’è‚·‚é</summary>
+    /// <summary>POVã®è§’åº¦ã‚’å¤–éƒ¨ã‹ã‚‰è¨­å®šã™ã‚‹</summary>
     public void SetRotation(float xRot, float yRot)
     {
         _headRotation = Quaternion.Euler(xRot, 0, 0);

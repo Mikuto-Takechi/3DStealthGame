@@ -1,79 +1,94 @@
+ï»¿using System;
 using Cinemachine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    static readonly int IsWalking = Animator.StringToHash("IsWalking");
+    static readonly int Dance = Animator.StringToHash("Dance");
     [SerializeField] float _moveSpeed = 10f;
     [SerializeField] float _gravity = -9.81f;
     [SerializeField] CheckGround _checkGround;
-    [SerializeField] POVController _povController;
+    [SerializeField] PovController _povController;
     [SerializeField] Animator _armsAnimator;
-    public POVController POVController { get { return _povController; } }
-    Rigidbody _rb;
-    float _totalFallTime = 0f;
-    public PlayerState State = PlayerState.Idle;
+    readonly IntReactiveProperty _footSteps = new();
+    public readonly ReactiveProperty<PlayerState> State = new(PlayerState.Idle);
     CinemachineBasicMultiChannelPerlin _headBob;
-    IntReactiveProperty _footSteps = new();
+    Rigidbody _rb;
+    public PovController PovController => _povController;
+
     void Awake()
     {
-        _footSteps.Where(n => n < 0).Subscribe(_ => AudioManager.Instance.PlayFootStep()).AddTo(this);
+        _footSteps.Where(n => n < 0).Subscribe(_ => AudioManager.Instance.PlayFootSteps(FootSteps.Player)).AddTo(this);
+        State.SkipLatestValueOnSubscribe().Where(s => s == PlayerState.Hide).Subscribe(_ => Hiding()).AddTo(this);
+        State.SkipLatestValueOnSubscribe().Where(s => s != PlayerState.Hide).Subscribe(_ => StopHiding()).AddTo(this);
         _rb = GetComponent<Rigidbody>();
-        _headBob = POVController.VirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        _headBob = PovController.VirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
+
     void Update()
     {
-        if(State == PlayerState.Hide)   //  ‰B‚ê‚Ä‚¢‚é‚È‚çRigidbody‚É‚æ‚éˆÚ“®‚ğŠ®‘S‚É~‚ß‚é
-        {
-            _rb.constraints = RigidbodyConstraints.FreezeAll;
-        }
-        else
-        {
-            _rb.constraints = RigidbodyConstraints.FreezeRotation;
+        if (Input.GetButtonDown("Dance")) _armsAnimator.SetTrigger(Dance);
+        if (State.Value != PlayerState.Hide) //  éš ã‚Œã¦ã„ã‚‹ãªã‚‰Rigid bodyã«ã‚ˆã‚‹ç§»å‹•ã‚’å®Œå…¨ã«æ­¢ã‚ã‚‹
             Movement();
-        }
     }
+
+    void Hiding()
+    {
+        _rb.constraints = RigidbodyConstraints.FreezeAll;
+        //  FPSè¦–ç‚¹ã®ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ã‚«ãƒ¡ãƒ©ã®ãƒã‚¹ã‚¯ã‹ã‚‰é™¤å¤–ã™ã‚‹
+        Camera.main.cullingMask &= ~(1 << 7);
+    }
+
+    void StopHiding()
+    {
+        _rb.constraints = RigidbodyConstraints.FreezeRotation;
+        //  FPSè¦–ç‚¹ã®ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ã‚«ãƒ¡ãƒ©ã®ãƒã‚¹ã‚¯ã«è¿½åŠ ã™ã‚‹
+        Camera.main.cullingMask |= 1 << 7;
+    }
+
     void Movement()
     {
         var horizontal = Input.GetAxisRaw("Horizontal") * _moveSpeed;
         var vertical = Input.GetAxisRaw("Vertical") * _moveSpeed;
-        Vector3 inputVector = new Vector3(horizontal, 0, vertical);
-        bool isWalking = inputVector.magnitude > 0;
-        if (isWalking)   //  ˆÚ“®—Ê‚ª0‚æ‚è‘å‚«‚©‚Á‚½‚çƒJƒƒ‰‚Ì—h‚ê‚ğ‘å‚«‚­‚·‚é
+        var inputVector = new Vector3(horizontal, 0, vertical);
+        var isWalking = inputVector.magnitude > 0;
+        if (isWalking) //  ç§»å‹•é‡ãŒ0ã‚ˆã‚Šå¤§ãã‹ã£ãŸã‚‰ã‚«ãƒ¡ãƒ©ã®æºã‚Œã‚’å¤§ããã™ã‚‹
         {
             _headBob.m_AmplitudeGain = 1;
             _headBob.m_FrequencyGain = 1;
-            _headBob.m_NoiseProfile.GetSignal(Time.time, out Vector3 pos, out Quaternion rot);
+            _headBob.m_NoiseProfile.GetSignal(Time.time, out var pos, out _);
             _footSteps.Value = Math.Sign(pos.y) * 1;
-            _armsAnimator.SetBool("IsWalking", isWalking);
+            _armsAnimator.SetBool(IsWalking, true);
         }
         else
         {
             _headBob.m_AmplitudeGain = 0.25f;
             _headBob.m_FrequencyGain = 0.5f;
-            _armsAnimator.SetBool("IsWalking", isWalking);
+            _armsAnimator.SetBool(IsWalking, false);
         }
-        inputVector = transform.TransformDirection(inputVector);    //  ƒxƒNƒgƒ‹‚ğ©•ª‚ÌŒü‚«‚É‡‚í‚¹‚é
-        if (_checkGround.IsGrounded)    //  Ú’n‚µ‚Ä‚¢‚é‚È‚ç–@üƒxƒNƒgƒ‹‚Å’nŒ`‚É‰ˆ‚Á‚½ƒxƒNƒgƒ‹‚ğo‚·
+
+        inputVector = transform.TransformDirection(inputVector); //  ãƒ™ã‚¯ãƒˆãƒ«ã‚’è‡ªåˆ†ã®å‘ãã«åˆã‚ã›ã‚‹
+        inputVector.y = _rb.velocity.y;
+        if (_checkGround.IsGrounded) //  æ¥åœ°ã—ã¦ã„ã‚‹ãªã‚‰æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã§åœ°å½¢ã«æ²¿ã£ãŸãƒ™ã‚¯ãƒˆãƒ«ã‚’å‡ºã™
         {
-            _totalFallTime = 0;
-            var onPlane = Vector3.ProjectOnPlane(inputVector, _checkGround.NormalVector);
-            _rb.velocity = onPlane;
+            var inputMagnitudeOnNormal = Vector3.Dot(inputVector, _checkGround.NormalVector);
+            var onNormal = inputVector - inputMagnitudeOnNormal * _checkGround.NormalVector;
+            var onPlane = inputVector - onNormal;
+            _rb.velocity = onPlane + onNormal;
         }
-        else    //  Ú’n‚µ‚Ä‚¢‚È‚¯‚ê‚Îy²‚Ìvelocity‚ğ™X‚É‘‚â‚·
+        else
         {
-            _totalFallTime += Time.deltaTime;
-            inputVector.y = _gravity * _totalFallTime;
+            inputVector.y = _rb.velocity.y;
             _rb.velocity = inputVector;
         }
     }
 }
+
 public enum PlayerState
 {
     Idle,
-    Run,
-    Hide,
+    Walk,
+    Hide
 }

@@ -1,17 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
+Ôªøusing UniRx;
 using UnityEditor;
 using UnityEngine;
 
 public class VisionSensor : MonoBehaviour
 {
-    /// <summary>éãñÏäp</summary>
+    /// <summary>Ë¶ñÈáéËßí</summary>
     [SerializeField] float _sightAngle = 45f;
     [SerializeField] SphereCollider _visionRange;
     [SerializeField] Color _visionRangeColor = Color.yellow;
-    public float SightAngle { get { return _sightAngle; } }
-    public float VisionRange { get { return _visionRange.radius; } }
-    public Color VisionRangeColor { get { return _visionRangeColor; } }
+    public Subject<Player> DetectionTarget = new();
+    public float SightAngle => _sightAngle;
+    public float VisionRange => _visionRange.radius;
+    public Color VisionRangeColor => _visionRangeColor;
     void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -24,7 +24,7 @@ public class VisionSensor : MonoBehaviour
                 {
                     if (hit.collider.Equals(other))
                     {
-                        Debug.Log("ÉvÉåÉCÉÑÅ[Çå©Ç¬ÇØÇΩ");
+                        DetectionTarget.OnNext(other.GetComponent<Player>());
                     }
                 }
             }
