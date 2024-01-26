@@ -3,10 +3,10 @@
 public class CheckGround : MonoBehaviour
 {
     [SerializeField] float _maxSlopeAngle = 45f;
-    bool _isGrounded = false;
-    Vector3 _normalVector = Vector3.up;
-    public bool IsGrounded => _isGrounded;
-    public Vector3 NormalVector => _normalVector;
+    public bool IsGrounded { get; set; } = false;
+
+    public Vector3 NormalVector { get; private set; } = Vector3.up;
+
     private ContactPoint _lastContactPoint;
 
     void OnCollisionStay(Collision collision)
@@ -15,8 +15,8 @@ public class CheckGround : MonoBehaviour
         {
             if (_maxSlopeAngle >= Vector3.Angle(Vector3.up, contact.normal))
             {
-                _normalVector = contact.normal;
-                _isGrounded = true;
+                NormalVector = contact.normal;
+                IsGrounded = true;
             }
             _lastContactPoint = contact;
         }
@@ -25,7 +25,7 @@ public class CheckGround : MonoBehaviour
     {
         if (Vector3.Angle(_lastContactPoint.normal, Vector3.up) < _maxSlopeAngle)
         {
-            _isGrounded = false;
+            IsGrounded = false;
         }
     }
 }

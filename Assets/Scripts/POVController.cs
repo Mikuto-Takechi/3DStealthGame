@@ -6,6 +6,7 @@ public class PovController : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera _virtualCamera;
     [SerializeField] bool _cursorLock = true;
     [SerializeField] GameObject _head;
+    public Transform Head => _head.transform;
     public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
     public bool Enabled { get; set; } = true;
     Quaternion _headRotation, _bodyRotation;
