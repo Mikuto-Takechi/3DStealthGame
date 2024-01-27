@@ -64,6 +64,42 @@ namespace MonstersDomain
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dance"",
+                    ""type"": ""Button"",
+                    ""id"": ""5d911378-3575-4cad-b81e-b0f16ef8ccbd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectHotbar"",
+                    ""type"": ""Value"",
+                    ""id"": ""bf8242ed-a304-4464-b1c1-8f34a5d4f342"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Use"",
+                    ""type"": ""Button"",
+                    ""id"": ""c775e9dd-0e8c-48dc-bf2d-a35b20829034"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""de23ccf4-14f3-4d37-872a-cc48fcb60bd2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -209,6 +245,72 @@ namespace MonstersDomain
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6c4a4c5d-3551-45f8-8339-f7792daf2669"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""id"": ""f589d9db-7bcc-42e0-addd-b9a11fed775c"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectHotbar"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""b3ec65c2-e488-4732-95b8-d1d40344935e"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=-1,max=1)"",
+                    ""groups"": """",
+                    ""action"": ""SelectHotbar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""fcc37eb2-209b-4108-818e-56306aeefb9f"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=-1,max=1)"",
+                    ""groups"": """",
+                    ""action"": ""SelectHotbar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ee92995-ed37-4869-914b-07bf31ee3e9f"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49f39b08-f040-4c7c-b076-c87ff57f9775"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -221,6 +323,10 @@ namespace MonstersDomain
             m_InGame_Jump = m_InGame.FindAction("Jump", throwIfNotFound: true);
             m_InGame_Crouch = m_InGame.FindAction("Crouch", throwIfNotFound: true);
             m_InGame_Run = m_InGame.FindAction("Run", throwIfNotFound: true);
+            m_InGame_Dance = m_InGame.FindAction("Dance", throwIfNotFound: true);
+            m_InGame_SelectHotbar = m_InGame.FindAction("SelectHotbar", throwIfNotFound: true);
+            m_InGame_Use = m_InGame.FindAction("Use", throwIfNotFound: true);
+            m_InGame_Interact = m_InGame.FindAction("Interact", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -286,6 +392,10 @@ namespace MonstersDomain
         private readonly InputAction m_InGame_Jump;
         private readonly InputAction m_InGame_Crouch;
         private readonly InputAction m_InGame_Run;
+        private readonly InputAction m_InGame_Dance;
+        private readonly InputAction m_InGame_SelectHotbar;
+        private readonly InputAction m_InGame_Use;
+        private readonly InputAction m_InGame_Interact;
         public struct InGameActions
         {
             private @GameInputs m_Wrapper;
@@ -294,6 +404,10 @@ namespace MonstersDomain
             public InputAction @Jump => m_Wrapper.m_InGame_Jump;
             public InputAction @Crouch => m_Wrapper.m_InGame_Crouch;
             public InputAction @Run => m_Wrapper.m_InGame_Run;
+            public InputAction @Dance => m_Wrapper.m_InGame_Dance;
+            public InputAction @SelectHotbar => m_Wrapper.m_InGame_SelectHotbar;
+            public InputAction @Use => m_Wrapper.m_InGame_Use;
+            public InputAction @Interact => m_Wrapper.m_InGame_Interact;
             public InputActionMap Get() { return m_Wrapper.m_InGame; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -315,6 +429,18 @@ namespace MonstersDomain
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
+                @Dance.started += instance.OnDance;
+                @Dance.performed += instance.OnDance;
+                @Dance.canceled += instance.OnDance;
+                @SelectHotbar.started += instance.OnSelectHotbar;
+                @SelectHotbar.performed += instance.OnSelectHotbar;
+                @SelectHotbar.canceled += instance.OnSelectHotbar;
+                @Use.started += instance.OnUse;
+                @Use.performed += instance.OnUse;
+                @Use.canceled += instance.OnUse;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
 
             private void UnregisterCallbacks(IInGameActions instance)
@@ -331,6 +457,18 @@ namespace MonstersDomain
                 @Run.started -= instance.OnRun;
                 @Run.performed -= instance.OnRun;
                 @Run.canceled -= instance.OnRun;
+                @Dance.started -= instance.OnDance;
+                @Dance.performed -= instance.OnDance;
+                @Dance.canceled -= instance.OnDance;
+                @SelectHotbar.started -= instance.OnSelectHotbar;
+                @SelectHotbar.performed -= instance.OnSelectHotbar;
+                @SelectHotbar.canceled -= instance.OnSelectHotbar;
+                @Use.started -= instance.OnUse;
+                @Use.performed -= instance.OnUse;
+                @Use.canceled -= instance.OnUse;
+                @Interact.started -= instance.OnInteract;
+                @Interact.performed -= instance.OnInteract;
+                @Interact.canceled -= instance.OnInteract;
             }
 
             public void RemoveCallbacks(IInGameActions instance)
@@ -354,6 +492,10 @@ namespace MonstersDomain
             void OnJump(InputAction.CallbackContext context);
             void OnCrouch(InputAction.CallbackContext context);
             void OnRun(InputAction.CallbackContext context);
+            void OnDance(InputAction.CallbackContext context);
+            void OnSelectHotbar(InputAction.CallbackContext context);
+            void OnUse(InputAction.CallbackContext context);
+            void OnInteract(InputAction.CallbackContext context);
         }
     }
 }

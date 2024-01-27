@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using UniRx;
-using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -33,14 +32,13 @@ namespace MonstersDomain
             if (_isInteract) return;
             _isInteract = true;
             InteractionMessage.Instance.WriteText("[E] 隠れる");
-            this.UpdateAsObservable().First(_ => Input.GetButtonDown("Interact"))
-                .Subscribe(_ => 
-                {
-                    _player = player;
-                    player.State.Value = PlayerState.Hide;
-                    _dummyPlayer?.SetActive(true);
-                    EnterTheLocker();
-                }).AddTo(_subscriptions);
+            InputProvider.Instance.InteractTrigger.First().Subscribe(_ =>
+            {
+                _player = player;
+                player.State.Value = PlayerState.Hide;
+                _dummyPlayer?.SetActive(true);
+                EnterTheLocker();
+            }).AddTo(_subscriptions);
         }
         void EnterTheLocker()
         {
@@ -57,8 +55,7 @@ namespace MonstersDomain
             _player.PovController.SetRotation(0, transform.localEulerAngles.y);
             _directors[1].Play();
             InteractionMessage.Instance.WriteText("[E] 出る");
-            this.UpdateAsObservable().Where(_ => Input.GetButtonDown("Interact")).Take(1)
-                .Subscribe(ExitFromLocker).AddTo(_subscriptions);
+            InputProvider.Instance.InteractTrigger.Take(1).Subscribe(ExitFromLocker).AddTo(_subscriptions);
         }
         void ExitFromLocker(Unit _)
         {

@@ -1,5 +1,4 @@
 ﻿using UniRx;
-using UniRx.Triggers;
 using UnityEngine;
 
 namespace MonstersDomain
@@ -13,12 +12,8 @@ namespace MonstersDomain
         GameObject _grabItem;
         void Start()
         {
-            this.UpdateAsObservable()
-                .Select(_ => Input.GetAxisRaw("Mouse ScrollWheel"))
-                .Subscribe(axis => _hotbar.Scroll(axis, _items, CheckItem)).AddTo(this);
-            this.UpdateAsObservable()
-                .Where(_ => Input.GetButtonDown("Use"))
-                .Subscribe(UseItem).AddTo(this);
+            InputProvider.Instance.SelectHotbarAxis.Subscribe(axis => _hotbar.Scroll(axis, _items, CheckItem)).AddTo(this);
+            InputProvider.Instance.UseTrigger.Subscribe(UseItem).AddTo(this);
             _hotbar.UpdateSlots(_items);
             CheckItem();
         }

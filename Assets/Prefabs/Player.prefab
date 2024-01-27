@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 296137514293694961}
   - component: {fileID: 6143336999018287758}
   - component: {fileID: 4639145557703026611}
+  - component: {fileID: 8664225469796833407}
   - component: {fileID: 453531429490428415}
   m_Layer: 3
   m_Name: Player
@@ -148,11 +149,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4baba3e4dee61254b96eb2311cbc74c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 5
+  _moveSpeed: 2.5
   _jumpPower: 5
+  _crouchingSpeedDivisor: 3
+  _dashSpeedMultiplier: 2.5
+  _maxStamina: 20
+  _decreaseStamina: 6
+  _recoveryStamina: 3
   _checkGround: {fileID: 8204911996546218696}
   _povController: {fileID: 6143336999018287758}
   _armsAnimator: {fileID: 0}
+  _bodyCollider: {fileID: 4639145557703026611}
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  _checkCeilingDistance: 1.9
+  _staminaBar: {fileID: 0}
 --- !u!54 &4043409065498982761
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -249,9 +261,30 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.3
-  m_Height: 1.57
+  m_Height: 1.3242397
   m_Direction: 1
-  m_Center: {x: 0, y: 1.04, z: 0}
+  m_Center: {x: 0, y: 1.1621199, z: 0}
+--- !u!135 &8664225469796833407
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2245032572253455219}
+  m_Material: {fileID: 13400000, guid: 985e41cd2cce9d94b9e82b15ae00a01d, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.3
+  m_Center: {x: 0, y: 0.77, z: 0}
 --- !u!135 &453531429490428415
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -284,6 +317,7 @@ GameObject:
   - component: {fileID: 5900920851669139414}
   - component: {fileID: 8991601932018967113}
   - component: {fileID: 4386793799028968562}
+  - component: {fileID: 5200251584331244617}
   m_Layer: 0
   m_Name: DefaultCamera
   m_TagString: Untagged
@@ -369,6 +403,36 @@ MonoBehaviour:
     m_FrequencyGain: 1
     m_Duration: 1
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!114 &5200251584331244617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8363298937895816229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 1
+  m_IgnoreTag: 
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.5
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1 &8556964626104742854
 GameObject:
   m_ObjectHideFlags: 0

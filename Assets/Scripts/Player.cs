@@ -10,108 +10,162 @@ namespace MonstersDomain
     {
         static readonly int IsWalking = Animator.StringToHash("IsWalking");
         static readonly int Dance = Animator.StringToHash("Dance");
-        [SerializeField, Tooltip("移動速度")] float _moveSpeed = 5f;
-        [SerializeField, Tooltip("ジャンプする力")] float _jumpPower = 5f;
-        [SerializeField, Tooltip("しゃがみ時に計算に加える除数")] float _crouchingSpeedDivisor = 3f;
-        [SerializeField, Tooltip("ダッシュ時に計算に加える乗数")] float _dashSpeedMultiplier = 3f;
-        [SerializeField, Tooltip("走るために必要なスタミナ")] float _maxStamina = 20f;
-        [SerializeField, Tooltip("走った時のスタミナ源少量")] float _decreaseStamina = 3f;
-        [SerializeField, Tooltip("接地判定")] CheckGround _checkGround;
-        [SerializeField, Tooltip("視点管理")] PovController _povController;
-        [SerializeField, Tooltip("一人称視点時に表示される腕のアニメーター")] Animator _armsAnimator;
-        [SerializeField, Tooltip("立っている時にアクティブになるコライダー")] Collider _bodyCollider;
-        [SerializeField, Tooltip("レイキャストから除外するレイヤー")] LayerMask _layerMask;
-        [SerializeField, Tooltip("しゃがみ時に立ち上がれる高さかを確認するための距離")] float _checkCeilingDistance = 1.9f;
-        [SerializeField, Tooltip("スタミナゲージを表示するUI")] ShrinkBar _staminaBar;
+        [SerializeField] [Tooltip("移動速度")] float _moveSpeed = 5f;
+        [SerializeField] [Tooltip("ジャンプする力")] float _jumpPower = 5f;
+
+        [SerializeField] [Tooltip("しゃがみ時に計算に加える除数")]
+        float _crouchingSpeedDivisor = 3f;
+
+        [SerializeField] [Tooltip("ダッシュ時に計算に加える乗数")]
+        float _dashSpeedMultiplier = 3f;
+
+        [SerializeField] [Tooltip("走るために必要なスタミナ")]
+        float _maxStamina = 20f;
+
+        [SerializeField] [Tooltip("走った時のスタミナ源少量")]
+        float _decreaseStamina = 3f;
+        
+        [SerializeField] [Tooltip("スタミナ回復量")]
+        float _recoveryStamina = 3f;
+
+        [SerializeField] [Tooltip("接地判定")] CheckGround _checkGround;
+        [SerializeField] [Tooltip("視点管理")] PovController _povController;
+
+        [SerializeField] [Tooltip("一人称視点時に表示される腕のアニメーター")]
+        Animator _armsAnimator;
+
+        [SerializeField] [Tooltip("立っている時にアクティブになるコライダー")]
+        Collider _bodyCollider;
+
+        [SerializeField] [Tooltip("レイキャストから除外するレイヤー")]
+        LayerMask _layerMask;
+
+        [SerializeField] [Tooltip("しゃがみ時に立ち上がれる高さかを確認するための距離")]
+        float _checkCeilingDistance = 1.9f;
+
+        [SerializeField] [Tooltip("スタミナゲージを表示するUI")]
+        ShrinkBar _staminaBar;
 
         readonly IntReactiveProperty _footSteps = new();
         public readonly ReactiveProperty<PlayerState> State = new(PlayerState.Idle);
-        ReactiveProperty<Vector3> _updatePosition = new();
+        float _currentStamina;
         IDisposable _disposable;
         CinemachineBasicMultiChannelPerlin _headBob;
         Tween _headTween;
         Rigidbody _rb;
+        readonly ReactiveProperty<Vector3> _updatePosition = new();
         public PovController PovController => _povController;
-        float _currentStamina = 0;
 
         void Awake()
         {
-            _footSteps.Where(n => n < 0).Subscribe(_ => AudioManager.Instance.PlayFootSteps(FootSteps.Player)).AddTo(this);
-            State.SkipLatestValueOnSubscribe().Where(s => s == PlayerState.Hide).Subscribe(_ => Hiding()).AddTo(this);
-            State.SkipLatestValueOnSubscribe().Where(s => s != PlayerState.Hide).Subscribe(_ => StopHiding()).AddTo(this);
+            _footSteps.Where(n => n < 0).Subscribe(_ => AudioManager.Instance.PlayFootSteps(FootSteps.Player))
+                .AddTo(this);
+            State.SkipLatestValueOnSubscribe().Subscribe(Hiding).AddTo(this);
             _rb = GetComponent<Rigidbody>();
             _headBob = PovController.VirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
             _currentStamina = _maxStamina;
+            InputProvider.Instance.JumpTrigger.Where(_ => _checkGround.IsGrounded).Subscribe(Jumping).AddTo(this);
+            InputProvider.Instance.CrouchSwitch.Subscribe(Crouching).AddTo(this);
+            InputProvider.Instance.RunTrigger.Subscribe(_ =>
+            {
+                if(State.Value == PlayerState.Walk)
+                    State.Value = PlayerState.Run;
+                else if (State.Value == PlayerState.Run)
+                    State.Value = PlayerState.Walk;
+            }).AddTo(this);
+            InputProvider.Instance.DanceTrigger.Subscribe(_ => _armsAnimator.SetTrigger(Dance)).AddTo(this);
         }
 
         void Update()
         {
-            if (Input.GetButtonDown("Dance")) _armsAnimator.SetTrigger(Dance);
-            if (Input.GetButtonDown("Dash"))
-                State.Value = PlayerState.Dash;
-            if (State.Value != PlayerState.Hide) //  隠れているならRigid bodyによる移動を完全に止める
+            if (State.Value != PlayerState.Hide)
+            {
                 Movement();
+            }
+                
+            //  座標更新を発行する
             _updatePosition.Value = transform.position;
         }
 
-        void Hiding()
+        void Hiding(PlayerState playerState) 
         {
-            _rb.constraints = RigidbodyConstraints.FreezeAll;
-            //  FPS視点ののレイヤーをカメラのマスクから除外する
-            Camera.main.cullingMask &= ~(1 << 7);
+            if (playerState == PlayerState.Hide)
+            {
+                //  Rigid bodyによる移動を完全に止める
+                _rb.constraints = RigidbodyConstraints.FreezeAll;
+                //  FPS視点ののレイヤーをカメラのマスクから除外する
+                Camera.main.cullingMask &= ~(1 << 7);
+            }
+            else
+            {
+                //  Rigid bodyによる回転だけ止める
+                _rb.constraints = RigidbodyConstraints.FreezeRotation;
+                //  FPS視点ののレイヤーをカメラのマスクに追加する
+                Camera.main.cullingMask |= 1 << 7;
+            }
         }
 
-        void StopHiding()
+        /// <summary>
+        ///     しゃがみ状態の切り替え
+        /// </summary>
+        void Crouching(bool b)
         {
-            _rb.constraints = RigidbodyConstraints.FreezeRotation;
-            //  FPS視点ののレイヤーをカメラのマスクに追加する
-            Camera.main.cullingMask |= 1 << 7;
-        }
-
-        void Crouching()
-        {
-            if (Input.GetButtonDown("Crouch"))  //  しゃがみ状態に入る
+            if (b) //  しゃがみ状態に入る
             {
                 State.Value = PlayerState.Crouch;
                 _headTween?.Kill();
                 _headTween = _povController.Head.DOLocalMoveY(1, 0.1f).OnComplete(() => _bodyCollider.isTrigger = true)
                     .SetLink(gameObject);
             }
-            else if (Input.GetButtonUp("Crouch"))   //  しゃがみ状態解除待機開始
+            else if (_disposable == null) //  しゃがみ状態解除待機開始
             {
-                if (_disposable == null)
-                    _disposable = _updatePosition.SkipLatestValueOnSubscribe()
-                        .Where(_ => !Physics.SphereCast(new Ray(transform.position, Vector3.up), 0.3f, _checkCeilingDistance, ~_layerMask))
-                        .First().Subscribe(_ =>
-                        {
-                            _disposable = null;
-                            State.Value = PlayerState.Idle;
-                            _headTween?.Kill();
-                            _headTween = _povController.Head.DOLocalMoveY(1.6f, 0.1f)
-                                .OnComplete(() => _bodyCollider.isTrigger = false).SetLink(gameObject);
-                        }).AddTo(this);
+                _disposable = _updatePosition.SkipLatestValueOnSubscribe()
+                    .Where(_ => !Physics.SphereCast(new Ray(transform.position, Vector3.up), 0.3f,
+                        _checkCeilingDistance, ~_layerMask))
+                    .First().Subscribe(_ =>
+                    {
+                        _disposable = null;
+                        State.Value = PlayerState.Idle;
+                        _headTween?.Kill();
+                        _headTween = _povController.Head.DOLocalMoveY(1.6f, 0.1f)
+                            .OnComplete(() => _bodyCollider.isTrigger = false).SetLink(gameObject);
+                    }).AddTo(this);
             }
         }
 
+        /// <summary>
+        ///     ジャンプ処理
+        /// </summary>
+        void Jumping(Unit _)
+        {
+            _checkGround.IsGrounded = false;
+            _rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
+        }
+        /// <summary>
+        /// 平面移動処理
+        /// </summary>
         void Movement()
         {
-            Crouching();
-            var horizontal = Input.GetAxisRaw("Horizontal");
-            var vertical = Input.GetAxisRaw("Vertical");
-            var inputVector = new Vector3(horizontal, 0, vertical);
-            var isWalking = inputVector.magnitude > 0;
-            if (isWalking) //  移動量が0より大きかったらカメラの揺れを大きくする
+            var inputVector = InputProvider.Instance.MoveDirection;
+            var isMoving = inputVector.magnitude > 0;
+            if (isMoving) //  移動量が0より大きかったらカメラの揺れを大きくする
             {
                 var moveSpeed = _moveSpeed;
                 if (State.Value == PlayerState.Crouch)
                 {
+                    RecoveryStamina();
                     moveSpeed /= _crouchingSpeedDivisor;
                 }
-                else if (State.Value == PlayerState.Dash && _currentStamina > 0)
+                else if (State.Value == PlayerState.Run && _currentStamina > 0)
                 {
                     moveSpeed *= _dashSpeedMultiplier;
                     _currentStamina -= _decreaseStamina * Time.deltaTime;
                     _staminaBar.SetFill(_maxStamina, _currentStamina);
+                }
+                else
+                {
+                    RecoveryStamina();
+                    State.Value = PlayerState.Walk;
                 }
 
                 inputVector.x *= moveSpeed;
@@ -127,6 +181,8 @@ namespace MonstersDomain
                 _headBob.m_AmplitudeGain = 0.25f;
                 _headBob.m_FrequencyGain = 0.5f;
                 _armsAnimator.SetBool(IsWalking, false);
+                if(State.Value != PlayerState.Crouch) State.Value = PlayerState.Idle;
+                RecoveryStamina();
             }
 
             inputVector = transform.TransformDirection(inputVector); //  ベクトルを自分の向きに合わせる
@@ -137,16 +193,20 @@ namespace MonstersDomain
                 var onNormal = inputVector - inputMagnitudeOnNormal * _checkGround.NormalVector;
                 var onPlane = inputVector - onNormal;
                 _rb.velocity = onPlane + onNormal;
-                if (Input.GetButtonDown("Jump"))
-                {
-                    _checkGround.IsGrounded = false;
-                    _rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
-                }
             }
             else
             {
                 inputVector.y = _rb.velocity.y;
                 _rb.velocity = inputVector;
+            }
+        }
+
+        void RecoveryStamina()
+        {
+            if (_currentStamina < _maxStamina)
+            {
+                _currentStamina += _recoveryStamina * Time.deltaTime;
+                _staminaBar.SetFill(_maxStamina, _currentStamina);
             }
         }
     }
@@ -155,7 +215,7 @@ namespace MonstersDomain
     {
         Idle,
         Walk,
-        Dash,
+        Run,
         Crouch,
         Hide
     }
