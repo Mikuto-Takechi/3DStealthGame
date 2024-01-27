@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-
-public interface IInteract
+﻿namespace MonstersDomain
 {
-    void Show();
-    void Hide();
+    public interface IInteract
+    {
+        void Show();
+        void Hide();
+    }
 }

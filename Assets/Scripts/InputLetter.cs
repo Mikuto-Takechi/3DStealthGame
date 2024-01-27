@@ -1,15 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InputLetter : MonoBehaviour
+namespace MonstersDomain
 {
-    InputField _inputField;
-    void Start()
+    public class InputLetter : MonoBehaviour
     {
-        _inputField = GetComponent<InputField>();
-        _inputField.OnEndEditAsObservable().Subscribe(_ => InteractionMessage.Instance.WriteText(_inputField.text));
+        InputField _inputField;
+        void Start()
+        {
+            _inputField = GetComponent<InputField>();
+            _inputField.OnEndEditAsObservable().Subscribe(_ => InteractionMessage.Instance.WriteText(_inputField.text));
+        }
     }
 }

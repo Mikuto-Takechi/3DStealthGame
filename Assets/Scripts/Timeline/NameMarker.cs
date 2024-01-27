@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
-using UnityEngine;
-using UnityEngine.Timeline;
+﻿using UnityEngine.Timeline;
 
-[CustomStyle("NameMarker")]
-public class NameMarker : Marker
+namespace MonstersDomain
 {
-    public string Name;
+    [CustomStyle("NameMarker")]
+    public class NameMarker : Marker
+    {
+        public string Name;
+    }
 }

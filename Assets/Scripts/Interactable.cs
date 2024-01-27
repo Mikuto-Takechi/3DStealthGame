@@ -1,22 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-public abstract class Interactable : MonoBehaviour
+﻿using UnityEngine;
+
+namespace MonstersDomain
 {
-    protected abstract void Interact(Player player);
-    protected abstract void Disengage(Player player);
-    void OnTriggerEnter(Collider other)
+    public abstract class Interactable : MonoBehaviour
     {
-        if(other.TryGetComponent(out Player player))
+        protected abstract void Interact(Player player);
+        protected abstract void Disengage(Player player);
+        void OnTriggerEnter(Collider other)
         {
-            Interact(player);
+            if(other.TryGetComponent(out Player player))
+            {
+                Interact(player);
+            }
         }
-    }
-    void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent(out Player player))
+        void OnTriggerExit(Collider other)
         {
-            Disengage(player);
+            if (other.TryGetComponent(out Player player))
+            {
+                Disengage(player);
+            }
         }
     }
 }

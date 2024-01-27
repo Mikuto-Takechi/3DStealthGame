@@ -1,4 +1,7 @@
-public interface ITool
+namespace MonstersDomain
 {
-    void Use();
+    public interface ITool
+    {
+        void Use();
+    }
 }

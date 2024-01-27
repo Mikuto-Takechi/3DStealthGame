@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Takechi.Scene
+namespace MonstersDomain
 {
     public class SceneManager : MonoBehaviour
     {

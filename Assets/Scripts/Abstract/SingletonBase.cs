@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 
-public abstract class SingletonBase<T> : MonoBehaviour where T : Component
+namespace MonstersDomain
 {
-    public static T Instance { get; set; }
-    protected abstract void AwakeFunction();
-    protected void Awake()
+    public abstract class SingletonBase<T> : MonoBehaviour where T : Component
     {
-        if (Instance == null)
+        public static T Instance { get; set; }
+        protected abstract void AwakeFunction();
+        protected void Awake()
         {
-            Instance = this as T;
-            DontDestroyOnLoad(gameObject);
-            AwakeFunction();
-        }
-        else
-        {
-            Destroy(gameObject);
+            if (Instance == null)
+            {
+                Instance = this as T;
+                DontDestroyOnLoad(gameObject);
+                AwakeFunction();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
