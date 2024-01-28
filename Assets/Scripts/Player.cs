@@ -153,17 +153,20 @@ namespace MonstersDomain
                 var moveSpeed = _moveSpeed;
                 if (State.Value == PlayerState.Crouch)
                 {
+                    _armsAnimator.SetInteger("MovingLevel", 1);
                     RecoveryStamina();
                     moveSpeed /= _crouchingSpeedDivisor;
                 }
                 else if (State.Value == PlayerState.Run && _currentStamina > 0)
                 {
+                    _armsAnimator.SetInteger("MovingLevel", 2);
                     moveSpeed *= _dashSpeedMultiplier;
                     _currentStamina -= _decreaseStamina * Time.deltaTime;
                     _staminaBar.SetFill(_maxStamina, _currentStamina);
                 }
                 else
                 {
+                    _armsAnimator.SetInteger("MovingLevel", 1);
                     RecoveryStamina();
                     State.Value = PlayerState.Walk;
                 }
@@ -174,13 +177,12 @@ namespace MonstersDomain
                 _headBob.m_FrequencyGain = 1;
                 _headBob.m_NoiseProfile.GetSignal(Time.time, out var pos, out _);
                 _footSteps.Value = Math.Sign(pos.y) * 1;
-                _armsAnimator.SetBool(IsWalking, true);
             }
             else
             {
                 _headBob.m_AmplitudeGain = 0.25f;
                 _headBob.m_FrequencyGain = 0.5f;
-                _armsAnimator.SetBool(IsWalking, false);
+                _armsAnimator.SetInteger("MovingLevel", 0);
                 if(State.Value != PlayerState.Crouch) State.Value = PlayerState.Idle;
                 RecoveryStamina();
             }
