@@ -18519,6 +18519,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5780917627396391718, guid: 815df5fef3ff5ad4c80b6b53f939bdb1, type: 3}
+      propertyPath: _volume
+      value: 
+      objectReference: {fileID: 1540555226}
+    - target: {fileID: 5780917627396391718, guid: 815df5fef3ff5ad4c80b6b53f939bdb1, type: 3}
       propertyPath: _patrolAnchor.Array.data[0]
       value: 
       objectReference: {fileID: 1840094895}

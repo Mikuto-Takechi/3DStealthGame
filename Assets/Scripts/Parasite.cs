@@ -4,6 +4,7 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace MonstersDomain
 {
@@ -15,6 +16,9 @@ namespace MonstersDomain
         [SerializeField] ParasiteEventDispatcher _eventDispatcher;
         [SerializeField] CinemachineImpulseSource _footStepsImpulseSource;
         [SerializeField] CinemachineImpulseSource _roarCinemachineImpulseSource;
+        [SerializeField] PostProcessVolume _volume;
+        ChromaticAberration _chromatic;
+        Vignette _vignette;
         ObservableStateMachineTrigger _trigger;
         Player _chaseTarget;
         int _patrolIndex = 0;
@@ -39,6 +43,8 @@ namespace MonstersDomain
                 AudioManager.Instance.Play3DFootSteps(FootSteps.Parasite, transform.position);
                 _footStepsImpulseSource.GenerateImpulse();
             });
+            _volume.profile.TryGetSettings(out _chromatic);
+            _volume.profile.TryGetSettings(out _vignette);
         }
         void Update()
         {
@@ -73,6 +79,8 @@ namespace MonstersDomain
             AudioManager.Instance.PlaySE(SE.Roar);
             AudioManager.Instance.PlayMusic(Music.Chase);
             AudioManager.Instance.PlayAmbient(Ambient.Chase);
+            _chromatic.enabled.value = true;
+            _vignette.enabled.value = true;
             _roarCinemachineImpulseSource.GenerateImpulse();
             _trigger.OnStateExitAsObservable()
                 .Where(i=> i.StateInfo.IsName("Base Layer.Mutant Roaring"))
