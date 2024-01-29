@@ -11,7 +11,7 @@ namespace MonstersDomain
         [SerializeField] AudioDataBase _ambientData;
         [SerializeField] AudioDataBase _seData;
         [SerializeField] AudioGroupDataBase _footStepsData;
-        [SerializeField] AudioSource _audioSource3D;
+        [SerializeField] ObjectPool _audioSourcePool;
         AudioSource _seSource, _bgmSource, _ambientSource;
 
         protected override void AwakeFunction()
@@ -62,12 +62,14 @@ namespace MonstersDomain
 
         void Play3DSound(AudioClip clip, Vector3 point, float volume)
         {
-            var audioSource = Instantiate(_audioSource3D, point, quaternion.identity);
+            var pooledObj = _audioSourcePool.GetPooledObject();
+            var audioSource = pooledObj.GetComponent<AudioSource>();
+            audioSource.transform.position = point;
             audioSource.clip = clip;
             audioSource.spatialBlend = 1f;
             audioSource.volume = volume;
             audioSource.Play();
-            Destroy(audioSource.gameObject, clip.length * (Time.timeScale < 0.009999999776482582 ? 0.01f : Time.timeScale));
+            pooledObj.Release(clip.length * (Time.timeScale < 0.009999999776482582 ? 0.01f : Time.timeScale));
         }
     }
 
