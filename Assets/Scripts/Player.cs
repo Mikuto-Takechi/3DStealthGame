@@ -60,6 +60,8 @@ namespace MonstersDomain
         Rigidbody _rb;
         readonly ReactiveProperty<Vector3> _updatePosition = new();
         public PovController PovController => _povController;
+        
+        public bool IsDied { get; set; }
 
         void Awake()
         {

@@ -1,5 +1,74 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2243652336300919917
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5362628452464321313}
+  - component: {fileID: 4918743318566816893}
+  - component: {fileID: 4715161561536392594}
+  m_Layer: 0
+  m_Name: VisionSensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5362628452464321313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2243652336300919917}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9045146763390215196}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &4918743318566816893
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2243652336300919917}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 5
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &4715161561536392594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2243652336300919917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2338ee449c4651740a96059ab0ac573a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sightAngle: 45
+  _visionRange: {fileID: 4918743318566816893}
+  _visionRangeColor: {r: 1, g: 0.9821618, b: 0, a: 0.3254902}
 --- !u!1 &8480005229565190173
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,10 +80,9 @@ GameObject:
   - component: {fileID: 9045146763390215196}
   - component: {fileID: 5780917627396391718}
   - component: {fileID: 5981958505441211625}
-  - component: {fileID: 4529169262754310972}
-  - component: {fileID: 6385085337335513806}
   - component: {fileID: 610652220683808141}
   - component: {fileID: 3171879945504856445}
+  - component: {fileID: 788947634044197050}
   m_Layer: 0
   m_Name: Parasite
   m_TagString: Untagged
@@ -36,6 +104,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3326564082192328032}
+  - {fileID: 5362628452464321313}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5780917627396391718
@@ -63,12 +132,13 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   _animator: {fileID: 8703901982669700890}
   _eventDispatcher: {fileID: 3961927063779357950}
   _footStepsImpulseSource: {fileID: 610652220683808141}
   _roarCinemachineImpulseSource: {fileID: 3171879945504856445}
+  _volume: {fileID: 0}
+  _visionSensor: {fileID: 4715161561536392594}
+  _deathTimeline: {fileID: 8013869363657174163, guid: e7a6aa18d6195bd40b5f405350d60df0, type: 3}
 --- !u!195 &5981958505441211625
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -91,42 +161,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!135 &4529169262754310972
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8480005229565190173}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 5
-  m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &6385085337335513806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8480005229565190173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2338ee449c4651740a96059ab0ac573a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sightAngle: 45
-  _visionRange: {fileID: 4529169262754310972}
-  _visionRangeColor: {r: 1, g: 0.9821618, b: 0, a: 0.3254902}
 --- !u!114 &610652220683808141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,6 +267,27 @@ MonoBehaviour:
     m_DissipationDistance: 20
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 0, y: -1, z: 0}
+--- !u!135 &788947634044197050
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8480005229565190173}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.4
+  m_Center: {x: 0, y: 0.93, z: 0}
 --- !u!1001 &2999658026666345099
 PrefabInstance:
   m_ObjectHideFlags: 0

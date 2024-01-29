@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Cinemachine;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Playables;
 using UnityEngine.Rendering.PostProcessing;
+using System.Linq;
 
 namespace MonstersDomain
 {
@@ -17,18 +20,18 @@ namespace MonstersDomain
         [SerializeField] CinemachineImpulseSource _footStepsImpulseSource;
         [SerializeField] CinemachineImpulseSource _roarCinemachineImpulseSource;
         [SerializeField] PostProcessVolume _volume;
+        [SerializeField] VisionSensor _visionSensor;
+        [SerializeField] GameObject _deathTimeline;
         ChromaticAberration _chromatic;
         Vignette _vignette;
         ObservableStateMachineTrigger _trigger;
         Player _chaseTarget;
         int _patrolIndex = 0;
         NavMeshAgent _agent;
-        VisionSensor _visionSensor;
         ReactiveProperty<ParasiteState> _state = new(ParasiteState.Patrol);
         void Start()
         {
             _agent = GetComponent<NavMeshAgent>();
-            _visionSensor = GetComponent<VisionSensor>();
             _visionSensor.DetectionTarget.Subscribe(p =>
             {
                 _chaseTarget = p;
@@ -64,6 +67,24 @@ namespace MonstersDomain
                 _animator.SetFloat("Speed", 0);
             }
         }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent(out Player player) && !player.IsDied)
+            {
+                player.IsDied = true;
+                Vector3 playerPos = player.transform.position;
+                //  死亡演出
+                CinemachineBrain main = Camera.main.GetComponent<CinemachineBrain>();
+                PlayableDirector playable = Instantiate(_deathTimeline, transform.position, Quaternion.identity).GetComponent<PlayableDirector>();
+                Vector3 playablePos = playable.transform.position;
+                playable.gameObject.transform.forward =
+                    (new Vector3(playerPos.x, playablePos.y, playerPos.z) - playablePos).normalized;
+                var binding = playable.playableAsset.outputs.First(c => c.streamName == "Cinemachine Track");
+                playable.SetGenericBinding(binding.sourceObject, main);
+            }
+        }
+
         void Patrol()
         {
             if(_patrolIndex >= _patrolAnchor.Length)

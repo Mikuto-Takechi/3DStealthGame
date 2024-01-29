@@ -17773,10 +17773,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1540555226}
     - target: {fileID: 5780917627396391718, guid: 815df5fef3ff5ad4c80b6b53f939bdb1, type: 3}
-      propertyPath: _patrolAnchor.Array.size
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 5780917627396391718, guid: 815df5fef3ff5ad4c80b6b53f939bdb1, type: 3}
       propertyPath: _patrolAnchor.Array.data[0]
       value: 
       objectReference: {fileID: 1840094895}
@@ -17820,14 +17816,6 @@ PrefabInstance:
       propertyPath: _patrolAnchor.Array.data[10]
       value: 
       objectReference: {fileID: 1062553181}
-    - target: {fileID: 5780917627396391718, guid: 815df5fef3ff5ad4c80b6b53f939bdb1, type: 3}
-      propertyPath: _patrolAnchor.Array.data[11]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5780917627396391718, guid: 815df5fef3ff5ad4c80b6b53f939bdb1, type: 3}
-      propertyPath: _patrolAnchor.Array.data[12]
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 8480005229565190173, guid: 815df5fef3ff5ad4c80b6b53f939bdb1, type: 3}
       propertyPath: m_Name
       value: Parasite
