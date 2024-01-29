@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace MonstersDomain
 {
@@ -10,6 +11,7 @@ namespace MonstersDomain
         public Vector3 NormalVector { get; private set; } = Vector3.up;
 
         private ContactPoint _lastContactPoint;
+        public Action HitWall;
 
         void OnCollisionStay(Collision collision)
         {
@@ -19,6 +21,10 @@ namespace MonstersDomain
                 {
                     NormalVector = contact.normal;
                     IsGrounded = true;
+                }
+                else
+                {
+                    HitWall?.Invoke();
                 }
                 _lastContactPoint = contact;
             }

@@ -80,8 +80,12 @@ namespace MonstersDomain
             }).AddTo(this);
             InputProvider.Instance.DanceTrigger.Subscribe(_ => _armsAnimator.SetTrigger(Dance)).AddTo(this);
             _stepRayUpper.transform.localPosition = new Vector3(0, _stepHeight, 0);
-            _updatePosition.SkipLatestValueOnSubscribe()
-                .Subscribe(_ => StepClimb()).AddTo(this);
+            _checkGround.HitWall += StepClimb;
+        }
+
+        void OnDestroy()
+        {
+            _checkGround.HitWall -= StepClimb;
         }
 
         void Update()
