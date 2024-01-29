@@ -1,6 +1,6 @@
 namespace MonstersDomain
 {
-    public interface ITool
+    public interface IUsable
     {
         void Use();
     }

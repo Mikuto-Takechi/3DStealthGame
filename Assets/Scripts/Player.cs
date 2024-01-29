@@ -158,7 +158,7 @@ namespace MonstersDomain
         void Movement()
         {
             var inputVector = InputProvider.Instance.MoveDirection;
-            var isMoving = inputVector.magnitude > 0;
+            var isMoving = inputVector.sqrMagnitude > 0;
             if (isMoving) //  移動量が0より大きかったらカメラの揺れを大きくする
             {
                 var moveSpeed = _moveSpeed;

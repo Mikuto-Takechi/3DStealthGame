@@ -1,15 +1,17 @@
-﻿using UniRx;
+﻿using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 namespace MonstersDomain
 {
-    public class ItemManager : MonoBehaviour
+    public class ItemManager : SingletonBase<ItemManager>
     {
         [SerializeField] Item[] _items;
         [SerializeField] Hotbar _hotbar;
         [SerializeField] Transform _itemAnchor;
         [SerializeField] Animator _armsAnimator;
         GameObject _grabItem;
+        public List<IPickable> AllPickables = new();
         void Start()
         {
             InputProvider.Instance.SelectHotbarAxis.Subscribe(axis => _hotbar.Scroll(axis, _items, CheckItem)).AddTo(this);
@@ -38,10 +40,12 @@ namespace MonstersDomain
         void UseItem(Unit _)
         {
             if (!_grabItem) return;
-            if (_grabItem.TryGetComponent(out ITool tool))
+            if (_grabItem.TryGetComponent(out IUsable usable))
             {
-                tool.Use();
+                usable.Use();
             }
         }
+
+        protected override void AwakeFunction() { }
     }
 }

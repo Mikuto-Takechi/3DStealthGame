@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
-    public class FlashLight : MonoBehaviour, ITool
+    public class FlashLight : MonoBehaviour, IUsable
     {
         [SerializeField] private Light _light;
         [SerializeField] private float _intensity = 10f;
