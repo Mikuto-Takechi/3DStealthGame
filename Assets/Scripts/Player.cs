@@ -46,6 +46,11 @@ namespace MonstersDomain
         [SerializeField] [Tooltip("スタミナゲージを表示するUI")]
         ShrinkBar _staminaBar;
 
+        //[SerializeField] [Tooltip("")] Transform _stepRayLower;
+        [SerializeField] [Tooltip("")] Transform _stepRayUpper;
+        [SerializeField] [Tooltip("")] float _stepHeight = 0.3f;
+        [SerializeField] [Tooltip("")] float _stepSmooth = 0.1f;
+
         readonly IntReactiveProperty _footSteps = new();
         public readonly ReactiveProperty<PlayerState> State = new(PlayerState.Idle);
         float _currentStamina;
@@ -74,6 +79,9 @@ namespace MonstersDomain
                     State.Value = PlayerState.Walk;
             }).AddTo(this);
             InputProvider.Instance.DanceTrigger.Subscribe(_ => _armsAnimator.SetTrigger(Dance)).AddTo(this);
+            _stepRayUpper.transform.localPosition = new Vector3(0, _stepHeight, 0);
+            _updatePosition.SkipLatestValueOnSubscribe()
+                .Subscribe(_ => StepClimb()).AddTo(this);
         }
 
         void Update()
@@ -82,7 +90,6 @@ namespace MonstersDomain
             {
                 Movement();
             }
-                
             //  座標更新を発行する
             _updatePosition.Value = transform.position;
         }
@@ -153,12 +160,16 @@ namespace MonstersDomain
                 var moveSpeed = _moveSpeed;
                 if (State.Value == PlayerState.Crouch)
                 {
+                    _headBob.m_AmplitudeGain = 0.25f;
+                    _headBob.m_FrequencyGain = 0.5f;
                     _armsAnimator.SetInteger("MovingLevel", 1);
                     RecoveryStamina();
                     moveSpeed /= _crouchingSpeedDivisor;
                 }
                 else if (State.Value == PlayerState.Run && _currentStamina > 0)
                 {
+                    _headBob.m_AmplitudeGain = 1;
+                    _headBob.m_FrequencyGain = 1;
                     _armsAnimator.SetInteger("MovingLevel", 2);
                     moveSpeed *= _dashSpeedMultiplier;
                     _currentStamina -= _decreaseStamina * Time.deltaTime;
@@ -166,6 +177,8 @@ namespace MonstersDomain
                 }
                 else
                 {
+                    _headBob.m_AmplitudeGain = 0.5f;
+                    _headBob.m_FrequencyGain = 0.75f;
                     _armsAnimator.SetInteger("MovingLevel", 1);
                     RecoveryStamina();
                     State.Value = PlayerState.Walk;
@@ -173,8 +186,6 @@ namespace MonstersDomain
 
                 inputVector.x *= moveSpeed;
                 inputVector.z *= moveSpeed;
-                _headBob.m_AmplitudeGain = 1;
-                _headBob.m_FrequencyGain = 1;
                 _headBob.m_NoiseProfile.GetSignal(Time.time, out var pos, out _);
                 _footSteps.Value = Math.Sign(pos.y) * 1;
             }
@@ -209,6 +220,21 @@ namespace MonstersDomain
             {
                 _currentStamina += _recoveryStamina * Time.deltaTime;
                 _staminaBar.SetFill(_maxStamina, _currentStamina);
+            }
+        }
+
+        void StepClimb()
+        {
+            RaycastHit hitLower;
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitLower,
+                    0.6f, ~_layerMask))
+            {
+                RaycastHit hitUpper;
+                if (!Physics.Raycast(_stepRayUpper.position, transform.TransformDirection(Vector3.forward), out hitUpper,
+                        0.7f, ~_layerMask))
+                {
+                    _rb.position -= new Vector3(0, -_stepSmooth,0);
+                }
             }
         }
     }
