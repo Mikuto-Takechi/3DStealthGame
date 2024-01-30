@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 
 namespace MonstersDomain
 {
     public class ItemManager : SingletonBase<ItemManager>
     {
-        [SerializeField] Item[] _items;
+        [SerializeField] InventoryItemData[] _items;
         [SerializeField] Hotbar _hotbar;
         [SerializeField] Transform _itemAnchor;
         [SerializeField] Animator _armsAnimator;
@@ -23,7 +22,7 @@ namespace MonstersDomain
         /// </summary>
         void CheckItem()
         {
-            var item = _items[_hotbar.SelectIndex].Object;
+            var item = _items[_hotbar.SelectIndex].EquipmentPrefab;
             Destroy(_grabItem);
             if (item != null)
             {

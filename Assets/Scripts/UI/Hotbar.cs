@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 namespace MonstersDomain
 {
+    //  InventorySystem継承予定
     public class Hotbar : MonoBehaviour
     {
         [SerializeField] int _slotCount = 5;
@@ -31,7 +32,7 @@ namespace MonstersDomain
             _slotList[_slotCount / 2].transform.localScale = _selectScale;
         }
 
-        public void UpdateSlots(Item[] items)
+        public void UpdateSlots(InventoryItemData[] items)
         {
             int setIndex = Algorithm.CircularBuffer(_selectIndex, items.Length);
 
@@ -52,7 +53,7 @@ namespace MonstersDomain
             }
         }
 
-        public void Scroll(float input, Item[] items, Action callback)
+        public void Scroll(float input, InventoryItemData[] items, Action callback)
         {
             if (_sequence != null) return;
             if (input > 0)

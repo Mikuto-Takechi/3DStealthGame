@@ -239,7 +239,7 @@ namespace MonstersDomain
                 if (!Physics.Raycast(_stepRayUpper.position, transform.TransformDirection(Vector3.forward), out hitUpper,
                         0.7f, ~_layerMask))
                 {
-                    _rb.position -= new Vector3(0, -_stepSmooth,0);
+                    _rb.position += new Vector3(0, _stepSmooth,0);
                 }
             }
         }

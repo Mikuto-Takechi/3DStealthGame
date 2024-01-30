@@ -1390,16 +1390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f453867c297315419c9deeb7ed9638e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _items:
-  - {fileID: 11400000, guid: 6b1b89ee650bc274c8fd8967a40711c0, type: 2}
-  - {fileID: 11400000, guid: 71fdffb214c08794cb7975d57dd7ddff, type: 2}
-  - {fileID: 11400000, guid: 345088d8b65a4294bb2db6baf87389b4, type: 2}
-  - {fileID: 11400000, guid: 6b1b89ee650bc274c8fd8967a40711c0, type: 2}
-  - {fileID: 11400000, guid: 6b1b89ee650bc274c8fd8967a40711c0, type: 2}
-  - {fileID: 11400000, guid: 345088d8b65a4294bb2db6baf87389b4, type: 2}
-  - {fileID: 11400000, guid: 6b1b89ee650bc274c8fd8967a40711c0, type: 2}
-  - {fileID: 11400000, guid: 71fdffb214c08794cb7975d57dd7ddff, type: 2}
-  - {fileID: 11400000, guid: 71fdffb214c08794cb7975d57dd7ddff, type: 2}
+  _items: []
   _hotbar: {fileID: 1727190217}
   _itemAnchor: {fileID: 1822785488}
   _armsAnimator: {fileID: 8817420703144150247}
@@ -1692,37 +1683,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1271576955897917939, guid: 557c62041ceb5eb4b8ae67ee51c80ebd, type: 3}
   m_PrefabInstance: {fileID: 1178782853}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1263503789
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1263503790}
-  m_Layer: 0
-  m_Name: ExitGate
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1263503790
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1263503789}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.589714, y: 0.32, z: 24.445795}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1343561430
 GameObject:
   m_ObjectHideFlags: 0
@@ -14349,7 +14309,7 @@ PrefabInstance:
       objectReference: {fileID: 294171807}
     - target: {fileID: 6137549359383213970, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
       propertyPath: _stepHeight
-      value: 0.6
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6137549359383213970, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
       propertyPath: _armsAnimator
@@ -74620,7 +74580,6 @@ SceneRoots:
   - {fileID: 1063328832}
   - {fileID: 1540555227}
   - {fileID: 667211293}
-  - {fileID: 1263503790}
   - {fileID: 7499183308390784263}
   - {fileID: 1797921516}
   - {fileID: 693280753}
@@ -74631,5 +74590,5 @@ SceneRoots:
   - {fileID: 498921447}
   - {fileID: 6661601658110228243}
   - {fileID: 337160889}
-  - {fileID: 1740985003}
   - {fileID: 80899998}
+  - {fileID: 1740985003}
