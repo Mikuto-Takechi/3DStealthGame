@@ -7,11 +7,13 @@ namespace MonstersDomain
     {
         public static InteractionMessage Instance { get; private set; }
         Text _text;
+        ContentSizeFitter _csf;
         void Awake()
         {
             if (Instance == null) 
             {
                 Instance = this;
+                _csf = gameObject.GetComponent<ContentSizeFitter>();
                 _text = GetComponent<Text>();
             }
         }
@@ -20,6 +22,7 @@ namespace MonstersDomain
             if (Instance)
             {
                 _text.text = text;
+                _csf.SetLayoutHorizontal();
             }
             else
             {

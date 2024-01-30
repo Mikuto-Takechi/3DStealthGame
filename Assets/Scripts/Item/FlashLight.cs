@@ -4,11 +4,13 @@ namespace MonstersDomain
 {
     public class FlashLight : MonoBehaviour, IUsable
     {
-        [SerializeField] private Light _light;
-        [SerializeField] private float _intensity = 10f;
+        [SerializeField] Light _light;
+        [SerializeField] float _intensity = 10f;
+        [SerializeField] GameObject _volumetricLight;
 
-        private void Awake()
+        void Awake()
         {
+            _volumetricLight.SetActive(false);
             _light.intensity = 0;
         }
 
@@ -16,11 +18,13 @@ namespace MonstersDomain
         {
             if (_light.intensity <= 0)
             {
+                _volumetricLight.SetActive(true);
                 _light.intensity = _intensity;
                 AudioManager.Instance.PlaySE(SE.FlashLightOn);
             }
             else
             {
+                _volumetricLight.SetActive(false);
                 _light.intensity = 0;
                 AudioManager.Instance.PlaySE(SE.FlashLightOff);
             }

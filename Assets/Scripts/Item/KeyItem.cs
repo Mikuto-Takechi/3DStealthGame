@@ -7,6 +7,7 @@ namespace MonstersDomain
         public bool IsPickedUp { get; set; }
         public void PickUp()
         {
+            IsPickedUp = true;
             print(gameObject.name + "を拾ったよ!");
         }
     }

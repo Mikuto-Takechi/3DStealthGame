@@ -10,10 +10,10 @@ namespace MonstersDomain
     {
         [SerializeField] int _slotCount = 5;
         [SerializeField] RectTransform _root;
-        [SerializeField] GameObject _slotPrefab;
+        [SerializeField] ItemSlot _slotPrefab;
         [SerializeField] int _selectIndex = 0;
         [SerializeField] Vector3 _selectScale = new Vector3(1.2f, 1.2f, 1.2f);
-        List<GameObject> _slotList = new();
+        List<ItemSlot> _slotList = new();
         Sequence _sequence;
         Vector2 _initialPosition = Vector2.zero;
         public int SelectIndex => _selectIndex;
@@ -23,7 +23,7 @@ namespace MonstersDomain
             _initialPosition = _root.anchoredPosition;
             for (int i = 0; i < _slotCount; i++)
             {
-                GameObject slot = Instantiate(_slotPrefab, _root, false);
+                ItemSlot slot = Instantiate(_slotPrefab, _root, false);
                 slot.transform.SetAsLastSibling();
                 _slotList.Add(slot);
             }
@@ -38,7 +38,7 @@ namespace MonstersDomain
             for (int i = _slotCount / 2; i < _slotCount; i++)
             {
                 //  選択しているスロットから後ろを埋める
-                _slotList[i].GetComponentInChildren<Text>().text = items[setIndex].Name;
+                _slotList[i].Set(items[setIndex]);
                 setIndex = Algorithm.CircularBuffer(setIndex + 1, items.Length);
             }
 
@@ -47,7 +47,7 @@ namespace MonstersDomain
             for (int i = _slotCount / 2 - 1; i >= 0; i--)
             {
                 //  選択しているスロットの前を埋める
-                _slotList[i].GetComponentInChildren<Text>().text = items[setIndex].Name;
+                _slotList[i].Set(items[setIndex]);
                 setIndex = Algorithm.CircularBuffer(setIndex - 1, items.Length);
             }
         }

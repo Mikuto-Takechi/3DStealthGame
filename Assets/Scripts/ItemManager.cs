@@ -11,7 +11,6 @@ namespace MonstersDomain
         [SerializeField] Transform _itemAnchor;
         [SerializeField] Animator _armsAnimator;
         GameObject _grabItem;
-        public List<IPickable> AllPickables = new();
         void Start()
         {
             InputProvider.Instance.SelectHotbarAxis.Subscribe(axis => _hotbar.Scroll(axis, _items, CheckItem)).AddTo(this);

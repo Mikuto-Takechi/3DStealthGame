@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: FlashLight
   m_EditorClassIdentifier: 
   Name: "\u61D0\u4E2D\u96FB\u706F"
-  Image: {fileID: 0}
+  Icon: {fileID: 21300000, guid: a8a8192519f1190408e23d396a499fdd, type: 3}
   Object: {fileID: 1002705123656268, guid: 3cfae3afef373bc4c9f0be649b4c431b, type: 3}

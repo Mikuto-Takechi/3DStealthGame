@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -12,6 +13,7 @@ namespace MonstersDomain
         Vector3ReactiveProperty _updateAngle = new();
         List<IPickable> _pickableList = new();
         IPickable _canPickUp;
+        IDisposable _disposable;
         void Start()
         {
             _main = Camera.main;
@@ -29,6 +31,7 @@ namespace MonstersDomain
                         _itemDotThreshold)
                     {
                         InteractionMessage.Instance.WriteText("[E] 拾う");
+                        CheckIfSubscribed(pickable);
                         _canPickUp = pickable;
                         foundPickable = true;
                         break;
@@ -38,6 +41,7 @@ namespace MonstersDomain
                 if (!foundPickable)
                 {
                     InteractionMessage.Instance.WriteText("");
+                    _disposable?.Dispose();
                     _canPickUp = null;
                 }
             }
@@ -59,6 +63,19 @@ namespace MonstersDomain
             if (other.TryGetComponent(out IPickable pickable))
             {
                 _pickableList = _pickableList.Where(p => p.GetHashCode() != pickable.GetHashCode()).ToList();
+            }
+        }
+
+        void CheckIfSubscribed(IPickable pickable)
+        {
+            if (_disposable == null)
+            {
+                _disposable = InputProvider.Instance.InteractTrigger.Subscribe(_=>pickable.PickUp()).AddTo(this);
+            }
+            else
+            {
+                _disposable?.Dispose();
+                _disposable = InputProvider.Instance.InteractTrigger.Subscribe(_=>pickable.PickUp()).AddTo(this);
             }
         }
     }

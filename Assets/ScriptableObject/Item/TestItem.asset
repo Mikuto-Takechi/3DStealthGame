@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd2a3cfe8a9a964e921e2c7562c7385, type: 3}
   m_Name: TestItem
   m_EditorClassIdentifier: 
-  Name: "\u30C6\u30B9\u30C8\u7528\u30A2\u30A4\u30C6\u30E0"
-  Image: {fileID: 0}
-  Object: {fileID: 0}
+  Name: "\u5B9D\u77F3"
+  Icon: {fileID: 21300000, guid: 01461f2d36b528542b1371a044db2800, type: 3}
+  Object: {fileID: 1000010880751780, guid: c3c0707254334a64ca8198f7486e977d, type: 3}
