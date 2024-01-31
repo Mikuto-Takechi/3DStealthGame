@@ -6,24 +6,24 @@ namespace MonstersDomain
     public class InventorySystem : MonoBehaviour
     {
         [SerializeField] ItemDataBase _itemDataBase;
-        List<ItemId> _itemList = new();
+        List<ItemId> _itemContainer = new();
         /// <summary>インベントリにアイテムを追加する</summary>
-        public void Add(InventoryItemData data)
+        public void Add(ItemData data)
         {
-            _itemList.Add(data.Id);
+            _itemContainer.Add(data.Id);
         }
 
         /// <summary>インベントリからアイテムを取り出す</summary>
         public void Drop(int index)
         {
-            Instantiate(_itemDataBase.ItemDic[_itemList[index]].FieldPrefab);
-            _itemList.RemoveAt(index);
+            Instantiate(_itemDataBase[_itemContainer[index]].FieldPrefab);
+            _itemContainer.RemoveAt(index);
         }
 
         /// <summary>インベントリのアイテムを手に装備する</summary>
         public void Equip(int index)
         {
-            Instantiate(_itemDataBase.ItemDic[_itemList[index]].EquipmentPrefab);
+            Instantiate(_itemDataBase[_itemContainer[index]].EquipmentPrefab);
         }
     }
 }

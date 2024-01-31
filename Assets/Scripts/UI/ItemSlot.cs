@@ -8,10 +8,10 @@ namespace MonstersDomain
         [SerializeField] Image _icon;
         [SerializeField] Text _label;
         
-        public void Set(InventoryItemData inventoryItemData)
+        public void Set(ItemData itemData)
         {
-            _icon.sprite = inventoryItemData.Icon;
-            _label.text = inventoryItemData.DisplayName;
+            _icon.sprite = itemData.Icon;
+            _label.text = itemData.DisplayName;
         }
     }
 }

@@ -1,19 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace MonstersDomain
 {
-    [CreateAssetMenu(fileName = "ItemDataBase", menuName = "ScriptableObjects/ItemDataBase", order = 1)]
+    [CreateAssetMenu(menuName = "ScriptableObjects/ItemDataBase")]
     public class ItemDataBase : ScriptableObject
     {
-        public InventoryItemData[] Items;
-        Dictionary<ItemId, InventoryItemData> _itemDic = new();
-        public Dictionary<ItemId, InventoryItemData> ItemDic => _itemDic;
-        ItemDataBase()
+        [SerializeField] List<ItemData> _items = new();
+        public ItemData this[ItemId key]
         {
-            foreach (var item in Items)
+            get
             {
-                _itemDic.Add(item.Id, item);
+                return _items.FirstOrDefault(itemData => itemData.Id == key);
             }
         }
     }

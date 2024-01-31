@@ -5,7 +5,7 @@ namespace MonstersDomain
 {
     public class ItemManager : SingletonBase<ItemManager>
     {
-        [SerializeField] InventoryItemData[] _items;
+        [SerializeField] ItemData[] _items;
         [SerializeField] Hotbar _hotbar;
         [SerializeField] Transform _itemAnchor;
         [SerializeField] Animator _armsAnimator;

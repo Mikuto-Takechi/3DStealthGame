@@ -2,8 +2,8 @@
 
 namespace  MonstersDomain
 {
-    [CreateAssetMenu(menuName = "ScriptableObjects/Inventory Item Data")]
-    public class InventoryItemData : ScriptableObject
+    [CreateAssetMenu(menuName = "ScriptableObjects/Item Data")]
+    public class ItemData : ScriptableObject
     {
         [SerializeField] ItemId _id;
         [SerializeField] string _displayName;
@@ -15,11 +15,5 @@ namespace  MonstersDomain
         public Sprite Icon => _icon;
         public GameObject EquipmentPrefab => _equipmentPrefab;
         public GameObject FieldPrefab => _fieldPrefab;
-    }
-
-    public enum ItemId
-    {
-        FlashLight,
-        KeyItem,
     }
 }

@@ -32,7 +32,7 @@ namespace MonstersDomain
             _slotList[_slotCount / 2].transform.localScale = _selectScale;
         }
 
-        public void UpdateSlots(InventoryItemData[] items)
+        public void UpdateSlots(ItemData[] items)
         {
             int setIndex = Algorithm.CircularBuffer(_selectIndex, items.Length);
 
@@ -53,7 +53,7 @@ namespace MonstersDomain
             }
         }
 
-        public void Scroll(float input, InventoryItemData[] items, Action callback)
+        public void Scroll(float input, ItemData[] items, Action callback)
         {
             if (_sequence != null) return;
             if (input > 0)
