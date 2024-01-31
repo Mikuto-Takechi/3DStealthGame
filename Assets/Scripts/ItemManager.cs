@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using System;
+using UniRx;
 using UnityEngine;
 
 namespace MonstersDomain
@@ -16,6 +17,7 @@ namespace MonstersDomain
         {
             InputProvider.Instance.SelectHotbarAxis.Subscribe(axis => _hotbar.Scroll(axis, ItemContainer, EquipmentItem)).AddTo(this);
             InputProvider.Instance.UseTrigger.Subscribe(UseItem).AddTo(this);
+            InputProvider.Instance.DropTrigger.Subscribe(_=> Drop(_hotbar.SelectIndex)).AddTo(this);
             //  アイテムコンテナが更新されたらスロットも更新する
             ItemContainer.ObserveCountChanged().Subscribe(_=>
             {
@@ -29,11 +31,14 @@ namespace MonstersDomain
         /// </summary>
         void EquipmentItem()
         {
-            if (ItemContainer.Count <= 0) return;
             UnEquipment();
+            if (ItemContainer.Count <= 0)
+            {
+                _armsAnimator.SetBool("GrabItem", false);
+                return;
+            }
             if (!EquippedItem)
             {
-                
                 Equipment(_hotbar.SelectIndex);
                 _armsAnimator.SetBool("GrabItem", true);
             }
@@ -54,6 +59,12 @@ namespace MonstersDomain
 
         protected override void OnDrop()
         {
+            if (_hotbar.SelectIndex >= ItemContainer.Count && ItemContainer.Count > 0)
+            {
+                _hotbar.SelectIndex = ItemContainer.Count - 1;
+            }
+            
+            AudioManager.Instance.PlaySE(SE.Drop);
             EquipmentItem();
             _hotbar.UpdateSlots(ItemContainer);
         }

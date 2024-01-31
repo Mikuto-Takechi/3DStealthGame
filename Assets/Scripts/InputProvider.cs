@@ -30,6 +30,7 @@ namespace MonstersDomain
         public Subject<float> SelectHotbarAxis { get; } = new();
         public Subject<Unit> UseTrigger { get; } = new();
         public Subject<Unit> InteractTrigger { get; } = new();
+        public Subject<Unit> DropTrigger { get; } = new();
 
         void OnMove(InputAction.CallbackContext context)
         {
@@ -79,6 +80,10 @@ namespace MonstersDomain
         {
             if (context.performed) InteractTrigger.OnNext(Unit.Default);
         }
+        void OnDrop(InputAction.CallbackContext context)
+        {
+            if (context.performed) DropTrigger.OnNext(Unit.Default);
+        }
 
         public void BindCharacterInput()
         {
@@ -92,6 +97,7 @@ namespace MonstersDomain
             _gameInputs.InGame.Dance.performed += OnDance;
             _gameInputs.InGame.Use.performed += OnUse;
             _gameInputs.InGame.Interact.performed += OnInteract;
+            _gameInputs.InGame.Drop.performed += OnDrop;
             _isBindCharacterInput = true;
         }
 
@@ -107,6 +113,7 @@ namespace MonstersDomain
             _gameInputs.InGame.Dance.performed -= OnDance;
             _gameInputs.InGame.Use.performed -= OnUse;
             _gameInputs.InGame.Interact.performed -= OnInteract;
+            _gameInputs.InGame.Drop.performed -= OnDrop;
             _isBindCharacterInput = false;
             MoveDirection = Vector3.zero;
             CrouchSwitch.Value = false;

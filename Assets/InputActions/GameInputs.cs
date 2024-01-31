@@ -100,6 +100,15 @@ namespace MonstersDomain
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Drop"",
+                    ""type"": ""Button"",
+                    ""id"": ""de789a89-2158-446e-a1e3-45497e4ae3e1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -311,6 +320,17 @@ namespace MonstersDomain
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""348a18db-2325-401e-9f3e-9a4b7d1f145d"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -327,6 +347,7 @@ namespace MonstersDomain
             m_InGame_SelectHotbar = m_InGame.FindAction("SelectHotbar", throwIfNotFound: true);
             m_InGame_Use = m_InGame.FindAction("Use", throwIfNotFound: true);
             m_InGame_Interact = m_InGame.FindAction("Interact", throwIfNotFound: true);
+            m_InGame_Drop = m_InGame.FindAction("Drop", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -396,6 +417,7 @@ namespace MonstersDomain
         private readonly InputAction m_InGame_SelectHotbar;
         private readonly InputAction m_InGame_Use;
         private readonly InputAction m_InGame_Interact;
+        private readonly InputAction m_InGame_Drop;
         public struct InGameActions
         {
             private @GameInputs m_Wrapper;
@@ -408,6 +430,7 @@ namespace MonstersDomain
             public InputAction @SelectHotbar => m_Wrapper.m_InGame_SelectHotbar;
             public InputAction @Use => m_Wrapper.m_InGame_Use;
             public InputAction @Interact => m_Wrapper.m_InGame_Interact;
+            public InputAction @Drop => m_Wrapper.m_InGame_Drop;
             public InputActionMap Get() { return m_Wrapper.m_InGame; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -441,6 +464,9 @@ namespace MonstersDomain
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Drop.started += instance.OnDrop;
+                @Drop.performed += instance.OnDrop;
+                @Drop.canceled += instance.OnDrop;
             }
 
             private void UnregisterCallbacks(IInGameActions instance)
@@ -469,6 +495,9 @@ namespace MonstersDomain
                 @Interact.started -= instance.OnInteract;
                 @Interact.performed -= instance.OnInteract;
                 @Interact.canceled -= instance.OnInteract;
+                @Drop.started -= instance.OnDrop;
+                @Drop.performed -= instance.OnDrop;
+                @Drop.canceled -= instance.OnDrop;
             }
 
             public void RemoveCallbacks(IInGameActions instance)
@@ -496,6 +525,7 @@ namespace MonstersDomain
             void OnSelectHotbar(InputAction.CallbackContext context);
             void OnUse(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
+            void OnDrop(InputAction.CallbackContext context);
         }
     }
 }

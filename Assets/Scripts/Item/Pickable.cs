@@ -7,7 +7,7 @@ namespace MonstersDomain
         [SerializeField] ItemId _itemId;
         public void PickUp()
         {
-            print("拾った");
+            AudioManager.Instance.PlaySE(SE.Drop);
             InteractionMessage.Instance.WriteText("");
             ItemManager.Instance.Add(_itemId);
             Destroy(gameObject);

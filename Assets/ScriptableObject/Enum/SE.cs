@@ -7,4 +7,5 @@ public enum SE{
 		FlashLightOff = 2,
 		FlashLightOn  = 3,
 		Roar          = 4,
+		Drop          = 5,
 }

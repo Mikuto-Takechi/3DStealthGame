@@ -92,6 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6296a8ea3ff8a8c4998b2a3ff1444ba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _notContainsImage: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
   _icon: {fileID: 1898475351900000460}
   _label: {fileID: 669773847209277422}
   _rightEdge: {fileID: 8326807170917596310}

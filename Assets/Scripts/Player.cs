@@ -38,7 +38,7 @@ namespace MonstersDomain
         Collider _bodyCollider;
 
         [SerializeField] [Tooltip("レイキャストから除外するレイヤー")]
-        LayerMask _layerMask;
+        LayerMask _ignoreLayer;
 
         [SerializeField] [Tooltip("しゃがみ時に立ち上がれる高さかを確認するための距離")]
         float _checkCeilingDistance = 1.9f;
@@ -46,7 +46,6 @@ namespace MonstersDomain
         [SerializeField] [Tooltip("スタミナゲージを表示するUI")]
         ShrinkBar _staminaBar;
 
-        //[SerializeField] [Tooltip("")] Transform _stepRayLower;
         [SerializeField] [Tooltip("")] Transform _stepRayUpper;
         [SerializeField] [Tooltip("")] float _stepHeight = 0.3f;
         [SerializeField] [Tooltip("")] float _stepSmooth = 0.1f;
@@ -134,7 +133,7 @@ namespace MonstersDomain
             {
                 _disposable = _updatePosition.SkipLatestValueOnSubscribe()
                     .Where(_ => !Physics.SphereCast(new Ray(transform.position, Vector3.up), 0.3f,
-                        _checkCeilingDistance, ~_layerMask))
+                        _checkCeilingDistance, ~_ignoreLayer))
                     .First().Subscribe(_ =>
                     {
                         _disposable = null;
@@ -233,11 +232,11 @@ namespace MonstersDomain
         {
             RaycastHit hitLower;
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitLower,
-                    0.6f, ~_layerMask))
+                    0.6f, ~_ignoreLayer))
             {
                 RaycastHit hitUpper;
                 if (!Physics.Raycast(_stepRayUpper.position, transform.TransformDirection(Vector3.forward), out hitUpper,
-                        0.7f, ~_layerMask))
+                        0.7f, ~_ignoreLayer))
                 {
                     _rb.position += new Vector3(0, _stepSmooth,0);
                 }

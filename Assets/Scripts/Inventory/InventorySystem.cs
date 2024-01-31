@@ -1,3 +1,4 @@
+using MonstersDomain.Common;
 using UniRx;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ namespace MonstersDomain
         /// <summary>インベントリからアイテムを取り出す</summary>
         public void Drop(int index)
         {
+            if (ItemContainer.Count <= 0 || !ArrayUtil.CheckIndexOutOfRange(ItemContainer, index)) return;
             var obj =  Instantiate(_itemDataBase[ItemContainer[index]].FieldPrefab);
             obj.transform.position = _dropAnchor.position;
             ItemContainer.RemoveAt(index);
@@ -27,7 +29,7 @@ namespace MonstersDomain
         /// <summary>インベントリのアイテムを手に装備する</summary>
         protected void Equipment(int index)
         {
-            if (ItemContainer.Count <= 0) return;
+            if (ItemContainer.Count <= 0 || !ArrayUtil.CheckIndexOutOfRange(ItemContainer, index)) return;
             EquippedItem = Instantiate(_itemDataBase[ItemContainer[index]].EquipmentPrefab, _equipmentAnchor);
         }
 

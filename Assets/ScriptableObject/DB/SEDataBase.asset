@@ -25,3 +25,5 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: 0c993a246fc37b94bac92b2f3a9bac37, type: 3}
   - Name: Roar
     Clip: {fileID: 8300000, guid: e28955ee1c7e4cd45bea222e3c95773a, type: 3}
+  - Name: Drop
+    Clip: {fileID: 8300000, guid: 1934545bcfae0024d9e3ea32df87c075, type: 3}
