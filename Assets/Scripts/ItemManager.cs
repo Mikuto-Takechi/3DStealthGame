@@ -3,47 +3,48 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
-    public class ItemManager : SingletonBase<ItemManager>
+    public class ItemManager : InventorySystem
     {
-        [SerializeField] ItemData[] _items;
+        public static ItemManager Instance;
         [SerializeField] Hotbar _hotbar;
-        [SerializeField] Transform _itemAnchor;
         [SerializeField] Animator _armsAnimator;
-        GameObject _grabItem;
+        void Awake()
+        {
+            Instance ??= this;
+        }
         void Start()
         {
-            InputProvider.Instance.SelectHotbarAxis.Subscribe(axis => _hotbar.Scroll(axis, _items, CheckItem)).AddTo(this);
+            InputProvider.Instance.SelectHotbarAxis.Subscribe(axis => _hotbar.Scroll(axis, ItemContainer, EquipmentItem)).AddTo(this);
             InputProvider.Instance.UseTrigger.Subscribe(UseItem).AddTo(this);
-            _hotbar.UpdateSlots(_items);
-            CheckItem();
+            //  アイテムコンテナが更新されたらスロットも更新する
+            ItemContainer.ObserveCountChanged().Subscribe(_=>_hotbar.UpdateSlots(ItemContainer)).AddTo(this);
+            EquipmentItem();
         }
         /// <summary>
         /// ホットバーで選択しているアイテムを見て手にセットする
         /// </summary>
-        void CheckItem()
+        void EquipmentItem()
         {
-            var item = _items[_hotbar.SelectIndex].EquipmentPrefab;
-            Destroy(_grabItem);
-            if (item != null)
+            if (ItemContainer.Count <= 0) return;
+            if (!EquippedItem)
             {
-                _grabItem = Instantiate(item, _itemAnchor);
+                Equipment(_hotbar.SelectIndex);
                 _armsAnimator.SetBool("GrabItem", true);
             }
             else
             {
+                UnEquipment();
                 _armsAnimator.SetBool("GrabItem", false);
             }
         }
-
+        
         void UseItem(Unit _)
         {
-            if (!_grabItem) return;
-            if (_grabItem.TryGetComponent(out IUsable usable))
+            if (!EquippedItem) return;
+            if (EquippedItem.TryGetComponent(out IUsable usable))
             {
                 usable.Use();
             }
         }
-
-        protected override void AwakeFunction() { }
     }
 }

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd2a3cfe8a9a964e921e2c7562c7385, type: 3}
   m_Name: FlashLight
   m_EditorClassIdentifier: 
-  Name: "\u61D0\u4E2D\u96FB\u706F"
-  Icon: {fileID: 21300000, guid: a8a8192519f1190408e23d396a499fdd, type: 3}
-  Object: {fileID: 1002705123656268, guid: 3cfae3afef373bc4c9f0be649b4c431b, type: 3}
+  _id: 0
+  _displayName: "\u61D0\u4E2D\u96FB\u706F"
+  _icon: {fileID: 21300000, guid: a8a8192519f1190408e23d396a499fdd, type: 3}
+  _equipmentPrefab: {fileID: 1002705123656268, guid: 3cfae3afef373bc4c9f0be649b4c431b, type: 3}
+  _fieldPrefab: {fileID: 333331696156879865, guid: e25072b101500a343aabc101d1d8cbc2, type: 3}
