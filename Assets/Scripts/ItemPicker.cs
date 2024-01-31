@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
-using UniRx.Triggers;
 using UnityEngine;
 
 namespace MonstersDomain
@@ -49,7 +48,6 @@ namespace MonstersDomain
         void Update()
         {
             _updateAngle.Value = _main.transform.localEulerAngles;
-            print(_pickableList.Count);
         }
 
         void OnTriggerEnter(Collider other)

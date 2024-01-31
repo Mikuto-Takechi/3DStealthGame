@@ -30,14 +30,15 @@ namespace MonstersDomain
         void EquipmentItem()
         {
             if (ItemContainer.Count <= 0) return;
+            UnEquipment();
             if (!EquippedItem)
             {
+                
                 Equipment(_hotbar.SelectIndex);
                 _armsAnimator.SetBool("GrabItem", true);
             }
             else
             {
-                UnEquipment();
                 _armsAnimator.SetBool("GrabItem", false);
             }
         }
