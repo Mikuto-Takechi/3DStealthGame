@@ -44,7 +44,7 @@ namespace MonstersDomain
             for (int i = _slotCount / 2; i < _slotCount; i++)
             {
                 //  選択しているスロットから後ろを埋める
-                _slotContainer[i].Set(_itemDataBase[itemContainer[setIndex]]);
+                _slotContainer[i].Set(_itemDataBase[itemContainer[setIndex]], itemContainer.Count - 1 == setIndex, 0 == setIndex);
                 setIndex = Algorithm.CircularBuffer(setIndex + 1, itemContainer.Count);
             }
 
@@ -53,7 +53,7 @@ namespace MonstersDomain
             for (int i = _slotCount / 2 - 1; i >= 0; i--)
             {
                 //  選択しているスロットの前を埋める
-                _slotContainer[i].Set(_itemDataBase[itemContainer[setIndex]]);
+                _slotContainer[i].Set(_itemDataBase[itemContainer[setIndex]], itemContainer.Count - 1 == setIndex, 0 == setIndex);
                 setIndex = Algorithm.CircularBuffer(setIndex - 1, itemContainer.Count());
             }
         }

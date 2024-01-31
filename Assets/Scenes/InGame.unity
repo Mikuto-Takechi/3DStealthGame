@@ -1354,6 +1354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemDataBase: {fileID: 11400000, guid: 0aaee8a92081aa74d8ecc5276712dd02, type: 2}
   _equipmentAnchor: {fileID: 1822785488}
+  _dropAnchor: {fileID: 1278450136}
   _hotbar: {fileID: 1727190217}
   _armsAnimator: {fileID: 8817420703144150247}
 --- !u!4 &1024924443
@@ -1644,6 +1645,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1271576955897917939, guid: 557c62041ceb5eb4b8ae67ee51c80ebd, type: 3}
   m_PrefabInstance: {fileID: 1178782853}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1278450136 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1433761453885230822, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
+  m_PrefabInstance: {fileID: 835135435689920113}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1343561430
 GameObject:

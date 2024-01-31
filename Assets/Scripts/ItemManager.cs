@@ -17,7 +17,11 @@ namespace MonstersDomain
             InputProvider.Instance.SelectHotbarAxis.Subscribe(axis => _hotbar.Scroll(axis, ItemContainer, EquipmentItem)).AddTo(this);
             InputProvider.Instance.UseTrigger.Subscribe(UseItem).AddTo(this);
             //  アイテムコンテナが更新されたらスロットも更新する
-            ItemContainer.ObserveCountChanged().Subscribe(_=>_hotbar.UpdateSlots(ItemContainer)).AddTo(this);
+            ItemContainer.ObserveCountChanged().Subscribe(_=>
+            {
+                _hotbar.UpdateSlots(ItemContainer);
+                EquipmentItem();
+            }).AddTo(this);
             EquipmentItem();
         }
         /// <summary>
@@ -45,6 +49,12 @@ namespace MonstersDomain
             {
                 usable.Use();
             }
+        }
+
+        protected override void OnDrop()
+        {
+            EquipmentItem();
+            _hotbar.UpdateSlots(ItemContainer);
         }
     }
 }

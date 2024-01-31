@@ -26,7 +26,7 @@ namespace MonstersDomain
                 bool foundPickable = false;
                 foreach (var pickable in _pickableList)
                 {
-                    if (Vector3.Dot(_main.transform.forward,
+                    if (pickable != null && Vector3.Dot(_main.transform.forward,
                             (pickable.transform.position - _main.transform.position).normalized) >
                         _itemDotThreshold)
                     {
@@ -36,6 +36,8 @@ namespace MonstersDomain
                         break;
                     }
                 }
+
+                _pickableList.RemoveAll(p => p == null);
 
                 if (!foundPickable)
                 {
@@ -56,13 +58,6 @@ namespace MonstersDomain
             {
                 //  リストに追加
                 _pickableList.Add(pickable);
-                //  追加時のインデックス番号を控えておいてDestroyが呼ばれた際はリストから削除する
-                int index = _pickableList.Count - 1;
-                pickable.OnDestroyAsObservable().Subscribe(_ =>
-                {
-                    if (_pickableList.Count > 0)
-                        _pickableList.RemoveAt(index);
-                });
             }
         }
         void OnTriggerExit(Collider other)

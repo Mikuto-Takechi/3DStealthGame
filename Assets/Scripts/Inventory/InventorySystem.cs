@@ -7,8 +7,10 @@ namespace MonstersDomain
     {
         [SerializeField] ItemDataBase _itemDataBase;
         [SerializeField] Transform _equipmentAnchor;
+        [SerializeField] Transform _dropAnchor;
         protected ReactiveCollection<ItemId> ItemContainer { get; } = new();
         protected GameObject EquippedItem { get; private set; }
+        protected abstract void OnDrop();
 
         /// <summary>インベントリにアイテムを追加する</summary>
         public void Add(ItemId id) => ItemContainer.Add(id);
@@ -16,8 +18,10 @@ namespace MonstersDomain
         /// <summary>インベントリからアイテムを取り出す</summary>
         public void Drop(int index)
         {
-            Instantiate(_itemDataBase[ItemContainer[index]].FieldPrefab);
+            var obj =  Instantiate(_itemDataBase[ItemContainer[index]].FieldPrefab);
+            obj.transform.position = _dropAnchor.position;
             ItemContainer.RemoveAt(index);
+            OnDrop();
         }
 
         /// <summary>インベントリのアイテムを手に装備する</summary>
