@@ -42,7 +42,7 @@ namespace MonstersDomain
         }
         void EnterTheLocker()
         {
-            InputProvider.Instance.UnBindCharacterInput();
+            InputProvider.Instance.CurrentBindInput &= ~(ActionType.Move | ActionType.Use | ActionType.Crouch | ActionType.Drop | ActionType.Jump);
             _subscriptions.ForEach(sub => sub.Dispose());
             _directors[0].Play();
             _directors[0].stopped += HidingInLocker;
@@ -67,7 +67,7 @@ namespace MonstersDomain
         }
         void Exit(PlayableDirector playableDirector)
         {
-            InputProvider.Instance.UnBindCharacterInput();
+            InputProvider.Instance.CurrentBindInput |= ActionType.Move | ActionType.Use | ActionType.Crouch | ActionType.Drop | ActionType.Jump;
             _directors[2].stopped -= Exit;
             _player.State.Value = PlayerState.Idle;
             _player.PovController.Enabled = true;

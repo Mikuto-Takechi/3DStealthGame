@@ -1,14 +1,52 @@
+using System;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace MonstersDomain
 {
+    [Flags]
+    public enum ActionType
+    {
+        Move = 1 << 0,
+
+        //BindedMove = 1 << 1,
+        Jump = 1 << 2,
+
+        //BindedJump = 1 << 3,
+        Crouch = 1 << 4,
+
+        //BindedCrouch = 1 << 5,
+        Run = 1 << 6,
+
+        //BindedRun = 1 << 7,
+        Dance = 1 << 8,
+
+        //BindedDance = 1 << 9,
+        Use = 1 << 10,
+
+        //BindedUse = 1 << 11,
+        Interact = 1 << 12,
+
+        //BindedInteract = 1 << 13,
+        Drop = 1 << 14,
+
+        //BindedDrop = 1 << 15,
+        SelectHotbar = 1 << 16
+        //BindedSelectHotbar = 1 << 17,
+    }
+
     public class InputProvider
     {
+        readonly Dictionary<ActionType, (InputAction, Action<InputAction.CallbackContext>)> _callBackDictionary = new();
+
+        readonly IDisposable _disposable;
+
         readonly GameInputs _gameInputs;
-        bool _isBindCharacterInput;
-        bool _isBindGUIInput;
+
+        readonly Subject<ActionType> _notifyBindInput = new();
+        ActionType _currentBindInput;
 
         InputProvider()
         {
@@ -16,9 +54,31 @@ namespace MonstersDomain
             {
                 _instance = this;
                 _gameInputs = new GameInputs();
-                BindCharacterInput();
-                BindGUIInput();
+                _callBackDictionary.Add(ActionType.Move, (_gameInputs.InGame.Move, OnMove));
+                _callBackDictionary.Add(ActionType.Jump, (_gameInputs.InGame.Jump, OnJump));
+                _callBackDictionary.Add(ActionType.Crouch, (_gameInputs.InGame.Crouch, OnCrouch));
+                _callBackDictionary.Add(ActionType.Run, (_gameInputs.InGame.Run, OnRun));
+                _callBackDictionary.Add(ActionType.Dance, (_gameInputs.InGame.Dance, OnDance));
+                _callBackDictionary.Add(ActionType.Use, (_gameInputs.InGame.Use, OnUse));
+                _callBackDictionary.Add(ActionType.Interact, (_gameInputs.InGame.Interact, OnInteract));
+                _callBackDictionary.Add(ActionType.Drop, (_gameInputs.InGame.Drop, OnDrop));
+                _callBackDictionary.Add(ActionType.SelectHotbar, (_gameInputs.InGame.SelectHotbar, OnSelectHotbar));
+                _disposable = _notifyBindInput.Subscribe(_ => UpdateBindInput());
+                CurrentBindInput = (ActionType)87381;
                 _gameInputs.Enable();
+            }
+        }
+
+        public ActionType CurrentBindInput
+        {
+            get => _currentBindInput;
+            set
+            {
+                if (!_currentBindInput.Equals(value))
+                {
+                    _currentBindInput = value;
+                    _notifyBindInput.OnNext(value);
+                }
             }
         }
 
@@ -72,69 +132,54 @@ namespace MonstersDomain
         {
             if (context.performed) SelectHotbarAxis.OnNext(context.ReadValue<float>());
         }
+
         void OnUse(InputAction.CallbackContext context)
         {
             if (context.performed) UseTrigger.OnNext(Unit.Default);
         }
+
         void OnInteract(InputAction.CallbackContext context)
         {
             if (context.performed) InteractTrigger.OnNext(Unit.Default);
         }
+
         void OnDrop(InputAction.CallbackContext context)
         {
             if (context.performed) DropTrigger.OnNext(Unit.Default);
         }
 
-        public void BindCharacterInput()
+        void UpdateBindInput()
         {
-            if (_isBindCharacterInput) return;
-            _gameInputs.InGame.Move.performed += OnMove;
-            _gameInputs.InGame.Move.canceled += OnMove;
-            _gameInputs.InGame.Jump.performed += OnJump;
-            _gameInputs.InGame.Crouch.performed += OnCrouch;
-            _gameInputs.InGame.Crouch.canceled += OnCrouch;
-            _gameInputs.InGame.Run.performed += OnRun;
-            _gameInputs.InGame.Dance.performed += OnDance;
-            _gameInputs.InGame.Use.performed += OnUse;
-            _gameInputs.InGame.Interact.performed += OnInteract;
-            _gameInputs.InGame.Drop.performed += OnDrop;
-            _isBindCharacterInput = true;
-        }
+            //Debug.Log(Convert.ToString((int)_currentBindInput, 2));
+            foreach (var callback in _callBackDictionary)
+                //  指定されたビットフラグが立っているかつそのビット<<1が立っていないとき
+                if ((int)(_currentBindInput & callback.Key) != 0
+                    && (int)(_currentBindInput & (ActionType)((int)callback.Key << 1)) == 0)
+                {
+                    //Debug.Log("Add" + Enum.GetName(typeof(ActionType), callback.Key));
+                    _currentBindInput |= (ActionType)((int)callback.Key << 1);
+                    callback.Value.Item1.performed += callback.Value.Item2;
+                    callback.Value.Item1.canceled += callback.Value.Item2;
+                }
+                else if ((int)(_currentBindInput & callback.Key) == 0
+                         && (int)(_currentBindInput & (ActionType)((int)callback.Key << 1)) != 0)
+                {
+                    //  指定されたビットが立っていないかつそのビット<<1が立っているとき
+                    //  指定されたビット<<1のビットをたおす
+                    //Debug.Log("Remove" + Enum.GetName(typeof(ActionType), callback.Key));
+                    _currentBindInput &= ~(ActionType)((int)callback.Key << 1);
+                    callback.Value.Item1.performed -= callback.Value.Item2;
+                    callback.Value.Item1.canceled -= callback.Value.Item2;
+                    if(callback.Key == ActionType.Move) MoveDirection = Vector3.zero;
+                    if(callback.Key == ActionType.Crouch) CrouchSwitch.Value = false;
+                }
 
-        public void UnBindCharacterInput()
-        {
-            if (!_isBindCharacterInput) return;
-            _gameInputs.InGame.Move.performed -= OnMove;
-            _gameInputs.InGame.Move.canceled -= OnMove;
-            _gameInputs.InGame.Jump.performed -= OnJump;
-            _gameInputs.InGame.Crouch.performed -= OnCrouch;
-            _gameInputs.InGame.Crouch.canceled -= OnCrouch;
-            _gameInputs.InGame.Run.performed -= OnRun;
-            _gameInputs.InGame.Dance.performed -= OnDance;
-            _gameInputs.InGame.Use.performed -= OnUse;
-            _gameInputs.InGame.Interact.performed -= OnInteract;
-            _gameInputs.InGame.Drop.performed -= OnDrop;
-            _isBindCharacterInput = false;
-            MoveDirection = Vector3.zero;
-            CrouchSwitch.Value = false;
+            //Debug.Log(Convert.ToString((int)_currentBindInput, 2));
         }
-
-        public void BindGUIInput()
-        {
-            if (_isBindGUIInput) return;
-            _gameInputs.InGame.SelectHotbar.performed += OnSelectHotbar;
-            _isBindGUIInput = true;
-        }
-        public void UnBindGUIInput()
-        {
-            if (!_isBindGUIInput) return;
-            _gameInputs.InGame.SelectHotbar.performed -= OnSelectHotbar;
-            _isBindGUIInput = false;
-        }
-
         ~InputProvider()
         {
             _gameInputs?.Dispose();
+            _disposable?.Dispose();
         }
 
         #region PureSingleton
