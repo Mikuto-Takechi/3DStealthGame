@@ -22,4 +22,4 @@ MonoBehaviour:
     Value: 20
   _displayParameters:
   - ID: 0
-    UI: {fileID: 5057056494286274871, guid: c6ae6049fb536e74aaf1dcde7597fe99, type: 3}
+    UI: {fileID: 8635882774643240509, guid: c6ae6049fb536e74aaf1dcde7597fe99, type: 3}

@@ -1140,7 +1140,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -458, y: -222}
+  m_AnchoredPosition: {x: -465, y: -222}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &800771028
@@ -1503,7 +1503,7 @@ GameObject:
   - component: {fileID: 1041760021}
   m_Layer: 3
   m_Name: StepRayUpper
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7683,7 +7683,7 @@ GameObject:
   - component: {fileID: 1970327243}
   m_Layer: 9
   m_Name: ItemPicker
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14384,6 +14384,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1787044181541178166, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 2245032572253455219, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
       propertyPath: m_Name
       value: Player
@@ -14415,6 +14419,10 @@ PrefabInstance:
     - target: {fileID: 6884796081297127250, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 6943856588033617396, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7965111333085663520, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14456,9 +14464,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8363298937895816229, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 8528691865035574422, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
       propertyPath: m_Intensity
       value: 0.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 9152122182134990593, guid: 43aa32cddead1b54ebd21e647e28f45c, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -72843,7 +72859,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7679746612122032631, guid: 43c602b17886cb5448254b9cf14ae508, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 439
+      value: 1463
       objectReference: {fileID: 0}
     - target: {fileID: 7743734955916602588, guid: 43c602b17886cb5448254b9cf14ae508, type: 3}
       propertyPath: m_Layer

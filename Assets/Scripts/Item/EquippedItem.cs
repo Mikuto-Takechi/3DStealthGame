@@ -9,10 +9,10 @@ namespace MonstersDomain
         [SerializeField] protected List<ItemParameter> _parametersToModify;
         [SerializeField] protected List<ItemParameter> _requiredParameters;
         public List<DisplayParameter> ParametersUI { get; } = new();
-        public new void InheritParameters(List<ItemParameter> inheritParametersList, bool callByReference = false)
+        public void InheritParameters(List<ItemParameter> inheritParametersList, bool callByReference = false, Transform parameterUIAnchor = null)
         {
             base.InheritParameters(inheritParametersList, callByReference);
-            if (CurrentParametersList is { Count: > 0 })
+            if (CurrentParametersList is { Count: > 0 } && parameterUIAnchor)
             {
                 foreach (var parameter in CurrentParametersList)
                 {
@@ -22,7 +22,7 @@ namespace MonstersDomain
                         int displayIndex = displayParameterIds.IndexOf(parameter.ID);
                         int currentParamIndex = CurrentParametersList.IndexOf(parameter);
                         int defaultParamIndex = _itemData.DefaultParameters.IndexOf(parameter);
-                        var instance = Instantiate(_itemData.DisplayParameters[displayIndex].UI);
+                        var instance = Instantiate(_itemData.DisplayParameters[displayIndex].UI, parameterUIAnchor);
                         instance.Value = CurrentParametersList[currentParamIndex].Value /
                                          _itemData.DefaultParameters[defaultParamIndex].Value;
                         ParametersUI.Add(new(){ID = _itemData.DisplayParameters[displayIndex].ID, UI = instance});

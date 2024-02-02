@@ -37,12 +37,7 @@ namespace MonstersDomain
         {
             if (ItemContainer.Count <= 0 || !ArrayUtil.CheckIndexOutOfRange(ItemContainer, index)) return;
             EquippedItem = Instantiate(_itemDataBase[ItemContainer[index].Item1].EquipmentItem, _equipmentAnchor);
-            EquippedItem.InheritParameters(ItemContainer[index].Item2, true);
-            if (EquippedItem.ParametersUI.Count > 0)
-            {
-                foreach (var parameterUI in EquippedItem.ParametersUI)
-                    parameterUI.UI.transform.SetParent(_parameterUIAnchor);
-            }
+            EquippedItem.InheritParameters(ItemContainer[index].Item2, true, _parameterUIAnchor);
         }
 
         /// <summary>手に持っているアイテムを空にする</summary>

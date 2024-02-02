@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using System;
+using UniRx;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ namespace MonstersDomain
         [SerializeField] float _sightAngle = 45f;
         [SerializeField] SphereCollider _visionRange;
         [SerializeField] Color _visionRangeColor = Color.yellow;
+        [SerializeField] LayerMask _ignoreRaycast;
+        [SerializeField] Transform _headAnchor;
         public Subject<Player> DetectionTarget = new();
         public float SightAngle => _sightAngle;
         public float VisionRange => _visionRange.radius;
@@ -18,11 +21,12 @@ namespace MonstersDomain
         {
             if (other.CompareTag("Player"))
             {
-                Vector3 posDelta = other.transform.position - transform.position;
+                Vector3 posDelta = other.transform.position - _headAnchor.position;
                 float targetAngle = Vector3.Angle(transform.forward, posDelta);
                 if(targetAngle < _sightAngle)
                 {
-                    if(Physics.Raycast(transform.position,new Vector3(posDelta.x, 0, posDelta.z),out RaycastHit hit))
+                    Debug.DrawRay (_headAnchor.position, posDelta.normalized * posDelta.magnitude, Color.red, 0.1f, false);
+                    if(Physics.Raycast(_headAnchor.position,posDelta,out RaycastHit hit, posDelta.magnitude, ~_ignoreRaycast))
                     {
                         if (hit.collider.Equals(other))
                         {
