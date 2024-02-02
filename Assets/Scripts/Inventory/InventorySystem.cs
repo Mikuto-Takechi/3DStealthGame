@@ -10,9 +10,9 @@ namespace MonstersDomain
         [SerializeField] ItemDataBase _itemDataBase;
         [SerializeField] Transform _equipmentAnchor;
         [SerializeField] Transform _dropAnchor;
-        [SerializeField] GameObject _parameterUIAnchor;
+        [SerializeField] Transform _parameterUIAnchor;
         protected ReactiveCollection<(ItemId, List<ItemParameter>)> ItemContainer { get; } = new();
-        protected InstancedItem EquippedItem { get; private set; }
+        protected EquippedItem EquippedItem { get; private set; }
         protected abstract void OnDrop();
 
         /// <summary>インベントリにアイテムを追加する</summary>
@@ -23,7 +23,7 @@ namespace MonstersDomain
         {
             if (ItemContainer.Count <= 0 || !ArrayUtil.CheckIndexOutOfRange(ItemContainer, index)) return;
             var obj =  Instantiate(_itemDataBase[ItemContainer[index].Item1].DroppedItem);
-            if (_itemDataBase[ItemContainer[index].Item1].DefaultParametersList.Count > 0)
+            if (_itemDataBase[ItemContainer[index].Item1].DefaultParameters.Count > 0)
             {
                 obj.InheritParameters(ItemContainer[index].Item2);
             }
@@ -38,12 +38,10 @@ namespace MonstersDomain
             if (ItemContainer.Count <= 0 || !ArrayUtil.CheckIndexOutOfRange(ItemContainer, index)) return;
             EquippedItem = Instantiate(_itemDataBase[ItemContainer[index].Item1].EquipmentItem, _equipmentAnchor);
             EquippedItem.InheritParameters(ItemContainer[index].Item2, true);
-            if (ItemContainer[index].Item2 != null && ItemContainer[index].Item2.Count > 0)
+            if (EquippedItem.ParametersUI.Count > 0)
             {
-                foreach (var _ in ItemContainer[index].Item2)
-                {
-                    
-                }
+                foreach (var parameterUI in EquippedItem.ParametersUI)
+                    parameterUI.UI.transform.SetParent(_parameterUIAnchor);
             }
         }
 
@@ -52,6 +50,11 @@ namespace MonstersDomain
         {
             if (EquippedItem)
             {
+                if (EquippedItem.ParametersUI.Count > 0)
+                {
+                    foreach (var parameterUI in EquippedItem.ParametersUI)
+                        Destroy(parameterUI.UI.gameObject);
+                }
                 Destroy(EquippedItem.gameObject);
                 EquippedItem = null;
             }

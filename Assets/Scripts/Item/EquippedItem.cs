@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +8,7 @@ namespace MonstersDomain
     {
         [SerializeField] protected List<ItemParameter> _parametersToModify;
         [SerializeField] protected List<ItemParameter> _requiredParameters;
-        public List<ParameterUI> ParametersUI { get; private set; } = new();
+        public List<DisplayParameter> ParametersUI { get; } = new();
         public new void InheritParameters(List<ItemParameter> inheritParametersList, bool callByReference = false)
         {
             base.InheritParameters(inheritParametersList, callByReference);
@@ -16,6 +16,17 @@ namespace MonstersDomain
             {
                 foreach (var parameter in CurrentParametersList)
                 {
+                    var displayParameterIds = _itemData.DisplayParameters.Select(p => p.ID).ToList();
+                    if(displayParameterIds.Contains(parameter.ID))
+                    {
+                        int displayIndex = displayParameterIds.IndexOf(parameter.ID);
+                        int currentParamIndex = CurrentParametersList.IndexOf(parameter);
+                        int defaultParamIndex = _itemData.DefaultParameters.IndexOf(parameter);
+                        var instance = Instantiate(_itemData.DisplayParameters[displayIndex].UI);
+                        instance.Value = CurrentParametersList[currentParamIndex].Value /
+                                         _itemData.DefaultParameters[defaultParamIndex].Value;
+                        ParametersUI.Add(new(){ID = _itemData.DisplayParameters[displayIndex].ID, UI = instance});
+                    }
                 }
             }
         }
@@ -30,9 +41,15 @@ namespace MonstersDomain
                     if (modifiedParam.Value > 0)
                     {
                         modifiedParam.Value += modify.Value * deltaTime;
-                        int defaultIndex = _itemData.DefaultParametersList.IndexOf(modify);
-                        modifiedParam.Value = Mathf.Clamp(modifiedParam.Value, 0, _itemData.DefaultParametersList[defaultIndex].Value);
+                        int defaultIndex = _itemData.DefaultParameters.IndexOf(modify);
+                        modifiedParam.Value = Mathf.Clamp(modifiedParam.Value, 0, _itemData.DefaultParameters[defaultIndex].Value);
                         CurrentParametersList[index] = modifiedParam;
+                        var displayParameterIds = ParametersUI.Select(p => p.ID).ToList();
+                        if(displayParameterIds.Contains(modifiedParam.ID))
+                        {
+                            int displayIndex = displayParameterIds.IndexOf(modifiedParam.ID);
+                            ParametersUI[displayIndex].UI.Value = modifiedParam.Value / _itemData.DefaultParameters[defaultIndex].Value;
+                        }
                     }
                 }
             }

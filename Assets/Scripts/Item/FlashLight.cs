@@ -38,7 +38,7 @@ namespace MonstersDomain
 
         void Update()
         {
-            if (RequiredParameters())
+            if (_toggleLight && RequiredParameters())
             {
                 ModifyParameters(Time.deltaTime);
             }

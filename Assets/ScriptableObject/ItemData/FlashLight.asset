@@ -17,6 +17,9 @@ MonoBehaviour:
   _icon: {fileID: 21300000, guid: a8a8192519f1190408e23d396a499fdd, type: 3}
   _equipmentItem: {fileID: 4161468342383339224, guid: 3cfae3afef373bc4c9f0be649b4c431b, type: 3}
   _droppedItem: {fileID: 6210086027705960445, guid: e25072b101500a343aabc101d1d8cbc2, type: 3}
-  _defaultParametersList:
+  _defaultParameters:
   - ID: 0
     Value: 20
+  _displayParameters:
+  - ID: 0
+    UI: {fileID: 5057056494286274871, guid: c6ae6049fb536e74aaf1dcde7597fe99, type: 3}

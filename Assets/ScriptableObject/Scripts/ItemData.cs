@@ -10,15 +10,17 @@ namespace  MonstersDomain
         [SerializeField] ItemId _id;
         [SerializeField] string _displayName;
         [SerializeField] Sprite _icon;
-        [SerializeField] InstancedItem _equipmentItem;
+        [SerializeField] EquippedItem _equipmentItem;
         [SerializeField] DroppedItem _droppedItem;
-        [SerializeField] List<ItemParameter> _defaultParametersList;
+        [SerializeField] List<ItemParameter> _defaultParameters;
+        [SerializeField] List<DisplayParameter> _displayParameters;
         public ItemId Id => _id;
         public string DisplayName => _displayName;
         public Sprite Icon => _icon;
-        public InstancedItem EquipmentItem => _equipmentItem;
+        public EquippedItem EquipmentItem => _equipmentItem;
         public DroppedItem DroppedItem => _droppedItem;
-        public List<ItemParameter> DefaultParametersList => _defaultParametersList;
+        public List<ItemParameter> DefaultParameters => _defaultParameters;
+        public List<DisplayParameter> DisplayParameters => _displayParameters;
     }
     [Serializable]
     public struct ItemParameter : IEquatable<ItemParameter>
@@ -29,5 +31,12 @@ namespace  MonstersDomain
         {
             return other.ID == ID;
         }
+    }
+
+    [Serializable]
+    public struct DisplayParameter
+    {
+        public ParameterId ID;
+        public ParameterUI UI;
     }
 }
