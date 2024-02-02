@@ -10,31 +10,14 @@ namespace MonstersDomain
     public enum ActionType
     {
         Move = 1 << 0,
-
-        //BindedMove = 1 << 1,
         Jump = 1 << 2,
-
-        //BindedJump = 1 << 3,
         Crouch = 1 << 4,
-
-        //BindedCrouch = 1 << 5,
         Run = 1 << 6,
-
-        //BindedRun = 1 << 7,
         Dance = 1 << 8,
-
-        //BindedDance = 1 << 9,
         Use = 1 << 10,
-
-        //BindedUse = 1 << 11,
         Interact = 1 << 12,
-
-        //BindedInteract = 1 << 13,
         Drop = 1 << 14,
-
-        //BindedDrop = 1 << 15,
         SelectHotbar = 1 << 16
-        //BindedSelectHotbar = 1 << 17,
     }
 
     public class InputProvider
@@ -47,6 +30,9 @@ namespace MonstersDomain
 
         readonly Subject<ActionType> _notifyBindInput = new();
         ActionType _currentBindInput;
+        const ActionType AllActionType = ActionType.Move | ActionType.Jump | ActionType.Crouch | ActionType.Run |
+                                   ActionType.Dance | ActionType.Use | ActionType.Interact | ActionType.Drop |
+                                   ActionType.SelectHotbar;
 
         InputProvider()
         {
@@ -64,7 +50,7 @@ namespace MonstersDomain
                 _callBackDictionary.Add(ActionType.Drop, (_gameInputs.InGame.Drop, OnDrop));
                 _callBackDictionary.Add(ActionType.SelectHotbar, (_gameInputs.InGame.SelectHotbar, OnSelectHotbar));
                 _disposable = _notifyBindInput.Subscribe(_ => UpdateBindInput());
-                CurrentBindInput = (ActionType)87381;
+                CurrentBindInput |= AllActionType;
                 _gameInputs.Enable();
             }
         }
@@ -165,7 +151,7 @@ namespace MonstersDomain
                          && (int)(_currentBindInput & (ActionType)((int)callback.Key << 1)) != 0)
                 {
                     //  指定されたビットが立っていないかつそのビット<<1が立っているとき
-                    //  指定されたビット<<1のビットをたおす
+                    //  指定されたビットの<<1のビットを倒す
                     //Debug.Log("Remove" + Enum.GetName(typeof(ActionType), callback.Key));
                     _currentBindInput &= ~(ActionType)((int)callback.Key << 1);
                     callback.Value.Item1.performed -= callback.Value.Item2;

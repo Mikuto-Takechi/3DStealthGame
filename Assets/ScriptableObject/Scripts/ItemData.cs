@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace  MonstersDomain
 {
@@ -8,12 +10,24 @@ namespace  MonstersDomain
         [SerializeField] ItemId _id;
         [SerializeField] string _displayName;
         [SerializeField] Sprite _icon;
-        [SerializeField] GameObject _equipmentPrefab;
-        [SerializeField] GameObject _fieldPrefab;
+        [SerializeField] InstancedItem _equipmentItem;
+        [SerializeField] DroppedItem _droppedItem;
+        [SerializeField] List<ItemParameter> _defaultParametersList;
         public ItemId Id => _id;
         public string DisplayName => _displayName;
         public Sprite Icon => _icon;
-        public GameObject EquipmentPrefab => _equipmentPrefab;
-        public GameObject FieldPrefab => _fieldPrefab;
+        public InstancedItem EquipmentItem => _equipmentItem;
+        public DroppedItem DroppedItem => _droppedItem;
+        public List<ItemParameter> DefaultParametersList => _defaultParametersList;
+    }
+    [Serializable]
+    public struct ItemParameter : IEquatable<ItemParameter>
+    {
+        public ParameterId ID;
+        public float Value;
+        public bool Equals(ItemParameter other)
+        {
+            return other.ID == ID;
+        }
     }
 }

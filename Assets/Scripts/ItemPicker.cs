@@ -11,7 +11,7 @@ namespace MonstersDomain
         [SerializeField, Range(0f, 1f), Tooltip("アイテムとカメラの内積で選択可能になる閾値。1に近ければより照準があっている。")] float _itemDotThreshold = 0.97f;
         Camera _main;
         Vector3ReactiveProperty _updateAngle = new();
-        List<Pickable> _pickableList = new();
+        List<DroppedItem> _pickableList = new();
         IDisposable _disposable;
         void Start()
         {
@@ -52,7 +52,7 @@ namespace MonstersDomain
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out Pickable pickable))
+            if (other.TryGetComponent(out DroppedItem pickable))
             {
                 //  リストに追加
                 _pickableList.Add(pickable);
@@ -60,22 +60,22 @@ namespace MonstersDomain
         }
         void OnTriggerExit(Collider other)
         {
-            if (other.TryGetComponent(out Pickable pickable))
+            if (other.TryGetComponent(out DroppedItem pickable))
             {
                 _pickableList = _pickableList.Where(p => p.GetHashCode() != pickable.GetHashCode()).ToList();
             }
         }
 
-        void CheckIfSubscribed(Pickable pickable)
+        void CheckIfSubscribed(DroppedItem droppedItem)
         {
             if (_disposable == null)
             {
-                _disposable = InputProvider.Instance.InteractTrigger.Subscribe(_=>pickable.PickUp()).AddTo(pickable);
+                _disposable = InputProvider.Instance.InteractTrigger.Subscribe(_=>droppedItem.PickUp()).AddTo(droppedItem);
             }
             else
             {
                 _disposable?.Dispose();
-                _disposable = InputProvider.Instance.InteractTrigger.Subscribe(_=>pickable.PickUp()).AddTo(pickable);
+                _disposable = InputProvider.Instance.InteractTrigger.Subscribe(_=>droppedItem.PickUp()).AddTo(droppedItem);
             }
         }
     }

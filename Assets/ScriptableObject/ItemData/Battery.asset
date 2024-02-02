@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dd2a3cfe8a9a964e921e2c7562c7385, type: 3}
-  m_Name: KeyItem
+  m_Name: Battery
   m_EditorClassIdentifier: 
-  _id: 1
-  _displayName: "\u9752\u3044\u5B9D\u77F3"
-  _icon: {fileID: 21300000, guid: 01461f2d36b528542b1371a044db2800, type: 3}
-  _equipmentItem: {fileID: 3270099572954232205, guid: 9ea608c5b2804654d9a0f446437d30bd, type: 3}
-  _droppedItem: {fileID: 5415932701806605009, guid: c3c0707254334a64ca8198f7486e977d, type: 3}
+  _id: 2
+  _displayName: "\u96FB\u6C60"
+  _icon: {fileID: 21300000, guid: 62c4e8abd6bd22240b1bfdc756325b6c, type: 3}
+  _equipmentItem: {fileID: 1622587284138613382, guid: 8db4d1bf2a8106642a65b22c81e8e56d, type: 3}
+  _droppedItem: {fileID: 8140018414564319644, guid: 27a5cfdf5ae07e1469e23f7a5ae20fdd, type: 3}
   _defaultParametersList: []

@@ -24,9 +24,8 @@ namespace MonstersDomain
 
         [SerializeField] [Tooltip("走った時のスタミナ源少量")]
         float _decreaseStamina = 3f;
-        
-        [SerializeField] [Tooltip("スタミナ回復量")]
-        float _recoveryStamina = 3f;
+
+        [SerializeField] [Tooltip("スタミナ回復量")] float _recoveryStamina = 3f;
 
         [SerializeField] [Tooltip("接地判定")] CheckGround _checkGround;
         [SerializeField] [Tooltip("視点管理")] PovController _povController;
@@ -51,15 +50,15 @@ namespace MonstersDomain
         [SerializeField] [Tooltip("")] float _stepSmooth = 0.1f;
 
         readonly IntReactiveProperty _footSteps = new();
+        readonly ReactiveProperty<Vector3> _updatePosition = new();
         public readonly ReactiveProperty<PlayerState> State = new(PlayerState.Idle);
         float _currentStamina;
         IDisposable _disposable;
         CinemachineBasicMultiChannelPerlin _headBob;
         Tween _headTween;
         Rigidbody _rb;
-        readonly ReactiveProperty<Vector3> _updatePosition = new();
         public PovController PovController => _povController;
-        
+
         public bool IsDied { get; set; }
 
         void Awake()
@@ -74,7 +73,7 @@ namespace MonstersDomain
             InputProvider.Instance.CrouchSwitch.Subscribe(Crouching).AddTo(this);
             InputProvider.Instance.RunTrigger.Subscribe(_ =>
             {
-                if(State.Value == PlayerState.Walk)
+                if (State.Value == PlayerState.Walk)
                     State.Value = PlayerState.Run;
                 else if (State.Value == PlayerState.Run)
                     State.Value = PlayerState.Walk;
@@ -84,22 +83,19 @@ namespace MonstersDomain
             _checkGround.HitWall += StepClimb;
         }
 
+        void Update()
+        {
+            if (State.Value != PlayerState.Hide) Movement();
+            //  座標更新を発行する
+            _updatePosition.Value = transform.position;
+        }
+
         void OnDestroy()
         {
             _checkGround.HitWall -= StepClimb;
         }
 
-        void Update()
-        {
-            if (State.Value != PlayerState.Hide)
-            {
-                Movement();
-            }
-            //  座標更新を発行する
-            _updatePosition.Value = transform.position;
-        }
-
-        void Hiding(PlayerState playerState) 
+        void Hiding(PlayerState playerState)
         {
             if (playerState == PlayerState.Hide)
             {
@@ -142,6 +138,8 @@ namespace MonstersDomain
                         _headTween = _povController.Head.DOLocalMoveY(1.6f, 0.1f)
                             .OnComplete(() => _bodyCollider.isTrigger = false).SetLink(gameObject);
                     }).AddTo(this);
+                //  一度だけ値を変えずに_updatePositionのOnNext()を呼ぶ
+                _updatePosition.SetValueAndForceNotify(_updatePosition.Value);
             }
         }
 
@@ -153,8 +151,9 @@ namespace MonstersDomain
             _checkGround.IsGrounded = false;
             _rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
         }
+
         /// <summary>
-        /// 平面移動処理
+        ///     平面移動処理
         /// </summary>
         void Movement()
         {
@@ -199,7 +198,7 @@ namespace MonstersDomain
                 _headBob.m_AmplitudeGain = 0.25f;
                 _headBob.m_FrequencyGain = 0.5f;
                 _armsAnimator.SetInteger("MovingLevel", 0);
-                if(State.Value != PlayerState.Crouch) State.Value = PlayerState.Idle;
+                if (State.Value != PlayerState.Crouch) State.Value = PlayerState.Idle;
                 RecoveryStamina();
             }
 
@@ -235,11 +234,10 @@ namespace MonstersDomain
                     0.6f, ~_ignoreLayer))
             {
                 RaycastHit hitUpper;
-                if (!Physics.Raycast(_stepRayUpper.position, transform.TransformDirection(Vector3.forward), out hitUpper,
+                if (!Physics.Raycast(_stepRayUpper.position, transform.TransformDirection(Vector3.forward),
+                        out hitUpper,
                         0.7f, ~_ignoreLayer))
-                {
-                    _rb.position += new Vector3(0, _stepSmooth,0);
-                }
+                    _rb.position += new Vector3(0, _stepSmooth, 0);
             }
         }
     }

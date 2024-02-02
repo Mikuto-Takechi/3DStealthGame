@@ -123,6 +123,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c4f1ffb9bc801429b8f7bac217424e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemData: {fileID: 11400000, guid: 6b1b89ee650bc274c8fd8967a40711c0, type: 2}
+  _parametersToModify:
+  - ID: 0
+    Value: -3
+  _requiredParameters:
+  - ID: 0
+    Value: 2
   _light: {fileID: 108038271100546340}
   _intensity: 10
   _volumetricLight: {fileID: 2483470529573332854}
