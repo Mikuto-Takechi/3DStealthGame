@@ -1,4 +1,4 @@
-namespace MonstersDomain
+﻿namespace MonstersDomain
 {
     public enum ItemId
     {
