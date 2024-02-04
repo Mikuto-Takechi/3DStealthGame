@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Takechi.BT
+namespace MonstersDomain.BehaviorTree
 {
     /// <summary>
     /// デコレータの基本クラス、直下の子ノードを1つしか持てない

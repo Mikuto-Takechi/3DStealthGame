@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 namespace MonstersDomain
 {
@@ -23,6 +24,18 @@ namespace MonstersDomain
             _ambientSource = gameObject.AddComponent<AudioSource>();
             _ambientSource.playOnAwake = false;
             _ambientSource.loop = true;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            StopAmbient();
+            StopMusic();
         }
 
         public void PlayFootSteps(FootSteps footSteps)
@@ -57,6 +70,15 @@ namespace MonstersDomain
         {
             _ambientSource.clip = _ambientData.Clips[(int)ambient].Clip;
             _ambientSource.Play();
+        }
+
+        public void StopMusic()
+        {
+            _bgmSource.Stop();
+        }
+        public void StopAmbient()
+        {
+            _ambientSource.Stop();
         }
 
         void Play3DSound(AudioClip clip, Vector3 point, float volume)

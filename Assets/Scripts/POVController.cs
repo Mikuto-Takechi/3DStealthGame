@@ -6,7 +6,6 @@ namespace MonstersDomain
     public class PovController : MonoBehaviour
     {
         [SerializeField] CinemachineVirtualCamera _virtualCamera;
-        [SerializeField] bool _cursorLock = true;
         [SerializeField] GameObject _head;
         public Transform Head => _head.transform;
         public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
@@ -41,29 +40,8 @@ namespace MonstersDomain
                 _head.transform.localRotation = _headRotation;
                 transform.localRotation = _bodyRotation;
             }
-            UpdateCursorLock();
         }
-        void UpdateCursorLock()
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                _cursorLock = false;
-            }
-            else if (Input.GetMouseButton(0))
-            {
-                _cursorLock = true;
-            }
-
-
-            if (_cursorLock)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-            else if (!_cursorLock)
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
-        }
+  
 
         //角度制限関数の作成
         Quaternion ClampRotation(Quaternion q)

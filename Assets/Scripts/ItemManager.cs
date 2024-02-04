@@ -13,6 +13,12 @@ namespace MonstersDomain
         {
             Instance ??= this;
         }
+
+        void OnDisable()
+        {
+            Instance = null;
+        }
+
         void Start()
         {
             InputProvider.Instance.SelectHotbarAxis.Subscribe(axis => _hotbar.Scroll(axis, ItemContainer, EquipmentItem)).AddTo(this);

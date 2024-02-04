@@ -19,3 +19,5 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: 2f8a8957cc52b074da8451e262024cca, type: 3}
   - Name: HeartBeat
     Clip: {fileID: 8300000, guid: 62e6c023178090d4ab1c87c21dbfdb92, type: 3}
+  - Name: Eating
+    Clip: {fileID: 8300000, guid: 2b90f4595df990c45a5c84ce354d9254, type: 3}

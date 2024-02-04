@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: KeyItem
   m_EditorClassIdentifier: 
   _id: 1
-  _displayName: "\u9752\u3044\u5B9D\u77F3"
+  _displayName: "\u5B9D\u77F3"
   _icon: {fileID: 21300000, guid: 01461f2d36b528542b1371a044db2800, type: 3}
   _equipmentItem: {fileID: 3270099572954232205, guid: 9ea608c5b2804654d9a0f446437d30bd, type: 3}
   _droppedItem: {fileID: 5415932701806605009, guid: c3c0707254334a64ca8198f7486e977d, type: 3}
-  _defaultParametersList: []
+  _defaultParameters: []
+  _displayParameters: []

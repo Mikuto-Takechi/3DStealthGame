@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Takechi.BT
+namespace MonstersDomain.BehaviorTree
 {
     public enum BTState
     {
@@ -302,14 +302,10 @@ namespace Takechi.BT
     //        return "Wait For Animator Signal : " + name;
     //    }
     //}
-}
-
-#if UNITY_EDITOR
-namespace Takechi.BT
-{
+    #if UNITY_EDITOR
     public interface IBTDebugable
     {
         Root GetAIRoot();
     }
+    #endif
 }
-#endif

@@ -4,4 +4,5 @@
 public enum Ambient{
 		Chase     = 0,
 		HeartBeat = 1,
+		Eating    = 2,
 }

@@ -8,4 +8,6 @@ public enum SE{
 		FlashLightOn  = 3,
 		Roar          = 4,
 		Drop          = 5,
+		JumpScare     = 6,
+		Bite          = 7,
 }

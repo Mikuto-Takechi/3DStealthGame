@@ -27,3 +27,7 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: e28955ee1c7e4cd45bea222e3c95773a, type: 3}
   - Name: Drop
     Clip: {fileID: 8300000, guid: 1934545bcfae0024d9e3ea32df87c075, type: 3}
+  - Name: JumpScare
+    Clip: {fileID: 8300000, guid: 49e7d3a398789be45ab40eb43ca4b883, type: 3}
+  - Name: Bite
+    Clip: {fileID: 8300000, guid: de437f66a92fc8e4d9466bd5babc36d9, type: 3}

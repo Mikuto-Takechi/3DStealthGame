@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Takechi.BT
+namespace MonstersDomain.BehaviorTree
 {
     /// <summary>
     /// メソッドを呼び出すか、コルーチンを実行する。

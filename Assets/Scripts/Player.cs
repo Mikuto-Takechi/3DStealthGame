@@ -90,7 +90,7 @@ namespace MonstersDomain
             _updatePosition.Value = transform.position;
         }
 
-        void OnDestroy()
+        void OnDisable()
         {
             _checkGround.HitWall -= StepClimb;
         }
