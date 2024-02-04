@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8352765665767070168}
   - component: {fileID: 2260663586514420015}
   - component: {fileID: 5365013000176166057}
-  - component: {fileID: 1622587284138613382}
+  - component: {fileID: 6669713985897826503}
   m_Layer: 7
   m_Name: EquipmentBattery
   m_TagString: Untagged
@@ -106,7 +106,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1622587284138613382
+--- !u!114 &6669713985897826503
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,12 +115,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3042537768332315193}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe99d2e1cea7cc447878232d56195827, type: 3}
+  m_Script: {fileID: 11500000, guid: a974bbe4b7054ea499b112d26c3d0c2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _itemData: {fileID: 11400000, guid: f11806e9f52c29d4ea69e0ace8e8076d, type: 2}
-  _parametersToModify: []
+  _holdType: 1
+  _parametersToModify:
+  - ID: 0
+    Value: 20
   _requiredParameters: []
-  _serializedHash:
-    _list:
-    - Value: 0
+  _itemDataBase: {fileID: 11400000, guid: 0aaee8a92081aa74d8ecc5276712dd02, type: 2}

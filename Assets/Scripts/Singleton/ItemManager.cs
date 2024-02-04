@@ -25,10 +25,15 @@ namespace MonstersDomain
             InputProvider.Instance.UseTrigger.Subscribe(UseItem).AddTo(this);
             InputProvider.Instance.DropTrigger.Subscribe(_=> Drop(_hotbar.SelectIndex)).AddTo(this);
             //  アイテムコンテナが更新されたらスロットも更新する
-            ItemContainer.ObserveCountChanged().Subscribe(_=>
+            ItemContainer.ObserveRemove().Subscribe(_=>
             {
                 _hotbar.UpdateSlots(ItemContainer);
                 EquipmentItem();
+            }).AddTo(this);
+            ItemContainer.ObserveAdd().Subscribe(_=>
+            {
+                _hotbar.UpdateSlots(ItemContainer);
+                if (ItemContainer.Count <= 1) EquipmentItem();
             }).AddTo(this);
             EquipmentItem();
         }
@@ -40,17 +45,17 @@ namespace MonstersDomain
             UnEquipment();
             if (ItemContainer.Count <= 0)
             {
-                _armsAnimator.SetBool("GrabItem", false);
+                _armsAnimator.SetInteger("HoldItem", 0);
                 return;
             }
             if (!EquippedItem)
             {
                 Equipment(_hotbar.SelectIndex);
-                _armsAnimator.SetBool("GrabItem", true);
+                if(EquippedItem) _armsAnimator.SetInteger("HoldItem", EquippedItem.HoldType);
             }
             else
             {
-                _armsAnimator.SetBool("GrabItem", false);
+                _armsAnimator.SetInteger("HoldItem", 0);
             }
         }
         
@@ -60,6 +65,20 @@ namespace MonstersDomain
             if (EquippedItem.TryGetComponent(out IUsable usable))
             {
                 usable.Use();
+            }
+
+            if (EquippedItem.TryGetComponent(out IConsumable consumable))
+            {
+                if (consumable.Consume(ItemContainer))
+                {
+                    ItemContainer.RemoveAt(_hotbar.SelectIndex);
+                    if (_hotbar.SelectIndex >= ItemContainer.Count && ItemContainer.Count > 0)
+                    {
+                        _hotbar.SelectIndex = ItemContainer.Count - 1;
+                    }
+                    EquipmentItem();
+                    _hotbar.UpdateSlots(ItemContainer);
+                }
             }
         }
 

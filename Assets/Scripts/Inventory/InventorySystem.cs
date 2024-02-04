@@ -12,7 +12,7 @@ namespace MonstersDomain
         [SerializeField] Transform _equipmentAnchor;
         [SerializeField] Transform _dropAnchor;
         [SerializeField] Transform _parameterUIAnchor;
-        protected ReactiveCollection<(ItemId, List<ItemParameter>)> ItemContainer { get; } = new();
+        public ReactiveCollection<(ItemId, List<ItemParameter>)> ItemContainer { get; } = new();
         protected EquippedItem EquippedItem { get; private set; }
         protected abstract void OnDrop();
 

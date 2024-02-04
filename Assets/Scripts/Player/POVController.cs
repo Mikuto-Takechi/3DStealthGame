@@ -22,7 +22,7 @@ namespace MonstersDomain
         void Start()
         {
             _bodyRotation = transform.localRotation;
-            _headRotation = transform.localRotation;
+            _headRotation = _head.transform.localRotation;
         }
 
         void Update()

@@ -16,7 +16,6 @@ namespace MonstersDomain
         [SerializeField] LayerMask _ignoreRaycast;
         [SerializeField] Transform _headAnchor;
         HashSet<Player> _playerHashSet = new();
-        public Subject<Player> DetectionTarget = new();
         public float SightAngle => _sightAngle;
         public float VisionRange => _visionRange.radius;
         public Color VisionRangeColor => _visionRangeColor;

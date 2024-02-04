@@ -18,11 +18,6 @@ namespace MonstersDomain
     {
         public ReactiveProperty<GameState>  CurrentGameState { get; set; } = new(GameState.Title);
         bool _cursorLock = false;
-        public void GameStart(string sceneName)
-        {
-            SceneManager.LoadSceneFade(sceneName, () => CurrentGameState.Value = GameState.InGame);
-        }
-
         void GameClear()
         {
             SceneManager.LoadSceneFade("GameClear");

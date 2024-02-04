@@ -10,7 +10,6 @@ using UnityEngine.Playables;
 using UnityEngine.Rendering.PostProcessing;
 using System.Linq;
 using MonstersDomain.BehaviorTree;
-using Action = System.Action;
 
 namespace MonstersDomain
 {
@@ -242,5 +241,6 @@ namespace MonstersDomain
     {
         Patrol,
         Chase,
+        Check,
     }
 }

@@ -6,9 +6,11 @@ namespace MonstersDomain
 {
     public class EquippedItem : InstancedItem
     {
+        [SerializeField, Range(1, 2)] int _holdType = 1;
         [SerializeField] protected List<ItemParameter> _parametersToModify;
         [SerializeField] protected List<ItemParameter> _requiredParameters;
         public List<DisplayParameter> ParametersUI { get; } = new();
+        public int HoldType => _holdType;
         public void InheritParameters(List<ItemParameter> inheritParametersList, bool callByReference = false, Transform parameterUIAnchor = null)
         {
             base.InheritParameters(inheritParametersList, callByReference);

@@ -49,6 +49,15 @@ namespace MonstersDomain
         [SerializeField] [Tooltip("")] float _stepHeight = 0.3f;
         [SerializeField] [Tooltip("")] float _stepSmooth = 0.1f;
 
+        [SerializeField, Tooltip("しゃがみ歩き時の音の距離、半径")]
+        float _crouchSoundDistance = 1;
+        
+        [SerializeField, Tooltip("歩き時の音の距離、半径")]
+        float _walkSoundDistance = 5;
+        
+        [SerializeField, Tooltip("走り時の音の距離、半径")]
+        float _runSoundDistance = 15;
+
         readonly IntReactiveProperty _footSteps = new();
         readonly ReactiveProperty<Vector3> _updatePosition = new();
         public readonly ReactiveProperty<PlayerState> State = new(PlayerState.Idle);
@@ -63,7 +72,22 @@ namespace MonstersDomain
 
         void Awake()
         {
-            _footSteps.Where(n => n < 0).Subscribe(_ => AudioManager.Instance.PlayFootSteps(FootSteps.Player))
+            _footSteps.Where(n => n < 0).Subscribe(_ =>
+                {
+                    AudioManager.Instance.PlayFootSteps(FootSteps.Player);
+                    switch (State.Value)
+                    {
+                        case PlayerState.Crouch :
+                            HearingManager.Instance.OnSoundEmitted(transform.position, _crouchSoundDistance);
+                            break;
+                        case PlayerState.Walk :
+                            HearingManager.Instance.OnSoundEmitted(transform.position, _walkSoundDistance);
+                            break;
+                        case PlayerState.Run :
+                            HearingManager.Instance.OnSoundEmitted(transform.position, _runSoundDistance);
+                            break;
+                    }
+                })
                 .AddTo(this);
             State.SkipLatestValueOnSubscribe().Subscribe(Hiding).AddTo(this);
             _rb = GetComponent<Rigidbody>();
@@ -85,7 +109,14 @@ namespace MonstersDomain
 
         void Update()
         {
-            if (State.Value != PlayerState.Hide) Movement();
+            if (State.Value == PlayerState.Hide)
+            {
+                RecoveryStamina();
+            }
+            else
+            {
+                Movement();
+            }
             //  座標更新を発行する
             _updatePosition.Value = transform.position;
         }

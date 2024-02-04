@@ -72,7 +72,8 @@ namespace MonstersDomain
             if (_sequence != null || itemContainer.Count <= 0) return;
             if (input > 0)
             {
-                _selectIndex = ArrayUtil.CircularBuffer(_selectIndex + 1, itemContainer.Count());
+                _selectIndex = ArrayUtil.CircularBuffer(_selectIndex + 1, itemContainer.Count);
+                callback?.Invoke();
                 float spacing = _root.GetComponent<HorizontalLayoutGroup>().spacing;
                 _sequence = DOTween.Sequence().OnComplete(() =>
                 {
@@ -81,7 +82,6 @@ namespace MonstersDomain
                     _root.anchoredPosition = _initialPosition;
                     _slotContainer[_slotCount / 2].transform.localScale = _selectScale;
                     _slotContainer[_slotCount / 2 + 1].transform.localScale = Vector3.one;
-                    callback();
                 }).SetLink(gameObject);
                 _sequence.Join(_root.DOAnchorPosX(_root.anchoredPosition.x - 100 - spacing, 0.5f));
                 _sequence.Join(_slotContainer[_slotCount / 2].transform.DOScale(1f, 0.5f));
@@ -89,7 +89,8 @@ namespace MonstersDomain
             }
             else if (input < 0)
             {
-                _selectIndex = ArrayUtil.CircularBuffer(_selectIndex - 1, itemContainer.Count());
+                _selectIndex = ArrayUtil.CircularBuffer(_selectIndex - 1, itemContainer.Count);
+                callback?.Invoke();
                 float spacing = _root.GetComponent<HorizontalLayoutGroup>().spacing;
                 _sequence = DOTween.Sequence().OnComplete(() =>
                 {
@@ -98,7 +99,6 @@ namespace MonstersDomain
                     _root.anchoredPosition = _initialPosition;
                     _slotContainer[_slotCount / 2].transform.localScale = _selectScale;
                     _slotContainer[_slotCount / 2 - 1].transform.localScale = Vector3.one;
-                    callback();
                 }).SetLink(gameObject);
                 _sequence.Join(_root.DOAnchorPosX(_root.anchoredPosition.x + 100 + spacing, 0.5f));
                 _sequence.Join(_slotContainer[_slotCount / 2].transform.DOScale(1f, 0.5f));

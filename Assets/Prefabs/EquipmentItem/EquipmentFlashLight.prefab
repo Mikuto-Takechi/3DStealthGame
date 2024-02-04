@@ -124,6 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemData: {fileID: 11400000, guid: 6b1b89ee650bc274c8fd8967a40711c0, type: 2}
+  _holdType: 2
   _parametersToModify:
   - ID: 0
     Value: -1

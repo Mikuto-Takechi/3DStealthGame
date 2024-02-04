@@ -15,6 +15,7 @@ MonoBehaviour:
   _id: 2
   _displayName: "\u96FB\u6C60"
   _icon: {fileID: 21300000, guid: 62c4e8abd6bd22240b1bfdc756325b6c, type: 3}
-  _equipmentItem: {fileID: 1622587284138613382, guid: 8db4d1bf2a8106642a65b22c81e8e56d, type: 3}
+  _equipmentItem: {fileID: 6669713985897826503, guid: 8db4d1bf2a8106642a65b22c81e8e56d, type: 3}
   _droppedItem: {fileID: 8140018414564319644, guid: 27a5cfdf5ae07e1469e23f7a5ae20fdd, type: 3}
-  _defaultParametersList: []
+  _defaultParameters: []
+  _displayParameters: []
