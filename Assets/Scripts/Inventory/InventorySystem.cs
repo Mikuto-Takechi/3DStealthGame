@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MonstersDomain.Common;
 using UniRx;
 using UnityEngine;
@@ -53,6 +54,18 @@ namespace MonstersDomain
                 Destroy(EquippedItem.gameObject);
                 EquippedItem = null;
             }
+        }
+
+        public bool RequestItem(ItemId itemId)
+        {
+            if (ItemContainer.Select(i => i.Item1).Contains(itemId))
+            {
+                ItemContainer.RemoveAt(ItemContainer
+                    .Select((item, index) => (item.Item1, index)).First(item => item.Item1 == itemId).Item2);
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -25,12 +25,12 @@ namespace MonstersDomain
 
         void GameClear()
         {
-            print("ゲームクリア");
+            SceneManager.LoadSceneFade("GameClear");
         }
 
         void GameOver()
         {
-            print("ゲームオーバー");
+            SceneManager.LoadSceneFade("GameOver");
         }
 
         protected override void AwakeFunction()

@@ -172,7 +172,7 @@ namespace MonstersDomain
             var binding = playable.playableAsset.outputs.First(c => c.streamName == "Cinemachine Track");
             playable.SetGenericBinding(binding.sourceObject, main);
             yield return new WaitForSeconds(1);
-            SceneManager.LoadSceneFade("Title");
+            GameManager.Instance.CurrentGameState.Value = GameState.GameOver;
         }
         void StartChase()
         {

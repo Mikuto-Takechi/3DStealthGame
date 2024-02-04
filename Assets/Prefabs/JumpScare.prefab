@@ -272,7 +272,7 @@ GameObject:
   - component: {fileID: 5868079264730775029}
   - component: {fileID: 5332056371559027583}
   m_Layer: 0
-  m_Name: DeathTimeline
+  m_Name: JumpScare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
