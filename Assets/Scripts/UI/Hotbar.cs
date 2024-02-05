@@ -70,6 +70,7 @@ namespace MonstersDomain
         public void Scroll(float input, ReactiveCollection<(ItemId, List<ItemParameter>)> itemContainer, Action callback)
         {
             if (_sequence != null || itemContainer.Count <= 0) return;
+            AudioManager.Instance.PlaySE(SE.SelectHotbar);
             if (input > 0)
             {
                 _selectIndex = ArrayUtil.CircularBuffer(_selectIndex + 1, itemContainer.Count);

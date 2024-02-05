@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Text;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MonstersDomain
 {
@@ -10,8 +10,22 @@ namespace MonstersDomain
     {
         [SerializeField, Tooltip("必要なアイテム")] ItemData _requestItem;
         [SerializeField, Range(1, 100)] int _requestItemAmount = 1;
+        [SerializeField] Image _requestItemImage;
+        [SerializeField] Text _requestItemText;
         int _currentItemAmount = 0;
         IDisposable _disposable;
+
+        void Awake()
+        {
+            _requestItemImage.sprite = _requestItem.Icon;
+        }
+
+        void Update()
+        {
+            StringBuilder stringBuilder = new();
+            stringBuilder.Append(_currentItemAmount).Append(" / ").Append(_requestItemAmount);
+            _requestItemText.text = stringBuilder.ToString();
+        }
 
         void OnDisable()
         {
@@ -23,7 +37,6 @@ namespace MonstersDomain
             if (_requestItemAmount <= _currentItemAmount) return;
             if (!ItemManager.Instance.RequestItem(_requestItem.Id)) return;
             _currentItemAmount++;
-            InteractionMessage.Instance.WriteText($"[E] 脱出する。 \n 要求アイテム {_requestItem.DisplayName} {_currentItemAmount} / {_requestItemAmount}");
             if (_requestItemAmount <= _currentItemAmount)
             {
                 GameManager.Instance.CurrentGameState.Value = GameState.GameClear;
@@ -33,7 +46,7 @@ namespace MonstersDomain
         {
             if (other.TryGetComponent(out Player player))
             {
-                InteractionMessage.Instance.WriteText($"[E] 脱出する。 \n 要求アイテム {_requestItem.DisplayName} {_currentItemAmount} / {_requestItemAmount}");
+                InteractionMessage.Instance.WriteText("[E] アイテムを捧げる");
                 _disposable?.Dispose();
                 _disposable = InputProvider.Instance.InteractTrigger.Subscribe(RequestItem).AddTo(this);
             }

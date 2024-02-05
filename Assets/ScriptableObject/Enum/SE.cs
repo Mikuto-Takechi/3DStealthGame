@@ -12,4 +12,5 @@ public enum SE{
 		Bite          = 7,
 		ButtonSelect  = 8,
 		ButtonSubmit  = 9,
+		SelectHotbar  = 10,
 }
