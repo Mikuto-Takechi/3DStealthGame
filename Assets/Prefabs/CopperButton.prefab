@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2191943348437994117}
   - component: {fileID: 5374542782477738025}
   - component: {fileID: 2832967828245112375}
+  - component: {fileID: 1303188025926415994}
   m_Layer: 5
   m_Name: CopperButton
   m_TagString: Untagged
@@ -133,6 +134,18 @@ MonoBehaviour:
           m_StringArgument: InGame
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1303188025926415994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110411172403614262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d874956ecb9c22a4fbcc543db59cd21a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2158512313137811708
 GameObject:
   m_ObjectHideFlags: 0

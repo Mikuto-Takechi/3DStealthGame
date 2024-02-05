@@ -10,4 +10,6 @@ public enum SE{
 		Drop          = 5,
 		JumpScare     = 6,
 		Bite          = 7,
+		ButtonSelect  = 8,
+		ButtonSubmit  = 9,
 }
