@@ -8,6 +8,7 @@ public class AudioGroupDataBase : ScriptableObject
     public string Summary;
     public NameAudioGroupPair[] AudioGroups;
     
+    #if UNITY_EDITOR
     [ContextMenu("EnumCreate")]
     void EnumCreate()
     {
@@ -40,6 +41,7 @@ public class AudioGroupDataBase : ScriptableObject
         else
             EnumCreator.Create(Name, filenames, $"Assets/ScriptableObject/Enum/{Name}.cs", Summary);
     }
+    #endif
     [Serializable]
     public class NameAudioGroupPair
     {

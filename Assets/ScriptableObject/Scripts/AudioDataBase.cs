@@ -8,6 +8,7 @@ public class AudioDataBase : ScriptableObject
     public string Summary;
     public NameAudioPair[] Clips;
     
+    #if UNITY_EDITOR
     [ContextMenu("EnumCreate")]
     void EnumCreate()
     {
@@ -31,6 +32,7 @@ public class AudioDataBase : ScriptableObject
         else
             EnumCreator.Create(Name, filenames, $"Assets/ScriptableObject/Enum/{Name}.cs", Summary);
     }
+    #endif
     [Serializable]
     public class NameAudioPair
     {
