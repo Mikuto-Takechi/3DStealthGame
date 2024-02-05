@@ -9,12 +9,27 @@ namespace MonstersDomain
         [SerializeField] float _intensity = 10f;
         [SerializeField] GameObject _volumetricLight;
         bool _toggleLight = false;
-
+        bool _isPaused = false;
         void Awake()
         {
             _volumetricLight.SetActive(false);
             _light.intensity = 0;
         }
+
+        void Start()
+        {
+            GameManager.Instance.OnPause += OnPause;
+            GameManager.Instance.OnResume += OnResume;
+        }
+
+        void OnDisable()
+        {
+            GameManager.Instance.OnPause -= OnPause;
+            GameManager.Instance.OnResume -= OnResume;
+        }
+
+        void OnPause() => _isPaused = true;
+        void OnResume() => _isPaused = false;
 
         public void Use()
         {
@@ -38,6 +53,7 @@ namespace MonstersDomain
 
         void Update()
         {
+            if (_isPaused) return;
             if (_toggleLight && RequiredParameters())
             {
                 ModifyParameters(Time.deltaTime);

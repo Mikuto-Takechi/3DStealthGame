@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace MonstersDomain
@@ -10,9 +9,19 @@ namespace MonstersDomain
         {
             SceneManager.LoadSceneFade(sceneName, () => GameManager.Instance.CurrentGameState.Value = GameState.InGame);
         }
+
         public void LoadScene(string sceneName)
         {
             SceneManager.LoadSceneFade(sceneName);
+        }
+
+        public void QuitGame()
+        {
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false; //ゲームプレイ終了
+#else
+                Application.Quit();//ゲームプレイ終了
+#endif
         }
     }
 }

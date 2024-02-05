@@ -168,7 +168,7 @@ MonoBehaviour:
   _checkCeilingDistance: 1.9
   _staminaBar: {fileID: 0}
   _stepRayUpper: {fileID: 6899486544670351133}
-  _stepHeight: 2
+  _stepHeight: 0.7
   _stepSmooth: 0.1
   _crouchSoundDistance: 1
   _walkSoundDistance: 5

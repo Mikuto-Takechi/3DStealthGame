@@ -17,7 +17,8 @@ namespace MonstersDomain
         Use = 1 << 10,
         Interact = 1 << 12,
         Drop = 1 << 14,
-        SelectHotbar = 1 << 16
+        SelectHotbar = 1 << 16,
+        Pause = 1 << 18
     }
 
     public class InputProvider
@@ -30,9 +31,9 @@ namespace MonstersDomain
 
         readonly Subject<ActionType> _notifyBindInput = new();
         ActionType _currentBindInput;
-        const ActionType AllActionType = ActionType.Move | ActionType.Jump | ActionType.Crouch | ActionType.Run |
+        public readonly ActionType AllActionType = ActionType.Move | ActionType.Jump | ActionType.Crouch | ActionType.Run |
                                    ActionType.Dance | ActionType.Use | ActionType.Interact | ActionType.Drop |
-                                   ActionType.SelectHotbar;
+                                   ActionType.SelectHotbar | ActionType.Pause;
 
         InputProvider()
         {
@@ -49,6 +50,7 @@ namespace MonstersDomain
                 _callBackDictionary.Add(ActionType.Interact, (_gameInputs.InGame.Interact, OnInteract));
                 _callBackDictionary.Add(ActionType.Drop, (_gameInputs.InGame.Drop, OnDrop));
                 _callBackDictionary.Add(ActionType.SelectHotbar, (_gameInputs.InGame.SelectHotbar, OnSelectHotbar));
+                _callBackDictionary.Add(ActionType.Pause, (_gameInputs.InGame.Pause, OnPause));
                 _disposable = _notifyBindInput.Subscribe(_ => UpdateBindInput());
                 CurrentBindInput |= AllActionType;
                 _gameInputs.Enable();
@@ -77,6 +79,7 @@ namespace MonstersDomain
         public Subject<Unit> UseTrigger { get; } = new();
         public Subject<Unit> InteractTrigger { get; } = new();
         public Subject<Unit> DropTrigger { get; } = new();
+        public Subject<Unit> PauseTrigger { get; } = new();
 
         void OnMove(InputAction.CallbackContext context)
         {
@@ -132,6 +135,11 @@ namespace MonstersDomain
         void OnDrop(InputAction.CallbackContext context)
         {
             if (context.performed) DropTrigger.OnNext(Unit.Default);
+        }
+        
+        void OnPause(InputAction.CallbackContext context)
+        {
+            if (context.performed) PauseTrigger.OnNext(Unit.Default);
         }
 
         void UpdateBindInput()

@@ -109,6 +109,15 @@ namespace MonstersDomain
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd15be14-111c-4429-bc01-349fbf35c50b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -331,6 +340,28 @@ namespace MonstersDomain
                     ""action"": ""Drop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""05d35f8c-9db1-4984-b040-cdc9a700da49"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d47fafd5-edb0-4aa8-aec5-d299636bb6e3"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -348,6 +379,7 @@ namespace MonstersDomain
             m_InGame_Use = m_InGame.FindAction("Use", throwIfNotFound: true);
             m_InGame_Interact = m_InGame.FindAction("Interact", throwIfNotFound: true);
             m_InGame_Drop = m_InGame.FindAction("Drop", throwIfNotFound: true);
+            m_InGame_Pause = m_InGame.FindAction("Pause", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -418,6 +450,7 @@ namespace MonstersDomain
         private readonly InputAction m_InGame_Use;
         private readonly InputAction m_InGame_Interact;
         private readonly InputAction m_InGame_Drop;
+        private readonly InputAction m_InGame_Pause;
         public struct InGameActions
         {
             private @GameInputs m_Wrapper;
@@ -431,6 +464,7 @@ namespace MonstersDomain
             public InputAction @Use => m_Wrapper.m_InGame_Use;
             public InputAction @Interact => m_Wrapper.m_InGame_Interact;
             public InputAction @Drop => m_Wrapper.m_InGame_Drop;
+            public InputAction @Pause => m_Wrapper.m_InGame_Pause;
             public InputActionMap Get() { return m_Wrapper.m_InGame; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -467,6 +501,9 @@ namespace MonstersDomain
                 @Drop.started += instance.OnDrop;
                 @Drop.performed += instance.OnDrop;
                 @Drop.canceled += instance.OnDrop;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
 
             private void UnregisterCallbacks(IInGameActions instance)
@@ -498,6 +535,9 @@ namespace MonstersDomain
                 @Drop.started -= instance.OnDrop;
                 @Drop.performed -= instance.OnDrop;
                 @Drop.canceled -= instance.OnDrop;
+                @Pause.started -= instance.OnPause;
+                @Pause.performed -= instance.OnPause;
+                @Pause.canceled -= instance.OnPause;
             }
 
             public void RemoveCallbacks(IInGameActions instance)
@@ -526,6 +566,7 @@ namespace MonstersDomain
             void OnUse(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
             void OnDrop(InputAction.CallbackContext context);
+            void OnPause(InputAction.CallbackContext context);
         }
     }
 }

@@ -177,6 +177,7 @@ MonoBehaviour:
   _volume: {fileID: 0}
   _visionSensor: {fileID: 4715161561536392594}
   _deathTimeline: {fileID: 8013869363657174163, guid: e7a6aa18d6195bd40b5f405350d60df0, type: 3}
+  _hearingSensor: {fileID: 1187928094085644989}
   _timeUntilLoseSightOfTarget: 7
   _distanceLoseSightOfTarget: 30
 --- !u!195 &5981958505441211625

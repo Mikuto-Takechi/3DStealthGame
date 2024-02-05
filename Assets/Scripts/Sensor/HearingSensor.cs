@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace MonstersDomain
@@ -5,6 +6,7 @@ namespace MonstersDomain
     public class HearingSensor : MonoBehaviour
     {
         [SerializeField] Transform _headAnchor;
+        public Vector3 CheckLocation { get; set; }= Vector3.zero; 
         void Start()
         {
             HearingManager.Instance.Register(this);
@@ -20,13 +22,8 @@ namespace MonstersDomain
             //  発信源とセンサーの距離が音の距離以下なら
             if ((_headAnchor.position - location).sqrMagnitude <= hearingDistance * hearingDistance)
             {
-                Detected();
+                CheckLocation = location;
             }
-        }
-
-        public void Detected()
-        {
-            print("確認するために近づく。");
         }
     }
 }

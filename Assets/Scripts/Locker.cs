@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using UniRx;
@@ -12,19 +11,25 @@ namespace MonstersDomain
     {
         [SerializeField] GameObject _dummyPlayer;
         [SerializeField] PlayableDirector[] _directors;
-        List<IDisposable> _subscriptions = new();
         Player _player;
         bool _isInteract = false;
+        IDisposable _enterSubscription, _exitSubscription;
         void Awake()
         {
             _dummyPlayer?.SetActive(false);
             BindMainCamera();
         }
+
+        void OnDisable()
+        {
+            _enterSubscription?.Dispose();
+            _exitSubscription?.Dispose();
+        }
+
         protected override void Disengage(Player player)
         {
             InteractionMessage.Instance.WriteText(string.Empty);
-            _subscriptions.ForEach(sub => sub.Dispose());
-            _subscriptions.Clear();
+            _enterSubscription?.Dispose();
             _isInteract = false;
         }
         protected override void Interact(Player player)
@@ -32,34 +37,34 @@ namespace MonstersDomain
             if (_isInteract) return;
             _isInteract = true;
             InteractionMessage.Instance.WriteText("[E] 隠れる");
-            InputProvider.Instance.InteractTrigger.First().Subscribe(_ =>
+            _enterSubscription = InputProvider.Instance.InteractTrigger.First().Subscribe(_ =>
             {
                 _player = player;
                 player.State.Value = PlayerState.Hide;
                 _dummyPlayer?.SetActive(true);
                 EnterTheLocker();
-            }).AddTo(_subscriptions);
+            }).AddTo(this);
         }
         void EnterTheLocker()
         {
-            InputProvider.Instance.CurrentBindInput &= ~(ActionType.Move | ActionType.Use | ActionType.Crouch | ActionType.Drop | ActionType.Jump);
-            _subscriptions.ForEach(sub => sub.Dispose());
+            InputProvider.Instance.CurrentBindInput &= ~(ActionType.Move | ActionType.Crouch | ActionType.Drop | ActionType.Jump);
+            _enterSubscription?.Dispose();
             _directors[0].Play();
             _directors[0].stopped += HidingInLocker;
             InteractionMessage.Instance.WriteText(string.Empty);
         }
         public void HidingInLocker(PlayableDirector pd)
         {
-            _subscriptions.ForEach(sub => sub.Dispose());
             _directors[0].stopped -= HidingInLocker;
-            _player.PovController.Enabled = false;
+            _player.PovController.FreePov = false;
             _player.PovController.SetRotation(0, transform.localEulerAngles.y);
             _directors[1].Play();
             InteractionMessage.Instance.WriteText("[E] 出る");
-            InputProvider.Instance.InteractTrigger.Take(1).Subscribe(ExitFromLocker).AddTo(_subscriptions);
+            _exitSubscription = InputProvider.Instance.InteractTrigger.Take(1).Subscribe(ExitFromLocker).AddTo(this);
         }
         void ExitFromLocker(Unit _)
         {
+            _exitSubscription?.Dispose();
             _directors[1].Stop();
             _directors[2].Play();
             _directors[2].stopped += Exit;
@@ -67,10 +72,10 @@ namespace MonstersDomain
         }
         void Exit(PlayableDirector playableDirector)
         {
-            InputProvider.Instance.CurrentBindInput |= ActionType.Move | ActionType.Use | ActionType.Crouch | ActionType.Drop | ActionType.Jump;
+            InputProvider.Instance.CurrentBindInput |= ActionType.Move | ActionType.Crouch | ActionType.Drop | ActionType.Jump;
             _directors[2].stopped -= Exit;
             _player.State.Value = PlayerState.Idle;
-            _player.PovController.Enabled = true;
+            _player.PovController.FreePov = true;
             _dummyPlayer?.SetActive(false);
             _player = null;
         }

@@ -69,6 +69,7 @@ namespace MonstersDomain
         public PovController PovController => _povController;
 
         public bool IsDied { get; set; }
+        bool _isPaused = false;
 
         void Awake()
         {
@@ -107,8 +108,27 @@ namespace MonstersDomain
             _checkGround.HitWall += StepClimb;
         }
 
+        void Start()
+        {
+            GameManager.Instance.OnPause += OnPause;
+            GameManager.Instance.OnResume += OnResume;
+        }
+
+        void OnPause()
+        {
+            _povController.FreePov = false;
+            _isPaused = true;
+        }
+
+        void OnResume()
+        {
+            _povController.FreePov = true;
+            _isPaused = false;
+        }
+
         void Update()
         {
+            if (_isPaused) return;
             if (State.Value == PlayerState.Hide)
             {
                 RecoveryStamina();
@@ -124,6 +144,8 @@ namespace MonstersDomain
         void OnDisable()
         {
             _checkGround.HitWall -= StepClimb;
+            GameManager.Instance.OnPause -= OnPause;
+            GameManager.Instance.OnResume -= OnResume;
         }
 
         void Hiding(PlayerState playerState)
