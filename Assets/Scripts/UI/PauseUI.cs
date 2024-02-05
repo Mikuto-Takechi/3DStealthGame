@@ -88,7 +88,7 @@ namespace MonstersDomain
             {
                 _sequence = null;
                 callback?.Invoke();
-            });
+            }).SetLink(gameObject);
             for (int i = _pauseTweenGroups.Count - 1; i >= 0; i--)
             {
                 for (int j = _pauseTweenGroups[i].Elements.Count - 1; j >= 0; j--)
@@ -118,7 +118,7 @@ namespace MonstersDomain
                             t.InitialAnchoredPosition[j];
                     }
                 }
-            });
+            }).SetLink(gameObject);
             foreach (var t in _pauseTweenGroups)
             {
                 for (int j = 0; j < t.Elements.Count; j++)

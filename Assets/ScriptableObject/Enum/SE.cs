@@ -13,4 +13,5 @@ public enum SE{
 		ButtonSelect  = 8,
 		ButtonSubmit  = 9,
 		SelectHotbar  = 10,
+		CheckRoar     = 11,
 }

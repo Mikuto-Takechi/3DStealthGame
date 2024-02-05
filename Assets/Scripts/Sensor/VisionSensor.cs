@@ -23,6 +23,7 @@ namespace MonstersDomain
         {
             if (_playerHashSet.Count <= 0) return false;
             Player player = _playerHashSet.First();
+            if (player.State.Value == PlayerState.Hide) return false;
             Vector3 posDelta = player.transform.position - _headAnchor.position;
             float targetAngle = Vector3.Angle(transform.forward, posDelta);
             if(targetAngle < _sightAngle)

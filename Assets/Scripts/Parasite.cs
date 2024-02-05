@@ -85,6 +85,7 @@ namespace MonstersDomain
                             {
                                 BT.Action(() =>
                                 {
+                                    AudioManager.Instance.Play3DSE(SE.Bite, transform.position);
                                     _state.Value = ParasiteState.Check;
                                     _agent.SetDestination(_hearingSensor.CheckLocation);
                                     _hearingSensor.CheckLocation = Vector3.zero;

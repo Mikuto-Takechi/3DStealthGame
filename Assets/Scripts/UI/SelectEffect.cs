@@ -6,14 +6,17 @@ namespace MonstersDomain
 {
     public class SelectEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
+        Tween _tween;
         public void OnPointerEnter(PointerEventData eventData)
         {
+            _tween?.Kill();
             AudioManager.Instance.PlaySE(SE.ButtonSelect);
-            transform.DOScale(1.2f, 0.3f).SetLink(gameObject);
+            _tween = transform.DOScale(1.2f, 0.3f).SetLink(gameObject);
         }
         public void OnPointerExit(PointerEventData eventData)
         {
-            transform.DOScale(1, 0.3f).SetLink(gameObject);
+            _tween?.Kill();
+            _tween = transform.DOScale(1, 0.3f).SetLink(gameObject);
         }
         
         public void OnPointerClick(PointerEventData eventData)

@@ -75,16 +75,19 @@ namespace MonstersDomain
         {
             _footSteps.Where(n => n < 0).Subscribe(_ =>
                 {
-                    AudioManager.Instance.PlayFootSteps(FootSteps.Player);
+                    
                     switch (State.Value)
                     {
                         case PlayerState.Crouch :
+                            AudioManager.Instance.PlayFootSteps(FootSteps.Player, 0.7f, 0.7f);
                             HearingManager.Instance.OnSoundEmitted(transform.position, _crouchSoundDistance);
                             break;
                         case PlayerState.Walk :
+                            AudioManager.Instance.PlayFootSteps(FootSteps.Player, 1, 1);
                             HearingManager.Instance.OnSoundEmitted(transform.position, _walkSoundDistance);
                             break;
                         case PlayerState.Run :
+                            AudioManager.Instance.PlayFootSteps(FootSteps.Player, 1.4f, 1);
                             HearingManager.Instance.OnSoundEmitted(transform.position, _runSoundDistance);
                             break;
                     }
@@ -225,8 +228,8 @@ namespace MonstersDomain
                 }
                 else if (State.Value == PlayerState.Run && _currentStamina > 0)
                 {
-                    _headBob.m_AmplitudeGain = 1;
-                    _headBob.m_FrequencyGain = 1;
+                    _headBob.m_AmplitudeGain = 1.4f;
+                    _headBob.m_FrequencyGain = 1f;
                     _armsAnimator.SetInteger("MovingLevel", 2);
                     moveSpeed *= _dashSpeedMultiplier;
                     _currentStamina -= _decreaseStamina * Time.deltaTime;
@@ -244,7 +247,7 @@ namespace MonstersDomain
                 inputVector.x *= moveSpeed;
                 inputVector.z *= moveSpeed;
                 _headBob.m_NoiseProfile.GetSignal(Time.time, out var pos, out _);
-                _footSteps.Value = Math.Sign(pos.y) * 1;
+                _footSteps.Value = Math.Sign(pos.y * _headBob.m_AmplitudeGain);
             }
             else
             {

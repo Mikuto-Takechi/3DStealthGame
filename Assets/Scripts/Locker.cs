@@ -28,17 +28,17 @@ namespace MonstersDomain
 
         protected override void Disengage(Player player)
         {
+            if (_isInteract) return;
             InteractionMessage.Instance.WriteText(string.Empty);
             _enterSubscription?.Dispose();
-            _isInteract = false;
         }
         protected override void Interact(Player player)
         {
             if (_isInteract) return;
-            _isInteract = true;
             InteractionMessage.Instance.WriteText("[E] 隠れる");
             _enterSubscription = InputProvider.Instance.InteractTrigger.First().Subscribe(_ =>
             {
+                _isInteract = true;
                 _player = player;
                 player.State.Value = PlayerState.Hide;
                 _dummyPlayer?.SetActive(true);
@@ -78,6 +78,7 @@ namespace MonstersDomain
             _player.PovController.FreePov = true;
             _dummyPlayer?.SetActive(false);
             _player = null;
+            _isInteract = false;
         }
         void BindMainCamera()
         {

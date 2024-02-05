@@ -37,3 +37,5 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: 6db7260c95af22a4382517f901d44f6c, type: 3}
   - Name: SelectHotbar
     Clip: {fileID: 8300000, guid: 6c96ffe11f9cd8b489e9f17af6ffe0ae, type: 3}
+  - Name: CheckRoar
+    Clip: {fileID: 8300000, guid: feb0ad48ab5e30b4a90528d85922b486, type: 3}

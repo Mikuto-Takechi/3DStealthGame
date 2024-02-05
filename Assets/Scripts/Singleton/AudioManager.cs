@@ -12,12 +12,14 @@ namespace MonstersDomain
         [SerializeField] AudioDataBase _seData;
         [SerializeField] AudioGroupDataBase _footStepsData;
         [SerializeField] ObjectPool _audioSourcePool;
-        AudioSource _seSource, _bgmSource, _ambientSource;
+        AudioSource _seSource, _bgmSource, _ambientSource, _footStepsSource;
 
         protected override void AwakeFunction()
         {
             _seSource = gameObject.AddComponent<AudioSource>();
             _seSource.playOnAwake = false;
+            _footStepsSource = gameObject.AddComponent<AudioSource>();
+            _footStepsSource.playOnAwake = false;
             _bgmSource = gameObject.AddComponent<AudioSource>();
             _bgmSource.playOnAwake = false;
             _bgmSource.loop = true;
@@ -38,10 +40,12 @@ namespace MonstersDomain
             StopMusic();
         }
 
-        public void PlayFootSteps(FootSteps footSteps)
+        public void PlayFootSteps(FootSteps footSteps, float pitch, float volume)
         {
             var clips = _footStepsData.AudioGroups[(int)footSteps].Clips;
-            _seSource.PlayOneShot(clips[Random.Range(0, clips.Length - 1)]);
+            _footStepsSource.pitch = pitch;
+            _footStepsSource.volume = volume;
+            _footStepsSource.PlayOneShot(clips[Random.Range(0, clips.Length - 1)]);
         }
 
         public void Play3DFootSteps(FootSteps footSteps, Vector3 point)
