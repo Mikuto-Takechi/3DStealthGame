@@ -142,6 +142,7 @@ namespace MonstersDomain
             }
             //  座標更新を発行する
             _updatePosition.Value = transform.position;
+            AreaManager.Instance.ReportPlayerLocation(transform.position.y);
         }
 
         void OnDisable()

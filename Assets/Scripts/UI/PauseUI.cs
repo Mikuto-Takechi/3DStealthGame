@@ -10,6 +10,7 @@ namespace MonstersDomain
     public class PauseUI : MonoBehaviour
     {
         [SerializeField] List<PauseTweenGroup> _pauseTweenGroups;
+        [SerializeField] SettingsUI _settingsUI;
         [SerializeField] Button _settingsButton;
         [SerializeField] Button _titleButton;
         [SerializeField] Button _quitButton;
@@ -41,7 +42,7 @@ namespace MonstersDomain
 
         void Register()
         {
-            _subscriptions.Add(_settingsButton.OnClickAsObservable().Subscribe(_=>print("設定")).AddTo(this));
+            _subscriptions.Add(_settingsButton.OnClickAsObservable().Subscribe(_ => _settingsUI.Switch()).AddTo(this));
             _subscriptions.Add(_titleButton.OnClickAsObservable()
                 .Subscribe(_ => SceneManager.LoadSceneFade("Title",()=> GameManager.Instance.CurrentGameState.Value = GameState.Title)).AddTo(this));
             _subscriptions.Add(_quitButton.OnClickAsObservable().Subscribe(_ =>
@@ -103,31 +104,66 @@ namespace MonstersDomain
         {
             if (_sequence != null) return;
             DeRegister();
-            _sequence = DOTween.Sequence().OnComplete(()=>
+            if (_settingsUI.IsOpen)
             {
-                _sequence = null;
-                callback?.Invoke();
-                _canvasGroup.interactable = false;
-                _canvasGroup.blocksRaycasts = false;
-                _canvasGroup.alpha = 0;
+                _settingsUI.Close(() =>
+                {
+                    _sequence = DOTween.Sequence().OnComplete(()=>
+                    {
+                        _sequence = null;
+                        callback?.Invoke();
+                        _canvasGroup.interactable = false;
+                        _canvasGroup.blocksRaycasts = false;
+                        _canvasGroup.alpha = 0;
+                        foreach (var t in _pauseTweenGroups)
+                        {
+                            for (int j = 0; j < t.Elements.Count; j++)
+                            {
+                                t.Elements[j].anchoredPosition =
+                                    t.InitialAnchoredPosition[j];
+                            }
+                        }
+                    }).SetLink(gameObject);
+                    foreach (var t in _pauseTweenGroups)
+                    {
+                        for (int j = 0; j < t.Elements.Count; j++)
+                        {
+                            var offset = t.InitialAnchoredPosition[j].x - Screen.width / 3;
+                            _sequence.Join(t.Elements[j]
+                                .DOAnchorPosX(offset, 0.5f));
+                        }
+                        _sequence.SetDelay(0.1f);
+                    }
+                });
+            }
+            else
+            {
+                _sequence = DOTween.Sequence().OnComplete(()=>
+                {
+                    _sequence = null;
+                    callback?.Invoke();
+                    _canvasGroup.interactable = false;
+                    _canvasGroup.blocksRaycasts = false;
+                    _canvasGroup.alpha = 0;
+                    foreach (var t in _pauseTweenGroups)
+                    {
+                        for (int j = 0; j < t.Elements.Count; j++)
+                        {
+                            t.Elements[j].anchoredPosition =
+                                t.InitialAnchoredPosition[j];
+                        }
+                    }
+                }).SetLink(gameObject);
                 foreach (var t in _pauseTweenGroups)
                 {
                     for (int j = 0; j < t.Elements.Count; j++)
                     {
-                        t.Elements[j].anchoredPosition =
-                            t.InitialAnchoredPosition[j];
+                        var offset = t.InitialAnchoredPosition[j].x - Screen.width / 3;
+                        _sequence.Join(t.Elements[j]
+                            .DOAnchorPosX(offset, 0.5f));
                     }
+                    _sequence.SetDelay(0.1f);
                 }
-            }).SetLink(gameObject);
-            foreach (var t in _pauseTweenGroups)
-            {
-                for (int j = 0; j < t.Elements.Count; j++)
-                {
-                    var offset = t.InitialAnchoredPosition[j].x - Screen.width / 3;
-                    _sequence.Join(t.Elements[j]
-                        .DOAnchorPosX(offset, 0.5f));
-                }
-                _sequence.SetDelay(0.1f);
             }
         }
     }

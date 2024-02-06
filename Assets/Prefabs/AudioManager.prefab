@@ -49,8 +49,11 @@ MonoBehaviour:
   _ambientData: {fileID: 11400000, guid: 0af6b0f43c7f10e4785bbad58a8a057d, type: 2}
   _seData: {fileID: 11400000, guid: 74243801b35c4104abffcf88d8ab69ae, type: 2}
   _footStepsData: {fileID: 11400000, guid: f595d7d88e6516246b4c643c0011a539, type: 2}
-  _audioSource3D: {fileID: 509372876679287393, guid: 39ada1accac32464bbc78d2db631a961, type: 3}
   _audioSourcePool: {fileID: 8088121717218151793}
+  _audioMixerGroups:
+  - {fileID: 1081116435086845747, guid: 8d19c1bc9c6b0af459a06159e17f75f5, type: 2}
+  - {fileID: -8336577955220125689, guid: 8d19c1bc9c6b0af459a06159e17f75f5, type: 2}
+  - {fileID: 3232421763309989393, guid: 8d19c1bc9c6b0af459a06159e17f75f5, type: 2}
 --- !u!1001 &4923977937396236918
 PrefabInstance:
   m_ObjectHideFlags: 0

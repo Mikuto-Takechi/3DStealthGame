@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Audio;
 using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
 
@@ -12,20 +13,25 @@ namespace MonstersDomain
         [SerializeField] AudioDataBase _seData;
         [SerializeField] AudioGroupDataBase _footStepsData;
         [SerializeField] ObjectPool _audioSourcePool;
+        [SerializeField] AudioMixerGroup[] _audioMixerGroups;
         AudioSource _seSource, _bgmSource, _ambientSource, _footStepsSource;
 
         protected override void AwakeFunction()
         {
             _seSource = gameObject.AddComponent<AudioSource>();
             _seSource.playOnAwake = false;
+            _seSource.outputAudioMixerGroup = _audioMixerGroups[0];
             _footStepsSource = gameObject.AddComponent<AudioSource>();
             _footStepsSource.playOnAwake = false;
+            _footStepsSource.outputAudioMixerGroup = _audioMixerGroups[0];
             _bgmSource = gameObject.AddComponent<AudioSource>();
             _bgmSource.playOnAwake = false;
             _bgmSource.loop = true;
+            _bgmSource.outputAudioMixerGroup = _audioMixerGroups[1];
             _ambientSource = gameObject.AddComponent<AudioSource>();
             _ambientSource.playOnAwake = false;
             _ambientSource.loop = true;
+            _ambientSource.outputAudioMixerGroup = _audioMixerGroups[2];
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 

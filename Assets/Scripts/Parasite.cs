@@ -16,7 +16,7 @@ namespace MonstersDomain
     {
         [SerializeField] float _chaseSpeed = 4f;
         [SerializeField] float _patrolSpeed = 2f;
-        [SerializeField] Transform[] _patrolAnchor;
+        [SerializeField] List<FloorPatrolAnchors> _floorPatrolAnchorsList;
         [SerializeField] Animator _animator;
         [SerializeField] ParasiteEventDispatcher _eventDispatcher;
         [SerializeField] CinemachineImpulseSource _footStepsImpulseSource;
@@ -24,6 +24,8 @@ namespace MonstersDomain
         [SerializeField] VisionSensor _visionSensor;
         [SerializeField] GameObject _deathTimeline;
         [SerializeField] HearingSensor _hearingSensor;
+        [SerializeField] Transform _firstFloorWarpPoint;
+        [SerializeField] Transform _secondFloorWarpPoint;
 
         [SerializeField] [Tooltip("目標を見失うまでの時間")]
         float _timeUntilLoseSightOfTarget = 3;
@@ -35,6 +37,7 @@ namespace MonstersDomain
         Player _currentTarget;
         float _lostTargetTimer = float.MaxValue;
         int _patrolIndex;
+        int _currentFloor = 0;
         readonly HashSet<Player> _playerHashSet = new();
         readonly ReactiveProperty<ParasiteState> _state = new(ParasiteState.Patrol);
         ObservableStateMachineTrigger _trigger;
@@ -72,6 +75,20 @@ namespace MonstersDomain
                 AudioManager.Instance.Play3DFootSteps(FootSteps.Parasite, transform.position);
                 _footStepsImpulseSource.GenerateImpulse();
             });
+            AreaManager.Instance.ReportSwitchFloor.SkipLatestValueOnSubscribe().Subscribe(b =>
+            {
+                if (b)
+                {
+                    _currentFloor = 1;
+                    if(_state.Value != ParasiteState.Chase) _agent.Warp(_secondFloorWarpPoint.position);
+                }
+                else
+                {
+                    _currentFloor = 0;
+                    if(_state.Value != ParasiteState.Chase) _agent.Warp(_firstFloorWarpPoint.position);
+                }
+                _patrolIndex = 0;
+            }).AddTo(this);
             _behaviorRoot = BT.Root(new List<Node>
             {
                 BT.Sequence(new List<Node>
@@ -138,7 +155,6 @@ namespace MonstersDomain
         void Update()
         {
             if (_isPaused) return;
-            
             _behaviorRoot.Tick();
             if (_lostTargetTimer < _timeUntilLoseSightOfTarget)
                 _lostTargetTimer += Time.deltaTime;
@@ -256,16 +272,16 @@ namespace MonstersDomain
         IEnumerator Patrol()
         {
             var wait = new WaitForSeconds(1);
-            _agent.SetDestination(_patrolAnchor[_patrolIndex].position);
+            _agent.SetDestination(_floorPatrolAnchorsList[_currentFloor].PatrolAnchors[_patrolIndex].position);
             while (true)
             {
                 if (!_isPaused)
                 {
                     if (!_agent.hasPath)
                     {
-                        _agent.SetDestination(_patrolAnchor[_patrolIndex].position);
+                        _agent.SetDestination(_floorPatrolAnchorsList[_currentFloor].PatrolAnchors[_patrolIndex].position);
                         _patrolIndex++;
-                        _patrolIndex %= _patrolAnchor.Length;
+                        _patrolIndex %= _floorPatrolAnchorsList[_currentFloor].PatrolAnchors.Count;
                     }
                 }
                 yield return wait;
@@ -278,5 +294,11 @@ namespace MonstersDomain
         Patrol,
         Chase,
         Check
+    }
+
+    [Serializable]
+    public struct FloorPatrolAnchors
+    {
+        [field: SerializeField] public List<Transform> PatrolAnchors { get; set; }
     }
 }
