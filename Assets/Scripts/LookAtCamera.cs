@@ -14,7 +14,8 @@ namespace MonstersDomain
 
         void Update()
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, _main.transform.rotation, _lookSpeed * Time.deltaTime);
+            transform.rotation =
+                Quaternion.Slerp(transform.rotation, _main.transform.rotation, _lookSpeed * Time.deltaTime);
         }
     }
 }

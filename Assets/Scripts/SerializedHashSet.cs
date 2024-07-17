@@ -22,6 +22,7 @@ namespace MonstersDomain
             foreach (var item in this) _list.Add(item);
         }
     }
+
     [Serializable]
     public class SerializedHashSetClass<T> : SerializedHashSet<T> where T : new()
     {

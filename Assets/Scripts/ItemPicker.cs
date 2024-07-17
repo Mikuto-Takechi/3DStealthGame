@@ -2,29 +2,56 @@
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
 namespace MonstersDomain
 {
     public class ItemPicker : MonoBehaviour
     {
-        [SerializeField, Range(0f, 1f), Tooltip("アイテムとカメラの内積で選択可能になる閾値。1に近ければより照準があっている。")] float _itemDotThreshold = 0.97f;
-        Camera _main;
-        Vector3ReactiveProperty _updateAngle = new();
-        List<DroppedItem> _pickableList = new();
+        [SerializeField, Tooltip("一人称視点時に表示される腕のアニメーター")] 
+        Animator _armsAnimator;
+
+        [SerializeField, Range(0f, 1f), Tooltip("アイテムとカメラの内積で選択可能になる閾値。1に近ければより照準があっている。")]
+        float _itemDotThreshold = 0.97f;
+
         IDisposable _disposable;
+        Camera _main;
+        List<DroppedItem> _pickableList = new();
+        ObservableStateMachineTrigger _trigger;
+        readonly Vector3ReactiveProperty _updateAngle = new();
+
         void Start()
         {
+            _trigger = _armsAnimator.GetBehaviour<ObservableStateMachineTrigger>();
             _main = Camera.main;
-            _updateAngle.SkipLatestValueOnSubscribe().Subscribe(_=>CheckItem()).AddTo(this);
+            _updateAngle.SkipLatestValueOnSubscribe().Subscribe(_ => CheckItem()).AddTo(this);
         }
+
+        void Update()
+        {
+            _updateAngle.Value = _main.transform.localEulerAngles;
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent(out DroppedItem pickable))
+                //  リストに追加
+                _pickableList.Add(pickable);
+        }
+
+        void OnTriggerExit(Collider other)
+        {
+            if (other.TryGetComponent(out DroppedItem pickable))
+                _pickableList = _pickableList.Where(p => p.GetHashCode() != pickable.GetHashCode()).ToList();
+        }
+
         void CheckItem()
         {
             if (_pickableList.Count > 0)
             {
-                bool foundPickable = false;
+                var foundPickable = false;
                 foreach (var pickable in _pickableList)
-                {
                     if (pickable != null && Vector3.Dot(_main.transform.forward,
                             (pickable.transform.position - _main.transform.position).normalized) >
                         _itemDotThreshold)
@@ -34,7 +61,6 @@ namespace MonstersDomain
                         foundPickable = true;
                         break;
                     }
-                }
 
                 _pickableList.RemoveAll(p => p == null);
 
@@ -45,38 +71,20 @@ namespace MonstersDomain
                 }
             }
         }
-        void Update()
-        {
-            _updateAngle.Value = _main.transform.localEulerAngles;
-        }
-
-        void OnTriggerEnter(Collider other)
-        {
-            if (other.TryGetComponent(out DroppedItem pickable))
-            {
-                //  リストに追加
-                _pickableList.Add(pickable);
-            }
-        }
-        void OnTriggerExit(Collider other)
-        {
-            if (other.TryGetComponent(out DroppedItem pickable))
-            {
-                _pickableList = _pickableList.Where(p => p.GetHashCode() != pickable.GetHashCode()).ToList();
-            }
-        }
 
         void CheckIfSubscribed(DroppedItem droppedItem)
         {
-            if (_disposable == null)
+            _disposable?.Dispose();
+            _disposable = InputProvider.Instance.InteractTrigger.Subscribe(_ =>
             {
-                _disposable = InputProvider.Instance.InteractTrigger.Subscribe(_=>droppedItem.PickUp()).AddTo(droppedItem);
-            }
-            else
-            {
-                _disposable?.Dispose();
-                _disposable = InputProvider.Instance.InteractTrigger.Subscribe(_=>droppedItem.PickUp()).AddTo(droppedItem);
-            }
+                Camera.main.cullingMask &= ~(1 << 11);
+                droppedItem.PickUp();
+                _armsAnimator.SetTrigger("Pickup");
+                _trigger.OnStateExitAsObservable()
+                    .Where(i => i.StateInfo.IsName("RightHand.FirstPersonPickup"))
+                    .First()
+                    .Subscribe(_ => Camera.main.cullingMask |= 1 << 11).AddTo(this);
+            }).AddTo(droppedItem);
         }
     }
 }

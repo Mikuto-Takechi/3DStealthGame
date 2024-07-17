@@ -12,22 +12,26 @@ namespace MonstersDomain
         [SerializeField] Transform _equipmentAnchor;
         [SerializeField] Transform _dropAnchor;
         [SerializeField] Transform _parameterUIAnchor;
-        public ReactiveCollection<(ItemId, List<ItemParameter>)> ItemContainer { get; } = new();
+
+        public ReactiveCollection<(ItemId, List<ItemParameter>)> ItemContainer { get; } =
+            new( /*Enumerable.Repeat<(ItemId, List<ItemParameter>)>((ItemId.Nothing, null), 5).ToList()*/);
+
         protected EquippedItem EquippedItem { get; private set; }
         protected abstract void OnDrop();
 
         /// <summary>インベントリにアイテムを追加する</summary>
-        public void Add(ItemId id, List<ItemParameter> param = null) => ItemContainer.Add((id, param));
+        public void Add(ItemId id, List<ItemParameter> param = null)
+        {
+            ItemContainer.Add((id, param));
+        }
 
         /// <summary>インベントリからアイテムを取り出す</summary>
         public void Drop(int index)
         {
             if (ItemContainer.Count <= 0 || !ArrayUtil.CheckIndexOutOfRange(ItemContainer, index)) return;
-            var obj =  Instantiate(_itemDataBase[ItemContainer[index].Item1].DroppedItem);
+            var obj = Instantiate(_itemDataBase[ItemContainer[index].Item1].DroppedItem);
             if (_itemDataBase[ItemContainer[index].Item1].DefaultParameters.Count > 0)
-            {
                 obj.InheritParameters(ItemContainer[index].Item2);
-            }
             obj.transform.position = _dropAnchor.position;
             ItemContainer.RemoveAt(index);
             OnDrop();
@@ -47,10 +51,8 @@ namespace MonstersDomain
             if (EquippedItem)
             {
                 if (EquippedItem.ParametersUI.Count > 0)
-                {
                     foreach (var parameterUI in EquippedItem.ParametersUI)
                         Destroy(parameterUI.UI.gameObject);
-                }
                 Destroy(EquippedItem.gameObject);
                 EquippedItem = null;
             }

@@ -7,17 +7,17 @@ namespace MonstersDomain
     {
         [SerializeField] CinemachineVirtualCamera _virtualCamera;
         [SerializeField] GameObject _head;
-        public Transform Head => _head.transform;
-        public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
-        public bool FreePov { get; set; } = true;
-        Quaternion _headRotation, _bodyRotation;
-        readonly float _xSensitivity = 3f;
-
-        readonly float _ySensitivity = 3f;
+        readonly float _maxX = 90f;
 
         //変数の宣言(角度の制限用)
         readonly float _minX = -90f;
-        readonly float _maxX = 90f;
+        readonly float _xSensitivity = 3f;
+
+        readonly float _ySensitivity = 3f;
+        Quaternion _headRotation, _bodyRotation;
+        public Transform Head => _head.transform;
+        public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
+        public bool FreePov { get; set; } = true;
 
         void Start()
         {
@@ -29,8 +29,8 @@ namespace MonstersDomain
         {
             if (FreePov)
             {
-                float xRot = Input.GetAxis("Mouse X") * _ySensitivity;
-                float yRot = Input.GetAxis("Mouse Y") * _xSensitivity;
+                var xRot = Input.GetAxis("Mouse X") * _ySensitivity;
+                var yRot = Input.GetAxis("Mouse Y") * _xSensitivity;
 
                 _headRotation *= Quaternion.Euler(-yRot, 0, 0);
                 _bodyRotation *= Quaternion.Euler(0, xRot, 0);
@@ -41,7 +41,7 @@ namespace MonstersDomain
                 transform.localRotation = _bodyRotation;
             }
         }
-  
+
 
         //角度制限関数の作成
         Quaternion ClampRotation(Quaternion q)
@@ -53,7 +53,7 @@ namespace MonstersDomain
             q.z /= q.w;
             q.w = 1f;
 
-            float angleX = Mathf.Atan(q.x) * Mathf.Rad2Deg * 2f;
+            var angleX = Mathf.Atan(q.x) * Mathf.Rad2Deg * 2f;
 
             angleX = Mathf.Clamp(angleX, _minX, _maxX);
 
@@ -61,6 +61,7 @@ namespace MonstersDomain
 
             return q;
         }
+
         /// <summary>POVの角度を外部から設定する</summary>
         public void SetRotation(float xRot, float yRot)
         {

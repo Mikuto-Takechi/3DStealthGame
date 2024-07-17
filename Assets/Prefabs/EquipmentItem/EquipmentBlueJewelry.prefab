@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3224718017942894305}
   - component: {fileID: 5226298659860880147}
   - component: {fileID: 3270099572954232205}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: EquipmentBlueJewelry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemData: {fileID: 11400000, guid: 345088d8b65a4294bb2db6baf87389b4, type: 2}
+  _holdType: 1
   _parametersToModify: []
   _requiredParameters: []
-  _test:
-    _list: 00000000

@@ -5,7 +5,7 @@ namespace MonstersDomain
     public abstract class SingletonBase<T> : MonoBehaviour where T : Component
     {
         public static T Instance { get; set; }
-        protected abstract void AwakeFunction();
+
         protected void Awake()
         {
             if (Instance == null)
@@ -19,5 +19,7 @@ namespace MonstersDomain
                 Destroy(gameObject);
             }
         }
+
+        protected abstract void AwakeFunction();
     }
 }

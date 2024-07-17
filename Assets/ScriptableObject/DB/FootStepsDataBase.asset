@@ -28,3 +28,23 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 4cf0822873368e1439fded82fea82065, type: 3}
     - {fileID: 8300000, guid: 1d6bcd424c397fd40bd578ec309e1405, type: 3}
     - {fileID: 8300000, guid: a395fac4612f3df4b8238083c0ecdd83, type: 3}
+  - Name: Dirt
+    Clips:
+    - {fileID: 8300000, guid: 155c102f6a80d0146afc54562e5983ac, type: 3}
+    - {fileID: 8300000, guid: 9f62bffa2c67e2b41bedafdb79d61ce8, type: 3}
+    - {fileID: 8300000, guid: 4e6f8f476826ed449a42be14510dc041, type: 3}
+    - {fileID: 8300000, guid: 7f880396397ec5c478b8e025ce35aa78, type: 3}
+    - {fileID: 8300000, guid: 63bbe8f66f44d1348bca48170aba7b60, type: 3}
+  - Name: Concrete
+    Clips:
+    - {fileID: 8300000, guid: 061f317f380add84aa4d0e5ac24968ce, type: 3}
+    - {fileID: 8300000, guid: 5ecf67121afa301439b849249393605c, type: 3}
+    - {fileID: 8300000, guid: af4c82041170df84b9d3eb8905339ab3, type: 3}
+    - {fileID: 8300000, guid: f87cf71c5e61d1446a98816c7fd615bb, type: 3}
+    - {fileID: 8300000, guid: dc86671baf14b114f95d1ae7bd6f6a32, type: 3}
+  - Name: Indoor
+    Clips:
+    - {fileID: 8300000, guid: 3fdd9d6477e46f541bd339af1addc967, type: 3}
+    - {fileID: 8300000, guid: 46dc544e6db3d8941810e9dcf96e9eee, type: 3}
+    - {fileID: 8300000, guid: 3cb5b55caab63914cad0039d14ccae26, type: 3}
+    - {fileID: 8300000, guid: 11912dea4206a9c4ca4322dadef78179, type: 3}

@@ -3,20 +3,25 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    ///     接地判定クラス
+    /// </summary>
     public class CheckGround : MonoBehaviour
     {
+        [SerializeField, Tooltip("レイキャストから除外するレイヤー")] 
+        LayerMask _ignoreLayer;
+
+        [SerializeField] float _raycastDistance = 25f;
         [SerializeField] float _maxSlopeAngle = 45f;
-        public bool IsGrounded { get; set; } = false;
-
-        public Vector3 NormalVector { get; private set; } = Vector3.up;
-
-        private ContactPoint _lastContactPoint;
+        [SerializeField] float _sphereRadius = 5f;
+        bool _exitGround;
         public Action HitWall;
+        public bool IsGrounded { get; set; }
+        public Vector3 NormalVector { get; private set; } = Vector3.up;
 
         void OnCollisionStay(Collision collision)
         {
             foreach (var contact in collision.contacts)
-            {
                 if (_maxSlopeAngle >= Vector3.Angle(Vector3.up, contact.normal))
                 {
                     NormalVector = contact.normal;
@@ -26,15 +31,6 @@ namespace MonstersDomain
                 {
                     HitWall?.Invoke();
                 }
-                _lastContactPoint = contact;
-            }
-        }
-        void OnCollisionExit(Collision collision)
-        {
-            if (Vector3.Angle(_lastContactPoint.normal, Vector3.up) < _maxSlopeAngle)
-            {
-                IsGrounded = false;
-            }
         }
     }
 }

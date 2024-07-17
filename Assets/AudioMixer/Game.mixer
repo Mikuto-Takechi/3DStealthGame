@@ -47,6 +47,26 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!244 &-7159941292642516674
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 0bfc5787530542a44b09caeb06db65a9
+  m_EffectName: Normalize
+  m_MixLevel: 3c27fc3573f52e84584d934c8f1a199d
+  m_Parameters:
+  - m_ParameterName: Fade in time
+    m_GUID: a2b85ee008d0cfc4ebad20eceef3a3e2
+  - m_ParameterName: Lowest volume
+    m_GUID: 3881867eff602f54bb84b859cf3eb237
+  - m_ParameterName: Maximum amp
+    m_GUID: 34ee2f9a180a35c4aa28bc64bd8d090f
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!241 &24100000
 AudioMixerController:
   m_ObjectHideFlags: 0
@@ -64,13 +84,13 @@ AudioMixerController:
   m_UpdateMode: 0
   m_ExposedParameters:
   - guid: c87a2c87db0284143acbf56e668732f3
-    name: Ambient
+    name: AmbientVolume
   - guid: 9c5797cf5515fd04abb0d4d16567c97b
-    name: BGM
+    name: BGMVolume
   - guid: 2cf5113649ecbd341b4f20bdd9cf3733
-    name: Master
+    name: MasterVolume
   - guid: 25e1df0e9cf50f9418c5c03425073a10
-    name: SE
+    name: SEVolume
   m_AudioMixerGroupViews:
   - guids:
     - 7987394cadef289478b407e312f8f916
@@ -125,7 +145,9 @@ AudioMixerSnapshotController:
   m_Name: Snapshot
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: e4725bf7639662d48a5ea7709081c91a
-  m_FloatValues: {}
+  m_FloatValues:
+    e37cbf91e06b11e4e8b37c31f60edae1: 50
+    9db02a32a539b7341bba5e1f22046e47: 4.1
   m_TransitionOverrides: {}
 --- !u!243 &1081116435086845747
 AudioMixerGroupController:
@@ -142,6 +164,7 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: -8947086678304402309}
+  - {fileID: -7159941292642516674}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0

@@ -12,7 +12,7 @@ namespace MonstersDomain
         [SerializeField, Range(1, 100)] int _requestItemAmount = 1;
         [SerializeField] Image _requestItemImage;
         [SerializeField] Text _requestItemText;
-        int _currentItemAmount = 0;
+        int _currentItemAmount;
         IDisposable _disposable;
 
         void Awake()
@@ -32,16 +32,6 @@ namespace MonstersDomain
             _disposable?.Dispose();
         }
 
-        void RequestItem(Unit _)
-        {
-            if (_requestItemAmount <= _currentItemAmount) return;
-            if (!ItemManager.Instance.RequestItem(_requestItem.Id)) return;
-            _currentItemAmount++;
-            if (_requestItemAmount <= _currentItemAmount)
-            {
-                GameManager.Instance.CurrentGameState.Value = GameState.GameClear;
-            }
-        }
         void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out Player player))
@@ -59,6 +49,15 @@ namespace MonstersDomain
                 InteractionMessage.Instance.WriteText("");
                 _disposable?.Dispose();
             }
+        }
+
+        void RequestItem(Unit _)
+        {
+            if (_requestItemAmount <= _currentItemAmount) return;
+            if (!ItemManager.Instance.RequestItem(_requestItem.Id)) return;
+            _currentItemAmount++;
+            if (_requestItemAmount <= _currentItemAmount)
+                GameManager.Instance.CurrentGameState.Value = GameState.GameClear;
         }
     }
 }

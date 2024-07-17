@@ -44,8 +44,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.92
-  m_Range: 3
+  m_Intensity: 3.29
+  m_Range: 4.07
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -81,7 +81,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 3967
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 4639145557703026611}
   - component: {fileID: 8664225469796833407}
   - component: {fileID: 453531429490428415}
+  - component: {fileID: 6299082769606380693}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -128,8 +129,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.31, y: 1.04, z: 6.83}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.67, y: 1.67, z: 1.67}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1433761453885230822}
   - {fileID: 7716452225149548366}
@@ -151,13 +152,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4baba3e4dee61254b96eb2311cbc74c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 2.5
+  _moveSpeed: 3
   _jumpPower: 5.5
+  _fallGravityMultiplier: 3
   _crouchingSpeedDivisor: 3
   _dashSpeedMultiplier: 2.5
-  _maxStamina: 20
+  _maxStamina: 50
   _decreaseStamina: 4
-  _recoveryStamina: 3
+  _recoveryStamina: 20
   _checkGround: {fileID: 8204911996546218696}
   _povController: {fileID: 6143336999018287758}
   _armsAnimator: {fileID: 0}
@@ -168,10 +170,10 @@ MonoBehaviour:
   _checkCeilingDistance: 1.9
   _staminaBar: {fileID: 0}
   _stepRayUpper: {fileID: 6899486544670351133}
-  _stepHeight: 0.7
-  _stepSmooth: 0.1
+  _stepHeight: 0.3
+  _stepSmooth: 0.01
   _crouchSoundDistance: 1
-  _walkSoundDistance: 5
+  _walkSoundDistance: 10
   _runSoundDistance: 15
 --- !u!54 &4043409065498982761
 Rigidbody:
@@ -212,7 +214,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d29b27590635041912593e5a9e0f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 776
+  _raycastDistance: 2
   _maxSlopeAngle: 45
+  _sphereRadius: 0.1
 --- !u!95 &296137514293694961
 Animator:
   serializedVersion: 5
@@ -313,6 +320,26 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.25
   m_Center: {x: 0, y: 0.25, z: 0}
+--- !u!114 &6299082769606380693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2245032572253455219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 430356238b8b458db7f436daabb25d26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _terrainSteps: 030000000200000002000000
+  _tagAndFootSteps:
+  - _tag: Concrete
+    _footSteps: 3
+  - _tag: Dirt
+    _footSteps: 2
+  - _tag: Indoor
+    _footSteps: 4
 --- !u!1 &2245882593858675947
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,6 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeeda811afdf5704dafc8980683b5d94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _armsAnimator: {fileID: 0}
   _itemDotThreshold: 0.97
 --- !u!135 &1522420484820122922
 SphereCollider:
@@ -439,7 +467,7 @@ Transform:
   m_GameObject: {fileID: 8363298937895816229}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.6740003, z: 0}
+  m_LocalPosition: {x: 0, y: 1.6739999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

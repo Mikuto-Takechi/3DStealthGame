@@ -10,51 +10,52 @@ namespace MonstersDomain
     {
         static readonly int IsWalking = Animator.StringToHash("IsWalking");
         static readonly int Dance = Animator.StringToHash("Dance");
-        [SerializeField] [Tooltip("移動速度")] float _moveSpeed = 5f;
-        [SerializeField] [Tooltip("ジャンプする力")] float _jumpPower = 5f;
+        [SerializeField, Tooltip("移動速度")]  float _moveSpeed = 5f;
+        [SerializeField, Tooltip("ジャンプする力")]  float _jumpPower = 5f;
+        [SerializeField] float _fallGravityMultiplier = 3f;
 
-        [SerializeField] [Tooltip("しゃがみ時に計算に加える除数")]
+        [SerializeField, Tooltip("しゃがみ時に計算に加える除数")] 
         float _crouchingSpeedDivisor = 3f;
 
-        [SerializeField] [Tooltip("ダッシュ時に計算に加える乗数")]
+        [SerializeField, Tooltip("ダッシュ時に計算に加える乗数")] 
         float _dashSpeedMultiplier = 3f;
 
-        [SerializeField] [Tooltip("走るために必要なスタミナ")]
+        [SerializeField, Tooltip("走るために必要なスタミナ")] 
         float _maxStamina = 20f;
 
-        [SerializeField] [Tooltip("走った時のスタミナ源少量")]
+        [SerializeField, Tooltip("走った時のスタミナ源少量")] 
         float _decreaseStamina = 3f;
 
-        [SerializeField] [Tooltip("スタミナ回復量")] float _recoveryStamina = 3f;
+        [SerializeField, Tooltip("スタミナ回復量")]  float _recoveryStamina = 3f;
 
-        [SerializeField] [Tooltip("接地判定")] CheckGround _checkGround;
-        [SerializeField] [Tooltip("視点管理")] PovController _povController;
+        [SerializeField, Tooltip("接地判定")]  CheckGround _checkGround;
+        [SerializeField, Tooltip("視点管理")]  PovController _povController;
 
-        [SerializeField] [Tooltip("一人称視点時に表示される腕のアニメーター")]
+        [SerializeField, Tooltip("一人称視点時に表示される腕のアニメーター")] 
         Animator _armsAnimator;
 
-        [SerializeField] [Tooltip("立っている時にアクティブになるコライダー")]
+        [SerializeField, Tooltip("立っている時にアクティブになるコライダー")] 
         Collider _bodyCollider;
 
-        [SerializeField] [Tooltip("レイキャストから除外するレイヤー")]
+        [SerializeField, Tooltip("レイキャストから除外するレイヤー")] 
         LayerMask _ignoreLayer;
 
-        [SerializeField] [Tooltip("しゃがみ時に立ち上がれる高さかを確認するための距離")]
+        [SerializeField, Tooltip("しゃがみ時に立ち上がれる高さかを確認するための距離")] 
         float _checkCeilingDistance = 1.9f;
 
-        [SerializeField] [Tooltip("スタミナゲージを表示するUI")]
+        [SerializeField, Tooltip("スタミナゲージを表示するUI")] 
         ShrinkBar _staminaBar;
 
-        [SerializeField] [Tooltip("")] Transform _stepRayUpper;
-        [SerializeField] [Tooltip("")] float _stepHeight = 0.3f;
-        [SerializeField] [Tooltip("")] float _stepSmooth = 0.1f;
+        [SerializeField, Tooltip("レイを飛ばす場所")]  Transform _stepRayUpper;
+        [SerializeField, Tooltip("レイを飛ばす高さ")]  float _stepHeight = 0.3f;
+        [SerializeField, Tooltip("段差を飛ばす距離")]  float _stepSmooth = 0.1f;
 
         [SerializeField, Tooltip("しゃがみ歩き時の音の距離、半径")]
         float _crouchSoundDistance = 1;
-        
+
         [SerializeField, Tooltip("歩き時の音の距離、半径")]
         float _walkSoundDistance = 5;
-        
+
         [SerializeField, Tooltip("走り時の音の距離、半径")]
         float _runSoundDistance = 15;
 
@@ -63,31 +64,32 @@ namespace MonstersDomain
         public readonly ReactiveProperty<PlayerState> State = new(PlayerState.Idle);
         float _currentStamina;
         IDisposable _disposable;
+        FootStepsSource _footStepsSource;
         CinemachineBasicMultiChannelPerlin _headBob;
         Tween _headTween;
+        bool _isPaused;
+        bool _jumpToggle;
         Rigidbody _rb;
         public PovController PovController => _povController;
-
         public bool IsDied { get; set; }
-        bool _isPaused = false;
 
         void Awake()
         {
+            _footStepsSource = GetComponent<FootStepsSource>();
             _footSteps.Where(n => n < 0).Subscribe(_ =>
                 {
-                    
                     switch (State.Value)
                     {
-                        case PlayerState.Crouch :
-                            AudioManager.Instance.PlayFootSteps(FootSteps.Player, 0.7f, 0.7f);
+                        case PlayerState.Crouch:
+                            _footStepsSource.PlayFootSteps(0.8f, 1f);
                             HearingManager.Instance.OnSoundEmitted(transform.position, _crouchSoundDistance);
                             break;
-                        case PlayerState.Walk :
-                            AudioManager.Instance.PlayFootSteps(FootSteps.Player, 1, 1);
+                        case PlayerState.Walk:
+                            _footStepsSource.PlayFootSteps(1, 1);
                             HearingManager.Instance.OnSoundEmitted(transform.position, _walkSoundDistance);
                             break;
-                        case PlayerState.Run :
-                            AudioManager.Instance.PlayFootSteps(FootSteps.Player, 1.4f, 1);
+                        case PlayerState.Run:
+                            _footStepsSource.PlayFootSteps(1.4f, 1);
                             HearingManager.Instance.OnSoundEmitted(transform.position, _runSoundDistance);
                             break;
                     }
@@ -117,6 +119,25 @@ namespace MonstersDomain
             GameManager.Instance.OnResume += OnResume;
         }
 
+        void Update()
+        {
+            if (_isPaused) return;
+            if (State.Value == PlayerState.Hide)
+                RecoveryStamina();
+            else
+                Movement();
+            //  座標更新を発行する
+            _updatePosition.Value = transform.position;
+            AreaManager.Instance.UpdatePlayerLocation(transform.position);
+        }
+
+        void OnDisable()
+        {
+            _checkGround.HitWall -= StepClimb;
+            GameManager.Instance.OnPause -= OnPause;
+            GameManager.Instance.OnResume -= OnResume;
+        }
+
         void OnPause()
         {
             _povController.FreePov = false;
@@ -127,29 +148,6 @@ namespace MonstersDomain
         {
             _povController.FreePov = true;
             _isPaused = false;
-        }
-
-        void Update()
-        {
-            if (_isPaused) return;
-            if (State.Value == PlayerState.Hide)
-            {
-                RecoveryStamina();
-            }
-            else
-            {
-                Movement();
-            }
-            //  座標更新を発行する
-            _updatePosition.Value = transform.position;
-            AreaManager.Instance.ReportPlayerLocation(transform.position.y);
-        }
-
-        void OnDisable()
-        {
-            _checkGround.HitWall -= StepClimb;
-            GameManager.Instance.OnPause -= OnPause;
-            GameManager.Instance.OnResume -= OnResume;
         }
 
         void Hiding(PlayerState playerState)
@@ -263,15 +261,28 @@ namespace MonstersDomain
             inputVector.y = _rb.velocity.y;
             if (_checkGround.IsGrounded) //  接地しているなら法線ベクトルで地形に沿ったベクトルを出す
             {
+                _jumpToggle = true;
                 var inputMagnitudeOnNormal = Vector3.Dot(inputVector, _checkGround.NormalVector);
-                var onNormal = inputVector - inputMagnitudeOnNormal * _checkGround.NormalVector;
-                var onPlane = inputVector - onNormal;
-                _rb.velocity = onPlane + onNormal;
+                var onNormal = inputMagnitudeOnNormal * _checkGround.NormalVector.normalized;
+                _rb.velocity = inputVector - onNormal;
             }
-            else
+            else if (_jumpToggle)
             {
-                inputVector.y = _rb.velocity.y;
+                _jumpToggle = false;
+                var inputMagnitudeOnNormal = Vector3.Dot(inputVector, Vector3.up);
+                var onNormal = inputMagnitudeOnNormal * Vector3.up;
+                _rb.velocity = inputVector - onNormal;
+            }
+            else if (_rb.velocity.y <= 0f)
+            {
+                inputVector.y = _rb.velocity.y + Physics.gravity.y * Time.deltaTime * 3f;
                 _rb.velocity = inputVector;
+            }
+
+            if (!_checkGround.IsGrounded)
+            {
+                _headBob.m_AmplitudeGain = 0f;
+                _headBob.m_FrequencyGain = 0f;
             }
         }
 

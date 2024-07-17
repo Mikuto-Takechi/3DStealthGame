@@ -6,13 +6,13 @@ namespace MonstersDomain
 {
     public class PooledObject : MonoBehaviour
     {
-        ObjectPool _pool;
-        public ObjectPool Pool { get => _pool; set => _pool = value; }
+        public ObjectPool Pool { get; set; }
 
         public void Release()
         {
-            _pool.ReturnToPool(this);
+            Pool.ReturnToPool(this);
         }
+
         public void Release(float t)
         {
             StartCoroutine(Delay(t, Release));
@@ -29,6 +29,7 @@ namespace MonstersDomain
                     callback?.Invoke();
                     yield break;
                 }
+
                 yield return null;
             }
         }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd2a3cfe8a9a964e921e2c7562c7385, type: 3}
   m_Name: Battery
   m_EditorClassIdentifier: 
-  _id: 2
+  _id: 3
   _displayName: "\u96FB\u6C60"
   _icon: {fileID: 21300000, guid: 62c4e8abd6bd22240b1bfdc756325b6c, type: 3}
   _equipmentItem: {fileID: 6669713985897826503, guid: 8db4d1bf2a8106642a65b22c81e8e56d, type: 3}

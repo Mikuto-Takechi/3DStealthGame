@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MonstersDomain
 {
@@ -8,8 +7,9 @@ namespace MonstersDomain
         [SerializeField] Light _light;
         [SerializeField] float _intensity = 10f;
         [SerializeField] GameObject _volumetricLight;
-        bool _toggleLight = false;
-        bool _isPaused = false;
+        bool _isPaused;
+        bool _toggleLight;
+
         void Awake()
         {
             _volumetricLight.SetActive(false);
@@ -22,14 +22,26 @@ namespace MonstersDomain
             GameManager.Instance.OnResume += OnResume;
         }
 
+        void Update()
+        {
+            if (_isPaused) return;
+            if (_toggleLight && RequiredParameters())
+            {
+                ModifyParameters(Time.deltaTime);
+            }
+            else
+            {
+                _toggleLight = false;
+                _volumetricLight.SetActive(false);
+                _light.intensity = 0;
+            }
+        }
+
         void OnDisable()
         {
             GameManager.Instance.OnPause -= OnPause;
             GameManager.Instance.OnResume -= OnResume;
         }
-
-        void OnPause() => _isPaused = true;
-        void OnResume() => _isPaused = false;
 
         public void Use()
         {
@@ -51,19 +63,14 @@ namespace MonstersDomain
             }
         }
 
-        void Update()
+        void OnPause()
         {
-            if (_isPaused) return;
-            if (_toggleLight && RequiredParameters())
-            {
-                ModifyParameters(Time.deltaTime);
-            }
-            else
-            {
-                _toggleLight = false;
-                _volumetricLight.SetActive(false);
-                _light.intensity = 0;
-            }
+            _isPaused = true;
+        }
+
+        void OnResume()
+        {
+            _isPaused = false;
         }
     }
 }
