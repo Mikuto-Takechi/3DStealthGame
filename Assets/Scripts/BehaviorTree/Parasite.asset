@@ -73,6 +73,9 @@ MonoBehaviour:
   - rid: 3949284539046035998
   - rid: 3949284539046035999
   - rid: 3949284539046036000
+  - rid: 3949284551254344259
+  - rid: 3949284551254344260
+  - rid: 3949284551254344261
   edges:
   - GUID: ddcee2bb-7f9d-454a-a4ea-261355865ae5
     owner: {fileID: 11400000}
@@ -594,13 +597,37 @@ MonoBehaviour:
     outputFieldName: output
     inputPortIdentifier: 
     outputPortIdentifier: output
+  - GUID: 05606b6b-4ccc-4783-9e8d-768fcc38e9d7
+    owner: {fileID: 11400000}
+    inputNodeGUID: 50f2474e-a51f-4d69-aa05-b448b77b5c0f
+    outputNodeGUID: dfa7c811-299c-4a80-94d6-2ace361a4d5f
+    inputFieldName: input
+    outputFieldName: _output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 77050c83-7597-4a05-9921-a35a22e9b1ea
+    owner: {fileID: 11400000}
+    inputNodeGUID: 50f2474e-a51f-4d69-aa05-b448b77b5c0f
+    outputNodeGUID: e7e8106f-da8b-4429-8b4d-feb34849e5d2
+    inputFieldName: inputValue
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: output
+  - GUID: c79bec67-e121-46d5-add0-797ea83c6ca3
+    owner: {fileID: 11400000}
+    inputNodeGUID: 21b472af-29a3-47a1-8a45-86962836a029
+    outputNodeGUID: 50f2474e-a51f-4d69-aa05-b448b77b5c0f
+    inputFieldName: input
+    outputFieldName: outputValue
+    inputPortIdentifier: input
+    outputPortIdentifier: 
   groups: []
   stackNodes: []
   pinnedElements:
   - position:
       serializedVersion: 2
-      x: 68
-      y: 0.9999962
+      x: 0
+      y: 0
       width: 150
       height: 200
     opened: 1
@@ -616,11 +643,12 @@ MonoBehaviour:
   - rid: 3949284534187982979
   - rid: 3949284534187982983
   - rid: 3949284534187982987
+  - rid: 3949284551254343875
   serializedParameterList: []
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: 397.6, y: -224, z: 0}
-  scale: {x: 1.15, y: 1.15, z: 1}
+  position: {x: 1742, y: 193, z: 0}
+  scale: {x: 1.3225, y: 1.3225, z: 1}
   references:
     version: 2
     RefIds:
@@ -1765,3 +1793,77 @@ MonoBehaviour:
         nodeLock: 0
         parameterGUID: 20cdb9de-cf2b-4f0a-be86-1acb34cd1358
         accessor: 0
+    - rid: 3949284551254343875
+      type: {class: FloatParameter, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        guid: f65bcc12-aadb-43d1-ac80-9d84c000774b
+        name: Timer
+        type: 
+        serializedValue:
+          serializedType: 
+          serializedName: 
+          serializedValue: 
+        input: 1
+        settings:
+          rid: 3949284551254343876
+        val: 10
+    - rid: 3949284551254343876
+      type: {class: FloatParameter/FloatSettings, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        isHidden: 0
+        expanded: 0
+        guid: f65bcc12-aadb-43d1-ac80-9d84c000774b
+        mode: 0
+        min: 0
+        max: 1
+    - rid: 3949284551254344259
+      type: {class: Decrease, ns: MonstersDomain.BehaviorTree, asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: 50f2474e-a51f-4d69-aa05-b448b77b5c0f
+        computeOrder: 61
+        position:
+          serializedVersion: 2
+          x: -785
+          y: 171.5
+          width: 193
+          height: 81
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        inputValue: 0
+        outputValue: 0
+    - rid: 3949284551254344260
+      type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        GUID: e7e8106f-da8b-4429-8b4d-feb34849e5d2
+        computeOrder: 60
+        position:
+          serializedVersion: 2
+          x: -874.5
+          y: 226.5
+          width: 68
+          height: 37
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        parameterGUID: f65bcc12-aadb-43d1-ac80-9d84c000774b
+        accessor: 0
+    - rid: 3949284551254344261
+      type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        GUID: 21b472af-29a3-47a1-8a45-86962836a029
+        computeOrder: 59
+        position:
+          serializedVersion: 2
+          x: -574.5
+          y: 216
+          width: 68
+          height: 37
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        parameterGUID: f65bcc12-aadb-43d1-ac80-9d84c000774b
+        accessor: 1

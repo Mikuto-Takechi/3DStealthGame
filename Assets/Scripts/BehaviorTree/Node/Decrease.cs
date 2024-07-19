@@ -1,18 +1,23 @@
 using System;
+using System.Linq;
 using GraphProcessor;
 using UnityEngine;
 
 namespace MonstersDomain.BehaviorTree
 {
-    [Serializable, NodeMenuItem("Custom/Decrease")]
-    public class Decrease : BaseNode
+    [Serializable, NodeMenuItem("BehaviorTree/Action/Decrease")]
+    public class Decrease : Node
     {
-        [Output] public float output;
-        protected override void Process()
+        [Input, Vertical] public Node input;
+        [Input] public float inputValue;
+        [Output] public float outputValue;
+        public override BTState Tick()
         {
-            output = Mathf.Clamp(output - Time.deltaTime, 0, float.MaxValue);
-            
-            Debug.Log(output);
+            inputPorts.PullDatas();
+            outputValue = inputValue - 1f;
+            Debug.Log(outputValue);
+            outputPorts.PushDatas();
+            return BTState.Success;
         }
     }
 }

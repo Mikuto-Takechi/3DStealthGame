@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,40 +7,17 @@ namespace MonstersDomain
     {
         [SerializeField] FootSteps[] _terrainSteps;
         [SerializeField] TagAndFootSteps[] _tagAndFootSteps;
-        readonly HashSet<GameObject> _collisionObjects = new();
-        readonly HashSet<Terrain> _collisionTerrains = new();
 
-        void OnCollisionEnter(Collision other)
+        FootSteps CheckGroundType(GameObject go)
         {
-            if (other.gameObject.TryGetComponent(out Terrain terrain)) _collisionTerrains.Add(terrain);
-
-            foreach (var pair in _tagAndFootSteps)
-                if (other.gameObject.CompareTag(pair.Tag))
-                {
-                    _collisionObjects.Add(other.gameObject);
-                    break;
-                }
-        }
-
-        void OnCollisionExit(Collision other)
-        {
-            if (other.gameObject.TryGetComponent(out Terrain terrain)) _collisionTerrains.Remove(terrain);
-            foreach (var pair in _tagAndFootSteps)
-                if (other.gameObject.CompareTag(pair.Tag))
-                {
-                    _collisionObjects.Remove(other.gameObject);
-                    break;
-                }
-        }
-
-        public void PlayFootSteps(float pitch, float volume)
-        {
-            var footTerrain = _collisionTerrains.LastOrDefault();
-            var footGameObject = _collisionObjects.LastOrDefault();
-            if (footTerrain)
+            if (!go)
             {
-                var pos = transform.position - footTerrain.transform.position;
-                var tData = footTerrain.terrainData;
+                return FootSteps.Indoor;
+            }
+            if (go.TryGetComponent(out Terrain terrain))
+            {
+                var pos = transform.position - terrain.transform.position;
+                var tData = terrain.terrainData;
                 var offsetX = (int)(tData.alphamapWidth * pos.x / tData.size.x);
                 var offsetZ = (int)(tData.alphamapHeight * pos.z / tData.size.z);
                 var alphaMaps = tData.GetAlphamaps(offsetX, offsetZ, 1, 1);
@@ -50,12 +26,59 @@ namespace MonstersDomain
                 var weights = alphaMaps.OfType<float>().ToArray();
                 //  比率が最大の物のIndexを取得
                 var maxIndex = weights.ToList().IndexOf(weights.Max());
-                AudioManager.Instance.PlayFootSteps(_terrainSteps[maxIndex], pitch, volume);
+                return _terrainSteps[maxIndex];
             }
-            else if (footGameObject)
+
+            foreach (var pair in _tagAndFootSteps)
             {
-                var footSteps = _tagAndFootSteps.First(pair => footGameObject.CompareTag(pair.Tag)).FootSteps;
-                AudioManager.Instance.PlayFootSteps(footSteps, pitch, volume);
+                if (go.CompareTag(pair.Tag))
+                {
+                    return pair.FootSteps;
+                }
+            }
+            
+            return FootSteps.Indoor;
+        }
+        public void PlayFootSteps(GameObject ground, float pitch, float volume)
+        {
+            AudioManager.Instance.PlayFootSteps(CheckGroundType(ground), pitch, volume);
+        }
+
+        public void PlayJumpingSE(GameObject ground, float pitch, float volume)
+        {
+            switch (CheckGroundType(ground))
+            {
+                case FootSteps.Concrete :
+                    AudioManager.Instance.PlayFootSteps(FootSteps.RockJump, pitch, volume);
+                    break;
+                case FootSteps.Grass :
+                    AudioManager.Instance.PlayFootSteps(FootSteps.GrassJump, pitch, volume);
+                    break;
+                case FootSteps.Indoor :
+                    AudioManager.Instance.PlayFootSteps(FootSteps.WoodJump, pitch, volume);
+                    break;
+                case FootSteps.Dirt :
+                    AudioManager.Instance.PlayFootSteps(FootSteps.DirtJump, pitch, volume);
+                    break;
+            }
+        }
+
+        public void PlayLandingSE(GameObject ground, float pitch, float volume)
+        {
+            switch (CheckGroundType(ground))
+            {
+                case FootSteps.Concrete :
+                    AudioManager.Instance.PlayFootSteps(FootSteps.RockLand, pitch, volume);
+                    break;
+                case FootSteps.Grass :
+                    AudioManager.Instance.PlayFootSteps(FootSteps.GrassLand, pitch, volume);
+                    break;
+                case FootSteps.Indoor :
+                    AudioManager.Instance.PlayFootSteps(FootSteps.WoodLand, pitch, volume);
+                    break;
+                case FootSteps.Dirt :
+                    AudioManager.Instance.PlayFootSteps(FootSteps.DirtLand, pitch, volume);
+                    break;
             }
         }
     }

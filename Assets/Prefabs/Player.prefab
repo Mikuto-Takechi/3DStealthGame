@@ -106,7 +106,6 @@ GameObject:
   - component: {fileID: 6137549359383213970}
   - component: {fileID: 4043409065498982761}
   - component: {fileID: 8204911996546218696}
-  - component: {fileID: 296137514293694961}
   - component: {fileID: 6143336999018287758}
   - component: {fileID: 4639145557703026611}
   - component: {fileID: 8664225469796833407}
@@ -129,8 +128,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.31, y: 1.04, z: 6.83}
-  m_LocalScale: {x: 1.67, y: 1.67, z: 1.67}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1433761453885230822}
   - {fileID: 7716452225149548366}
@@ -153,8 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 3
-  _jumpPower: 5.5
-  _fallGravityMultiplier: 3
+  _jumpPower: 5
   _crouchingSpeedDivisor: 3
   _dashSpeedMultiplier: 2.5
   _maxStamina: 50
@@ -170,11 +168,14 @@ MonoBehaviour:
   _checkCeilingDistance: 1.9
   _staminaBar: {fileID: 0}
   _stepRayUpper: {fileID: 6899486544670351133}
-  _stepHeight: 0.3
+  _stepHeight: 0.6
   _stepSmooth: 0.01
   _crouchSoundDistance: 1
   _walkSoundDistance: 10
   _runSoundDistance: 15
+  _crouchInterval: 0.7
+  _walkInterval: 0.5
+  _runInterval: 0.2
 --- !u!54 &4043409065498982761
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -219,28 +220,8 @@ MonoBehaviour:
     m_Bits: 776
   _raycastDistance: 2
   _maxSlopeAngle: 45
-  _sphereRadius: 0.1
---- !u!95 &296137514293694961
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2245032572253455219}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  _sphereRadius: 0.01
+  _hitMin: 0.05
 --- !u!114 &6143336999018287758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,7 +313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 430356238b8b458db7f436daabb25d26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _terrainSteps: 030000000200000002000000
+  _terrainSteps: 030000000200000005000000
   _tagAndFootSteps:
   - _tag: Concrete
     _footSteps: 3
@@ -467,7 +448,7 @@ Transform:
   m_GameObject: {fileID: 8363298937895816229}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.6739999, z: 0}
+  m_LocalPosition: {x: 0, y: 1.6739998, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

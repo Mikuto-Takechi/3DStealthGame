@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -9,20 +11,20 @@ namespace MonstersDomain
 {
     public class ItemPicker : MonoBehaviour
     {
-        [SerializeField, Tooltip("一人称視点時に表示される腕のアニメーター")] 
-        Animator _armsAnimator;
-
+        [SerializeField, Tooltip("一人称視点時に表示される腕のアニメーター")] Animator _armsAnimator;
         [SerializeField, Range(0f, 1f), Tooltip("アイテムとカメラの内積で選択可能になる閾値。1に近ければより照準があっている。")]
         float _itemDotThreshold = 0.97f;
-
+        [SerializeField, Tooltip("アイテムを拾うアニメーションの時間")] float _pickUpAnimationTime = 0.4f;
         IDisposable _disposable;
         Camera _main;
         List<DroppedItem> _pickableList = new();
         ObservableStateMachineTrigger _trigger;
         readonly Vector3ReactiveProperty _updateAngle = new();
+        CancellationTokenSource _cts;
 
         void Start()
         {
+            _cts = new();
             _trigger = _armsAnimator.GetBehaviour<ObservableStateMachineTrigger>();
             _main = Camera.main;
             _updateAngle.SkipLatestValueOnSubscribe().Subscribe(_ => CheckItem()).AddTo(this);
@@ -72,19 +74,27 @@ namespace MonstersDomain
             }
         }
 
+        /// <summary>
+        /// 入力イベント登録処理
+        /// </summary>
         void CheckIfSubscribed(DroppedItem droppedItem)
         {
             _disposable?.Dispose();
             _disposable = InputProvider.Instance.InteractTrigger.Subscribe(_ =>
-            {
-                Camera.main.cullingMask &= ~(1 << 11);
-                droppedItem.PickUp();
-                _armsAnimator.SetTrigger("Pickup");
-                _trigger.OnStateExitAsObservable()
-                    .Where(i => i.StateInfo.IsName("RightHand.FirstPersonPickup"))
-                    .First()
-                    .Subscribe(_ => Camera.main.cullingMask |= 1 << 11).AddTo(this);
+            { 
+                _cts.Cancel();
+                _cts = new CancellationTokenSource();
+                ItemPickUp(droppedItem, _cts.Token).Forget();
             }).AddTo(droppedItem);
+        }
+
+        async UniTask ItemPickUp(DroppedItem droppedItem, CancellationToken ct)
+        {
+            Camera.main.cullingMask &= ~(1 << 11);
+            droppedItem.PickUp();
+            _armsAnimator.SetTrigger("Pickup");
+            await UniTask.WaitForSeconds(_pickUpAnimationTime, cancellationToken: ct);
+            Camera.main.cullingMask |= 1 << 11;
         }
     }
 }
