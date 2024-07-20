@@ -19,13 +19,6 @@ namespace MonstersDomain
             // Rootが無かったらつくる
             if (!nodes.Any(x => x is Root)) AddNode(BaseNode.CreateFromType<Root>(Vector2.zero));
         }
-
-        [ContextMenu("Process")]
-        void Process()
-        {
-            var processor = new BehaviorTreeProcessor(this);
-            processor.Run();
-        }
 #if UNITY_EDITOR
         // ダブルクリックでウィンドウが開かれるように
         [OnOpenAsset(0)]

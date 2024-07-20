@@ -11,7 +11,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override void Process()
         {
-            inputPorts.PullDatas();
             Debug.Log(input);
         }
     }
@@ -21,9 +20,9 @@ namespace MonstersDomain.BehaviorTree
     {
         [Input("In")] public GameObject input;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (input)
                 Debug.Log($"Target is {input.name}");
             else

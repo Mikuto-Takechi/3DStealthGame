@@ -14,7 +14,7 @@ namespace MonstersDomain.BehaviorTree
         float _future = -1;
         [Input, Vertical] public Node input;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
             if (_future < 0)
                 _future = Time.time + _seconds;

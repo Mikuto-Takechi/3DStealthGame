@@ -11,19 +11,18 @@ namespace MonstersDomain.BehaviorTree
         [Input, Vertical] public Node input;
         [Input] public VisionSensor sensor;
         [Output] public GameObject searchedTarget;
-        [Input] public MoveController moveController;
+        [Output] public float timer;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (!sensor) return BTState.Failure;
-
             Player player = null;
             if (sensor.InSightTarget(ref player))
             {
                 searchedTarget = player.gameObject;
-                moveController.ChaseTimer = _setTime;
-                outputPorts.PushDatas();
+                timer = _setTime;
+                PushParameters();
                 return BTState.Success;
             }
             return BTState.Failure;

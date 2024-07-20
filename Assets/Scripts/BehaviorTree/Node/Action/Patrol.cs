@@ -9,9 +9,9 @@ namespace MonstersDomain.BehaviorTree
         [Input, Vertical] public Node _input;
         [Input] public MoveController _moveController;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (_moveController)
             {
                 _moveController.Patrol();

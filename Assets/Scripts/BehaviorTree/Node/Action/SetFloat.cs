@@ -11,9 +11,9 @@ namespace MonstersDomain.BehaviorTree
         [SerializeField] float _value;
         [Input] public MoveController moveController;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (moveController) moveController.ChaseTimer = _value;
             return BTState.Success;
         }

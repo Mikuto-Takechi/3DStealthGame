@@ -1,5 +1,4 @@
 using GraphProcessor;
-using UnityEngine;
 
 namespace MonstersDomain.BehaviorTree
 {
@@ -8,14 +7,14 @@ namespace MonstersDomain.BehaviorTree
     {
         [Input] public bool Predicate;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (Predicate)
             {
                 return BTState.Success;
             }
-            return Child.Tick();
+            return Child.OnTick();
         }
     }
 }

@@ -15,10 +15,10 @@ namespace MonstersDomain.BehaviorTree
         [SerializeField] int _limit = 1;
         int _count;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
             if (_limit > 0 && _count < _limit)
-                switch (Child.Tick())
+                switch (Child.OnTick())
                 {
                     case BTState.Running:
                         return BTState.Running;

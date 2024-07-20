@@ -10,9 +10,9 @@ namespace MonstersDomain.BehaviorTree
         [Input, Vertical] public Node _input;
         [Input] public GameObject target;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (target)
             {
                 return BTState.Success;

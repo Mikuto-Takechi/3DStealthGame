@@ -10,10 +10,10 @@ namespace MonstersDomain.BehaviorTree
         [Input, Vertical] public Node _input;
         [Output] public GameObject target;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
             target = null;
-            outputPorts.PushDatas();
+            PushParameters();
             return BTState.Success;
         }
     }

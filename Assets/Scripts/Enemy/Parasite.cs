@@ -36,7 +36,6 @@ namespace MonstersDomain
             _copyGraph.SetParameterValue("Animator", _animator);
             _copyGraph.SetParameterValue("ImpulseSource", _roarCinemachineImpulseSource);
             _treeProcessor = new BehaviorTreeProcessor(_copyGraph);
-            _treeProcessor.Run();
             //  プレイヤーの居るエリアが切り替わったらそのエリアのスポーン地点にワープする
             AreaManager.Instance.SwitchAreaSubject.Subscribe(warpPoint =>
             {

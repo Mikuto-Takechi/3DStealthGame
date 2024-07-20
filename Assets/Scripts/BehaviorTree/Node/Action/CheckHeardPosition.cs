@@ -12,9 +12,9 @@ namespace MonstersDomain.BehaviorTree
         [Output] public Vector3 _position;
         [Input, Vertical] public Node _input;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (!_sensor)
             {
                 return BTState.Failure;
@@ -25,7 +25,7 @@ namespace MonstersDomain.BehaviorTree
                 AudioManager.Instance.Play3DSE(SE.Bite, Owner.transform.position);
                 _position = _sensor.CheckLocation;
                 _sensor.CheckLocation = Vector3.zero;
-                outputPorts.PushDatas();
+                PushParameters();
                 return BTState.Success;
             }
 

@@ -12,22 +12,29 @@ namespace MonstersDomain.BehaviorTree
         [Output(allowMultiple: true), Vertical]
         protected Node _output;
 
-        protected override void Process()
+        protected override void Enable()
+        {
+            onAfterEdgeConnected += UpdateChildren;
+            onAfterEdgeDisconnected += UpdateChildren;
+            UpdateChildren(null);
+        }
+
+        protected override void Disable()
+        {
+            onAfterEdgeConnected -= UpdateChildren;
+            onAfterEdgeDisconnected -= UpdateChildren;
+        }
+
+        void UpdateChildren(SerializableEdge _)
         {
             _children = new List<Node>();
             var outputNodes = GetOutputNodes().OrderBy(x => x.position.x);
             foreach (var outputNode in outputNodes)
-                if (outputNode is Node)
-                    _children.Add(outputNode as Node);
-        }
-
-        public virtual void ResetChildren()
-        {
-            _activeChild = 0;
-            for (var i = 0; i < _children.Count; i++)
             {
-                var b = _children[i] as Composite;
-                if (b != null) b.ResetChildren();
+                if (outputNode is Node node)
+                {
+                    _children.Add(node);
+                }
             }
         }
     }

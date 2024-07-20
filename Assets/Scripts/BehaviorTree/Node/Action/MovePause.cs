@@ -11,9 +11,9 @@ namespace MonstersDomain.BehaviorTree
         [SerializeField] bool _isPause;
         [Input] public MoveController moveController;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (moveController) moveController.Agent.isStopped = _isPause;
             return BTState.Success;
         }

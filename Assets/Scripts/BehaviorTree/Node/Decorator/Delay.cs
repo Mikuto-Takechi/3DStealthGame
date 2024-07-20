@@ -12,13 +12,13 @@ namespace MonstersDomain.BehaviorTree
         float _future = -1;
         [SerializeField] float _seconds = 0;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
             if (_future < 0)
                 _future = Time.time + _seconds;
 
             if (Time.time >= _future)
-                switch (Child.Tick())
+                switch (Child.OnTick())
                 {
                     case BTState.Running:
                         return BTState.Running;

@@ -10,15 +10,14 @@ namespace MonstersDomain.BehaviorTree
         [SerializeField] float _compareValue;
         [SerializeField] bool _greaterThan;
         [Input, Vertical] public Node Input;
-        [Input] public MoveController InputValue;
+        [Input] public float InputValue;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
-            Debug.Log(InputValue.ChaseTimer);
+            PullParameters();
             if (_greaterThan)
             {
-                if (InputValue.ChaseTimer > _compareValue)
+                if (InputValue > _compareValue)
                 {
                     return BTState.Success;
                 }
@@ -26,7 +25,7 @@ namespace MonstersDomain.BehaviorTree
                 return BTState.Failure;
             }
 
-            if (InputValue.ChaseTimer <= _compareValue)
+            if (InputValue <= _compareValue)
             {
                 return BTState.Success;
             }

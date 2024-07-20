@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using GraphProcessor;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -13,28 +14,10 @@ namespace MonstersDomain.BehaviorTree
     public class Selector : Composite
     {
         [Input, Vertical] protected Node _input;
-        [SerializeField] readonly bool _shuffle = false;
 
-        protected override void Process()
+        protected override BTState Tick()
         {
-            base.Process();
-            if (_shuffle)
-            {
-                var n = _children.Count;
-                while (n > 1)
-                {
-                    n--;
-                    var k = Mathf.FloorToInt(Random.value * (n + 1));
-                    var value = _children[k];
-                    _children[k] = _children[n];
-                    _children[n] = value;
-                }
-            }
-        }
-
-        public override BTState Tick()
-        {
-            var childState = _children[_activeChild].Tick();
+            var childState = _children[_activeChild].OnTick();
             switch (childState)
             {
                 case BTState.Success:

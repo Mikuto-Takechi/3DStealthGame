@@ -13,9 +13,9 @@ namespace MonstersDomain.BehaviorTree
         [Input] public GameObject _owner;
         [Input] public GameObject _target;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (!_owner || !_target)
             {
                 return BTState.Failure;

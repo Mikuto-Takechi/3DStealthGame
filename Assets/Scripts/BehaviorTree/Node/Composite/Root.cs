@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace MonstersDomain.BehaviorTree
 {
@@ -8,11 +9,11 @@ namespace MonstersDomain.BehaviorTree
         //  終了フラグ。立っていたらこれ以上処理しない。
         bool _isTerminated;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
             if (_isTerminated) return BTState.Abort;
             while (true)
-                switch (_children[_activeChild].Tick())
+                switch (_children[_activeChild].OnTick())
                 {
                     case BTState.Running:
                         return BTState.Running;

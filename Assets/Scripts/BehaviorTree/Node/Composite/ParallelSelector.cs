@@ -12,12 +12,12 @@ namespace MonstersDomain.BehaviorTree
     {
         [Input, Vertical] protected Node _input;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
             var shouldWait = false;
             for (var i = 0; i < _children.Count; ++i)
             {
-                var childState = _children[i].Tick();
+                var childState = _children[i].OnTick();
                 if (childState == BTState.Running)
                     shouldWait = true;
                 else if (childState == BTState.Success) return BTState.Success;

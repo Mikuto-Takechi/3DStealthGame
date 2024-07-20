@@ -12,9 +12,9 @@ namespace MonstersDomain.BehaviorTree
         [Input, Vertical] public Node _input;
         [Input] public CinemachineImpulseSource impulseSource;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (_isStart)
             {
                 AudioManager.Instance.PlaySE(SE.Roar);

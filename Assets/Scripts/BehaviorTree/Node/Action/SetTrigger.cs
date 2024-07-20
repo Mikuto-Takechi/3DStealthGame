@@ -11,9 +11,9 @@ namespace MonstersDomain.BehaviorTree
         [SerializeField] string _triggerName;
         [Input] public Animator animator;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             animator.SetTrigger(_triggerName);
             return BTState.Success;
         }

@@ -11,30 +11,31 @@ namespace MonstersDomain.BehaviorTree
         [Input] public MoveController _moveController;
         [Input] public Vector3 _position;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             Debug.Log(nameof(MoveToPoint));
             if (!_moveController) return BTState.Failure;
-
-            switch (_moveController.PointAsyncMover.Current)
-            {
-                case MoveState.Complete:
-                    _moveController.PointAsyncMover.Current = MoveState.Ready;
-                    return BTState.Success;
-                case MoveState.Running:
-                    return BTState.Running;
-                case MoveState.Ready:
-                    _moveController.MoveToPoint(_position);
-                    return BTState.Running;
-                case MoveState.Abort:
-                    _moveController.MoveToPoint(_position);
-                    return BTState.Running;
-                // _moveController.PointAsyncMover.Current = MoveState.Ready;
-                // return BTState.Failure;
-                default:
-                    return BTState.Failure;
-            }
+            _moveController.Agent.SetDestination(_position);
+            return BTState.Success;
+            // switch (_moveController.PointAsyncMover.Current)
+            // {
+            //     case MoveState.Complete:
+            //         _moveController.PointAsyncMover.Current = MoveState.Ready;
+            //         return BTState.Success;
+            //     case MoveState.Running:
+            //         return BTState.Running;
+            //     case MoveState.Ready:
+            //         _moveController.MoveToPoint(_position);
+            //         return BTState.Running;
+            //     case MoveState.Abort:
+            //         _moveController.MoveToPoint(_position);
+            //         return BTState.Running;
+            //     // _moveController.PointAsyncMover.Current = MoveState.Ready;
+            //     // return BTState.Failure;
+            //     default:
+            //         return BTState.Failure;
+            // }
         }
     }
 }

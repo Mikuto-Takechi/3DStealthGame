@@ -8,9 +8,9 @@ namespace MonstersDomain.BehaviorTree
     {
         [Input, Vertical] protected Node _input;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            var childState = _children[_activeChild].Tick();
+            var childState = _children[_activeChild].OnTick();
             switch (childState)
             {
                 case BTState.Success:

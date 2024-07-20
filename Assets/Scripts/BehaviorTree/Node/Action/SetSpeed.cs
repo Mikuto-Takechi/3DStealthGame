@@ -11,9 +11,9 @@ namespace MonstersDomain.BehaviorTree
         [SerializeField] float _speed;
         [Input] public MoveController moveController;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
+            PullParameters();
             if (moveController) moveController.Agent.speed = _speed;
             return BTState.Success;
         }

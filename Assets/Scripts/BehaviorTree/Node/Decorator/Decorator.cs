@@ -8,10 +8,22 @@ namespace MonstersDomain.BehaviorTree
         public Node Child;
         [Input, Vertical] public Node Input;
         [Output, Vertical] public Node Output;
-
-        protected override void Process()
+        protected override void Enable()
         {
-            Child = GetOutputNodes().ToList().OfType<Node>().First();
+            onAfterEdgeConnected += UpdateChild;
+            onAfterEdgeDisconnected += UpdateChild;
+            UpdateChild(null);
+        }
+
+        protected override void Disable()
+        {
+            onAfterEdgeConnected -= UpdateChild;
+            onAfterEdgeDisconnected -= UpdateChild;
+        }
+
+        void UpdateChild(SerializableEdge _)
+        {
+            Child = GetOutputNodes().ToList().OfType<Node>().FirstOrDefault();
         }
     }
 }

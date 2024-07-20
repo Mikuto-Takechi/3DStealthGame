@@ -11,10 +11,10 @@ namespace MonstersDomain.BehaviorTree
         [Output] public bool _output;
         [SerializeField] bool _setBool;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
             _output = _setBool;
-            outputPorts.PushDatas();
+            PushParameters();
             return BTState.Success;
         }
     }

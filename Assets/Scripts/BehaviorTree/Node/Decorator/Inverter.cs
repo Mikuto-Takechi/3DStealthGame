@@ -9,9 +9,9 @@ namespace MonstersDomain.BehaviorTree
     [NodeMenuItem("BehaviorTree/Decorator/Inverter")]
     public class Inverter : Decorator
     {
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            switch (Child.Tick())
+            switch (Child.OnTick())
             {
                 case BTState.Running:
                     return BTState.Running;

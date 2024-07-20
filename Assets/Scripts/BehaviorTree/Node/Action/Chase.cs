@@ -11,10 +11,9 @@ namespace MonstersDomain.BehaviorTree
         [Input] public MoveController _moveController;
         [Input] public GameObject _target;
 
-        public override BTState Tick()
+        protected override BTState Tick()
         {
-            inputPorts.PullDatas();
-
+            PullParameters();
             if (_moveController && _target)
             {
                 _moveController.Chase(_target.transform);
