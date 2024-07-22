@@ -26,7 +26,6 @@ namespace MonstersDomain.BehaviorTree
         /// </summary>
         protected override BTState Tick()
         {
-            PullParameters();
             if (_isFirst)
             {
                 _prevTime = Time.time;
@@ -39,7 +38,8 @@ namespace MonstersDomain.BehaviorTree
                 outputValue = Mathf.Clamp(inputValue - (currentTime - _prevTime), 0, float.MaxValue);
                 _prevTime = currentTime;
             }
-            PushParameters();
+
+            ParameterPushed = true;
             Debug.Log(outputValue);
             return BTState.Success;
         }

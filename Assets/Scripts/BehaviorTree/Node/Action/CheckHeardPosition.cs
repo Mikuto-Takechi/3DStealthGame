@@ -14,7 +14,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             if (!_sensor)
             {
                 return BTState.Failure;
@@ -25,7 +24,7 @@ namespace MonstersDomain.BehaviorTree
                 AudioManager.Instance.Play3DSE(SE.Bite, Owner.transform.position);
                 _position = _sensor.CheckLocation;
                 _sensor.CheckLocation = Vector3.zero;
-                PushParameters();
+                ParameterPushed = true;
                 return BTState.Success;
             }
 

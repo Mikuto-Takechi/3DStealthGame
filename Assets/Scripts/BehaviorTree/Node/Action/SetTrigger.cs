@@ -13,7 +13,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             animator.SetTrigger(_triggerName);
             return BTState.Success;
         }

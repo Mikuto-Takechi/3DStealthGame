@@ -13,7 +13,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             if (moveController) moveController.Agent.speed = _speed;
             return BTState.Success;
         }

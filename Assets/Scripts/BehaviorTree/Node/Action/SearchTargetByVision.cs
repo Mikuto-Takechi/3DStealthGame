@@ -15,14 +15,13 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             if (!sensor) return BTState.Failure;
             Player player = null;
             if (sensor.InSightTarget(ref player))
             {
                 searchedTarget = player.gameObject;
                 timer = _setTime;
-                PushParameters();
+                ParameterPushed = true;
                 return BTState.Success;
             }
             return BTState.Failure;

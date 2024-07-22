@@ -11,7 +11,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             if (_moveController)
             {
                 _moveController.Patrol();

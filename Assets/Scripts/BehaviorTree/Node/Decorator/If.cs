@@ -9,12 +9,14 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             if (Predicate)
             {
                 return BTState.Success;
             }
-            return Child.OnTick();
+            else
+            {
+                return Child.OnTick();
+            }
         }
     }
 }

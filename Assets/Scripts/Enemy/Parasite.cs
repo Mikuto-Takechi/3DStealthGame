@@ -5,6 +5,9 @@ using Cinemachine;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Playables;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace MonstersDomain
 {
@@ -36,6 +39,10 @@ namespace MonstersDomain
             _copyGraph.SetParameterValue("Animator", _animator);
             _copyGraph.SetParameterValue("ImpulseSource", _roarCinemachineImpulseSource);
             _treeProcessor = new BehaviorTreeProcessor(_copyGraph);
+            #if UNITY_EDITOR
+            EditorWindow.GetWindow<BehaviorTreeGraphWindow>().InitializeGraph(_copyGraph);
+            #endif
+            _treeProcessor.UnHighlight(destroyCancellationToken).Forget();
             //  プレイヤーの居るエリアが切り替わったらそのエリアのスポーン地点にワープする
             AreaManager.Instance.SwitchAreaSubject.Subscribe(warpPoint =>
             {

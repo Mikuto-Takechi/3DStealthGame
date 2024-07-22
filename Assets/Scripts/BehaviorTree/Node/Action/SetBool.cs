@@ -8,13 +8,13 @@ namespace MonstersDomain.BehaviorTree
     public class SetBool : Node
     {
         [Input, Vertical] public Node _input;
-        [Output] public bool _output;
+        [Output] public bool OutputValue;
         [SerializeField] bool _setBool;
 
         protected override BTState Tick()
         {
-            _output = _setBool;
-            PushParameters();
+            OutputValue = _setBool;
+            ParameterPushed = true;
             return BTState.Success;
         }
     }

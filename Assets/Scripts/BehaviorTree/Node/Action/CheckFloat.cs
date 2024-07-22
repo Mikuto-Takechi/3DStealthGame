@@ -14,7 +14,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             if (_greaterThan)
             {
                 if (InputValue > _compareValue)

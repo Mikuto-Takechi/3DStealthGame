@@ -13,7 +13,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             if (moveController) moveController.Agent.isStopped = _isPause;
             return BTState.Success;
         }

@@ -13,7 +13,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             if (_moveController && _target)
             {
                 _moveController.Chase(_target.transform);

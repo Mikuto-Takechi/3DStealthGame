@@ -10,10 +10,30 @@ namespace MonstersDomain
 {
     public class BehaviorTreeGraphView : BaseGraphView
     {
+        Root _root;
         public BehaviorTreeGraphView(EditorWindow window) : base(window)
         {
         }
+        protected override void InitializeView()
+        {
+            _root = nodeViews.Select(nv=>nv.nodeTarget).OfType<Root>().First();
+            _root.OnTicked += HighLight;
+        }
 
+        void HighLight()
+        {
+            foreach (var nodeView in nodeViews.Where(nv=> nv.nodeTarget is Node))
+            {
+                if (((Node)nodeView.nodeTarget).HighLighted)
+                {
+                    nodeView.Highlight();
+                }
+                else
+                {
+                    nodeView.UnHighlight();
+                }
+            }
+        }
         protected override bool canDeleteSelection
         {
             // Rootを消せないように

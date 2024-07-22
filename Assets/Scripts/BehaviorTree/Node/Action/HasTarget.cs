@@ -12,7 +12,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             if (target)
             {
                 return BTState.Success;

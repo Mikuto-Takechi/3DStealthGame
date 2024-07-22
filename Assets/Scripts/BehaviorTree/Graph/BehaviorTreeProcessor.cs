@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using GraphProcessor;
 using MonstersDomain.BehaviorTree;
 
@@ -29,11 +31,24 @@ namespace MonstersDomain
             // }
             // JobHandle.ScheduleBatchedJobs();
         }
-
+        
         public void UpdateTick()
         {
             var root = _processList.OfType<Root>().First();
             root.OnTick();
+        }
+
+        public async UniTaskVoid UnHighlight(CancellationToken ct)
+        {
+            while (true)
+            {
+                foreach (var node in _processList.OfType<Node>())
+                {
+                    node.HighLighted = false;
+                }
+
+                await UniTask.WaitForSeconds(0.8f, cancellationToken: ct);
+            }
         }
     }
 }

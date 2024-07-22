@@ -13,7 +13,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             Debug.Log(nameof(MoveToPoint));
             if (!_moveController) return BTState.Failure;
             _moveController.Agent.SetDestination(_position);

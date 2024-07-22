@@ -14,7 +14,6 @@ namespace MonstersDomain.BehaviorTree
 
         protected override BTState Tick()
         {
-            PullParameters();
             if (_isStart)
             {
                 AudioManager.Instance.PlaySE(SE.Roar);

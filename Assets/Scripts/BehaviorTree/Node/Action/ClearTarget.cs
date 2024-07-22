@@ -13,7 +13,7 @@ namespace MonstersDomain.BehaviorTree
         protected override BTState Tick()
         {
             target = null;
-            PushParameters();
+            ParameterPushed = true;
             return BTState.Success;
         }
     }

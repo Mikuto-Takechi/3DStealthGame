@@ -7,29 +7,46 @@ namespace MonstersDomain.BehaviorTree
     [Serializable]
     public abstract class Node : BaseNode
     {
+        public bool HighLighted { get; set; }
+        public Action OnTicked { get; set; }
         protected abstract BTState Tick();
+        protected bool ParameterPushed;
         public BTState OnTick()
         {
+            PullParameters();
+            HighLighted = true;
             inputPorts.PullDatas();
             var state = Tick();
             outputPorts.PushDatas();
+            OnTicked?.Invoke();
+            if (ParameterPushed)
+            {
+                PushParameters();
+                ParameterPushed = false;
+            }
             return state;
         }
-        protected void PullParameters()
+        void PullParameters()
         {
-            foreach (var node in GetInputNodes().OfType<ParameterNode>())
+            var inputNodes = GetInputNodes();
+            if (inputNodes.Any())
             {
-                node.OnProcess();
+                foreach (var node in inputNodes.OfType<ParameterNode>())
+                {
+                    node.OnProcess();
+                }
             }
-            //inputPorts.PullDatas();
         }
-
-        protected void PushParameters()
+        
+        void PushParameters()
         {
-            //outputPorts.PushDatas();
-            foreach (var node in GetOutputNodes().OfType<ParameterNode>())
+            var outputNodes = GetOutputNodes();
+            if (outputNodes.Any())
             {
-                node.OnProcess();
+                foreach (var node in outputNodes.OfType<ParameterNode>())
+                {
+                    node.OnProcess();
+                }
             }
         }
     }
