@@ -40,7 +40,6 @@ namespace MonstersDomain.BehaviorTree
             }
 
             ParameterPushed = true;
-            Debug.Log(outputValue);
             return BTState.Success;
         }
     }

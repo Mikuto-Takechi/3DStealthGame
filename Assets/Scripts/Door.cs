@@ -13,6 +13,7 @@ namespace MonstersDomain
         IDisposable _enterSubscription;
         Animator _animator;
         CancellationTokenSource _cts;
+        bool _isInteract;
         void Awake()
         {
             _cts = new();
@@ -21,8 +22,8 @@ namespace MonstersDomain
 
         protected override void Interact(Player player)
         {
-            _cts?.Cancel();
-            _cts = new();
+            if (_isInteract) return;
+            _isInteract = true;
             SetText();
             _enterSubscription = InputProvider.Instance.InteractTrigger.First().Subscribe(_ =>
             {
@@ -32,16 +33,20 @@ namespace MonstersDomain
 
         protected override void Disengage(Player player)
         {
+            _isInteract = false;
             InteractionMessage.Instance.WriteText(string.Empty);
             _enterSubscription?.Dispose();
             _cts?.Cancel();
+            _cts = new();
         }
 
         async UniTaskVoid SwitchDoor(CancellationToken ct)
         {
             _isOpened = !_isOpened;
             _animator.SetBool("IsOpened", _isOpened);
+            AudioManager.Instance.Play3DSE(_isOpened ? SE.OpenDoor : SE.CloseDoor, transform.position);
             await UniTask.WaitForSeconds(_animationTime, cancellationToken: ct);
+            _isInteract = false;
             Interact(null);
         }
 
