@@ -3,8 +3,11 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// タグと足音のenumを関連付けるための構造体
+    /// </summary>
     [Serializable]
-    internal struct TagAndFootSteps
+    struct TagAndFootSteps
     {
         [SerializeField] string _tag;
         [SerializeField] FootSteps _footSteps;

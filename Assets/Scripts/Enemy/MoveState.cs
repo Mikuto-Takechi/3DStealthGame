@@ -1,4 +1,4 @@
-namespace MonstersDomain
+namespace MonstersDomain.Enemy
 {
     public enum MoveState
     {

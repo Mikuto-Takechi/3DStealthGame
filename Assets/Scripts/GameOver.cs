@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// ゲームオーバー時の演出処理を行うクラス。
+    /// </summary>
     public class GameOver : MonoBehaviour
     {
         [SerializeField] ParasiteEventDispatcher _dispatcher;

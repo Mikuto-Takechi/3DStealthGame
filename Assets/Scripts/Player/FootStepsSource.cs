@@ -1,13 +1,26 @@
+using System;
 using System.Linq;
 using UnityEngine;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// 足音関連の処理を行うクラス。
+    /// </summary>
     public class FootStepsSource : MonoBehaviour
     {
+        [SerializeField, Tooltip("しゃがみ歩き時の音の距離、半径")] float _crouchSoundDistance = 1;
+        [SerializeField, Tooltip("歩き時の音の距離、半径")] float _walkSoundDistance = 5;
+        [SerializeField, Tooltip("走り時の音の距離、半径")] float _runSoundDistance = 15;
+        [SerializeField, Tooltip("しゃがみ音の間隔")] float _crouchInterval = 0.2f;
+        [SerializeField, Tooltip("歩行音の間隔")] float _walkInterval = 0.2f;
+        [SerializeField, Tooltip("ダッシュ音の間隔")] float _runInterval = 0.2f;
         [SerializeField] FootSteps[] _terrainSteps;
         [SerializeField] TagAndFootSteps[] _tagAndFootSteps;
-
+        float _footStepsTimer;
+        /// <summary>
+        /// タグやTerrainの情報からどの地面かを判定する。
+        /// </summary>
         FootSteps CheckGroundType(GameObject go)
         {
             if (!go)
@@ -39,47 +52,67 @@ namespace MonstersDomain
             
             return FootSteps.Indoor;
         }
-        public void PlayFootSteps(GameObject ground, float pitch, float volume)
-        {
-            AudioManager.Instance.PlayFootSteps(CheckGroundType(ground), pitch, volume);
-        }
 
+        public void UpdateFootSteps(PlayerState state, bool isMove, CheckGround checkGround)
+        {
+            if (!checkGround.IsGrounded.Value || !isMove)
+            {
+                _footStepsTimer = 0f;
+                return;
+            }
+            
+            switch (state)
+            {
+                case PlayerState.Crouch:
+                    if (_footStepsTimer <= _crouchInterval) break;
+                    _footStepsTimer = 0f;
+                    AudioManager.Instance.PlayFootSteps(CheckGroundType(checkGround.HitGameObject), 0.8f, 1f);
+                    HearingManager.Instance.OnSoundEmitted(transform.position, _crouchSoundDistance);
+                    break;
+                case PlayerState.Walk:
+                    if (_footStepsTimer <= _walkInterval) break;
+                    _footStepsTimer = 0f;
+                    AudioManager.Instance.PlayFootSteps(CheckGroundType(checkGround.HitGameObject), 1f, 1f);
+                    HearingManager.Instance.OnSoundEmitted(transform.position, _walkSoundDistance);
+                    break;
+                case PlayerState.Run:
+                    if (_footStepsTimer <= _runInterval) break;
+                    _footStepsTimer = 0f;
+                    AudioManager.Instance.PlayFootSteps(CheckGroundType(checkGround.HitGameObject), 1.4f, 1f);
+                    HearingManager.Instance.OnSoundEmitted(transform.position, _runSoundDistance);
+                    break;
+            }
+            _footStepsTimer += Time.deltaTime;
+        }
+        /// <summary>
+        /// 地面に合ったジャンプ音を再生する。
+        /// </summary>
         public void PlayJumpingSE(GameObject ground, float pitch, float volume)
         {
-            switch (CheckGroundType(ground))
+            FootSteps jumpType = CheckGroundType(ground) switch
             {
-                case FootSteps.Concrete :
-                    AudioManager.Instance.PlayFootSteps(FootSteps.RockJump, pitch, volume);
-                    break;
-                case FootSteps.Grass :
-                    AudioManager.Instance.PlayFootSteps(FootSteps.GrassJump, pitch, volume);
-                    break;
-                case FootSteps.Indoor :
-                    AudioManager.Instance.PlayFootSteps(FootSteps.WoodJump, pitch, volume);
-                    break;
-                case FootSteps.Dirt :
-                    AudioManager.Instance.PlayFootSteps(FootSteps.DirtJump, pitch, volume);
-                    break;
-            }
+                FootSteps.Concrete => FootSteps.RockJump,
+                FootSteps.Grass => FootSteps.GrassJump,
+                FootSteps.Indoor => FootSteps.WoodJump,
+                FootSteps.Dirt => FootSteps.DirtJump,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            AudioManager.Instance.PlayFootSteps(jumpType, pitch, volume);
         }
-
+        /// <summary>
+        /// 地面に合った着地音を再生する。
+        /// </summary>
         public void PlayLandingSE(GameObject ground, float pitch, float volume)
         {
-            switch (CheckGroundType(ground))
+            FootSteps landingType = CheckGroundType(ground) switch
             {
-                case FootSteps.Concrete :
-                    AudioManager.Instance.PlayFootSteps(FootSteps.RockLand, pitch, volume);
-                    break;
-                case FootSteps.Grass :
-                    AudioManager.Instance.PlayFootSteps(FootSteps.GrassLand, pitch, volume);
-                    break;
-                case FootSteps.Indoor :
-                    AudioManager.Instance.PlayFootSteps(FootSteps.WoodLand, pitch, volume);
-                    break;
-                case FootSteps.Dirt :
-                    AudioManager.Instance.PlayFootSteps(FootSteps.DirtLand, pitch, volume);
-                    break;
-            }
+                FootSteps.Concrete => FootSteps.RockLand,
+                FootSteps.Grass => FootSteps.GrassLand,
+                FootSteps.Indoor => FootSteps.WoodLand,
+                FootSteps.Dirt => FootSteps.DirtLand,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            AudioManager.Instance.PlayFootSteps(landingType, pitch, volume);
         }
     }
 }

@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// ドア
+    /// </summary>
     public class Door : Interactable
     {
         [SerializeField] float _animationTime = 0.4f;

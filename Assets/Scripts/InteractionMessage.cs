@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// プレイヤーにメッセージを表示するためのクラス。
+    /// </summary>
     public class InteractionMessage : MonoBehaviour
     {
         ContentSizeFitter _csf;

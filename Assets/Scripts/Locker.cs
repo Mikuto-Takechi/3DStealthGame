@@ -7,6 +7,9 @@ using UnityEngine.Playables;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// プレイヤーが隠れるためのロッカー。
+    /// </summary>
     public class Locker : Interactable
     {
         [SerializeField] GameObject _dummyPlayer;
@@ -61,8 +64,8 @@ namespace MonstersDomain
         public void HidingInLocker(PlayableDirector pd)
         {
             _directors[0].stopped -= HidingInLocker;
-            _player.PovController.FreePov = false;
-            _player.PovController.SetRotation(0, transform.localEulerAngles.y);
+            _player.FirstPersonViewController.FreePov = false;
+            _player.FirstPersonViewController.SetRotation(0, transform.localEulerAngles.y);
             _directors[1].Play();
             InteractionMessage.Instance.WriteText("[E] 出る");
             _exitSubscription = InputProvider.Instance.InteractTrigger.Take(1).Subscribe(ExitFromLocker).AddTo(this);
@@ -83,7 +86,7 @@ namespace MonstersDomain
                 ActionType.Move | ActionType.Crouch | ActionType.Drop | ActionType.Jump;
             _directors[2].stopped -= Exit;
             _player.State.Value = PlayerState.Idle;
-            _player.PovController.FreePov = true;
+            _player.FirstPersonViewController.FreePov = true;
             _dummyPlayer?.SetActive(false);
             _player = null;
             _isInteract = false;

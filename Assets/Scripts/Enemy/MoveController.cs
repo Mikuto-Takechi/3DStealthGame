@@ -2,8 +2,11 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace MonstersDomain
+namespace MonstersDomain.Enemy
 {
+    /// <summary>
+    /// 敵の移動を管理するクラス。
+    /// </summary>
     [Serializable]
     public class MoveController : MonoBehaviour
     {

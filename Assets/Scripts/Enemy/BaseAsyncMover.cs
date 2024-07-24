@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MonstersDomain
+namespace MonstersDomain.Enemy
 {
     public abstract class BaseAsyncMover : MonoBehaviour
     {

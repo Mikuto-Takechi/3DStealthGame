@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// 音が鳴った座標を管理して各センサーに伝達するためのクラス。
+    /// </summary>
     public class HearingManager : SingletonBase<HearingManager>
     {
         public List<HearingSensor> AllSensors { get; } = new();

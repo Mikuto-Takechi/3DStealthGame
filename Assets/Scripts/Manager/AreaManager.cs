@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// 敵が徘徊するエリアや巡回座標を提供するクラス。
+    /// </summary>
     public class AreaManager : SingletonBase<AreaManager>
     {
         [SerializeField] List<AreaData> _areaDataList;

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace MonstersDomain
+namespace MonstersDomain.Enemy
 {
     public class PatrolAsyncMover : BaseAsyncMover
     {

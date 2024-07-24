@@ -1,5 +1,6 @@
 using System;
 using GraphProcessor;
+using MonstersDomain.Enemy;
 using UnityEngine;
 
 namespace MonstersDomain.BehaviorTree

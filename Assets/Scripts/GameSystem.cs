@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// シーン遷移とゲーム終了処理を行うクラス。
+    /// </summary>
     public class GameSystem : MonoBehaviour
     {
         public void LoadGame(string sceneName)

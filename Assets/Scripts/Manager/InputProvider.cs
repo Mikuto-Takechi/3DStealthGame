@@ -20,7 +20,9 @@ namespace MonstersDomain
         SelectHotbar = 1 << 16,
         Pause = 1 << 18
     }
-
+    /// <summary>
+    /// 入力を提供するクラス
+    /// </summary>
     public class InputProvider
     {
         readonly Dictionary<ActionType, (InputAction, Action<InputAction.CallbackContext>)> _callBackDictionary = new();

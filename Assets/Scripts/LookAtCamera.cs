@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// 自身をカメラの方向に向かせるクラス。(ビルボード)
+    /// </summary>
     public class LookAtCamera : MonoBehaviour
     {
         [SerializeField] float _lookSpeed = 3f;

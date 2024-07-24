@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// アイテムを受け取ってゲームクリア判定を出すクラス。
+    /// </summary>
     public class Exit : MonoBehaviour
     {
         [SerializeField, Tooltip("必要なアイテム")] ItemData _requestItem;

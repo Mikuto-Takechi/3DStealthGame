@@ -5,17 +5,13 @@ using Cinemachine;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Playables;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
-namespace MonstersDomain
+namespace MonstersDomain.Enemy
 {
     public class Parasite : MonoBehaviour
     {
         [SerializeField] BehaviorTreeGraph _behaviorTree;
-        [SerializeField] float _chaseSpeed = 4f;
-        [SerializeField] float _patrolSpeed = 2f;
+        [SerializeField] float _initialPatrolSpeed = 1.9f;
         [SerializeField] Animator _animator;
         [SerializeField] ParasiteEventDispatcher _eventDispatcher;
         [SerializeField] CinemachineImpulseSource _footStepsImpulseSource;
@@ -32,6 +28,7 @@ namespace MonstersDomain
         {
             //  グラフのインスタンスをコピーして使う
             _copyGraph = Instantiate(_behaviorTree);
+            //  行動制御に必要なコンポーネントを割り当てる。
             _copyGraph.SetParameterValue("Owner", gameObject);
             _copyGraph.SetParameterValue("VisionSensor", _visionSensor);
             _copyGraph.SetParameterValue("HearingSensor", _hearingSensor);
@@ -39,10 +36,12 @@ namespace MonstersDomain
             _copyGraph.SetParameterValue("Animator", _animator);
             _copyGraph.SetParameterValue("ImpulseSource", _roarCinemachineImpulseSource);
             _treeProcessor = new BehaviorTreeProcessor(_copyGraph);
+            
             #if UNITY_EDITOR
-            EditorWindow.GetWindow<BehaviorTreeGraphWindow>().InitializeGraph(_copyGraph);
+            //EditorWindow.GetWindow<BehaviorTreeGraphWindow>().InitializeGraph(_copyGraph);
+            //_treeProcessor.UnHighlight(destroyCancellationToken).Forget();
             #endif
-            _treeProcessor.UnHighlight(destroyCancellationToken).Forget();
+            
             //  プレイヤーの居るエリアが切り替わったらそのエリアのスポーン地点にワープする
             AreaManager.Instance.SwitchAreaSubject.Subscribe(warpPoint =>
             {
@@ -53,8 +52,8 @@ namespace MonstersDomain
                 AudioManager.Instance.Play3DFootSteps(FootSteps.Parasite, transform.position);
                 _footStepsImpulseSource.GenerateImpulse();
             });
-            _moveController.Patrol();
-            _moveController.Agent.speed = _patrolSpeed;
+            _moveController.Patrol();   //  最初に巡回移動処理を呼ぶ。
+            _moveController.Agent.speed = _initialPatrolSpeed;
             GameManager.Instance.OnPause += OnPause;
             GameManager.Instance.OnResume += OnResume;
         }
@@ -62,11 +61,12 @@ namespace MonstersDomain
         void Update()
         {
             if (_isPaused) return;
+            //  BehaviorTreeを更新する。
             _treeProcessor.UpdateTick();
             if (_playerHashSet.Count > 0)
             {
                 var player = _playerHashSet.First();
-                if (!player.IsDied && player.State.Value != PlayerState.Hide) StartCoroutine(EatingTarget(player));
+                if (!player.IsDied && player.State.Value != PlayerState.Hide) StartCoroutine(KillPlayer(player));
             }
         }
 
@@ -83,22 +83,6 @@ namespace MonstersDomain
             GameManager.Instance.OnPause -= OnPause;
             GameManager.Instance.OnResume -= OnResume;
         }
-#if UNITY_EDITOR
-        void OnDrawGizmos()
-        {
-            if (_moveController.Agent != null)
-            {
-                Gizmos.color = Color.red;
-                var prefPos = transform.position;
-                foreach (var p in _moveController.Agent.path.corners)
-                {
-                    Gizmos.DrawLine(prefPos, p);
-                    prefPos = p;
-                }
-            }
-        }
-#endif
-
         void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out Player player)) _playerHashSet.Add(player);
@@ -121,7 +105,7 @@ namespace MonstersDomain
             _moveController.Agent.Resume();
         }
 
-        IEnumerator EatingTarget(Player player)
+        IEnumerator KillPlayer(Player player)
         {
             player.IsDied = true;
             var playerPos = player.transform.position;
@@ -140,5 +124,20 @@ namespace MonstersDomain
             yield return new WaitForSeconds(1);
             GameManager.Instance.CurrentGameState.Value = GameState.GameOver;
         }
+#if UNITY_EDITOR
+        void OnDrawGizmos()
+        {
+            if (_moveController.Agent != null)
+            {
+                Gizmos.color = Color.red;
+                var prefPos = transform.position;
+                foreach (var p in _moveController.Agent.path.corners)
+                {
+                    Gizmos.DrawLine(prefPos, p);
+                    prefPos = p;
+                }
+            }
+        }
+#endif
     }
 }

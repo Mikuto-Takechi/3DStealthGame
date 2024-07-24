@@ -9,12 +9,16 @@ using UnityEngine;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// アイテムを拾うためのクラス。
+    /// </summary>
     public class ItemPicker : MonoBehaviour
     {
         [SerializeField, Tooltip("一人称視点時に表示される腕のアニメーター")] Animator _armsAnimator;
         [SerializeField, Range(0f, 1f), Tooltip("アイテムとカメラの内積で選択可能になる閾値。1に近ければより照準があっている。")]
         float _itemDotThreshold = 0.97f;
         [SerializeField, Tooltip("アイテムを拾うアニメーションの時間")] float _pickUpAnimationTime = 0.4f;
+        [SerializeField, Tooltip("アニメーション中に隠すレイヤー")] LayerMask _hideLayerMask = 1 << 11;
         IDisposable _disposable;
         Camera _main;
         List<DroppedItem> _pickableList = new();
@@ -90,11 +94,11 @@ namespace MonstersDomain
 
         async UniTask ItemPickUp(DroppedItem droppedItem, CancellationToken ct)
         {
-            Camera.main.cullingMask &= ~(1 << 11);
+            Camera.main.cullingMask &= ~_hideLayerMask;
             droppedItem.PickUp();
             _armsAnimator.SetTrigger("Pickup");
             await UniTask.WaitForSeconds(_pickUpAnimationTime, cancellationToken: ct);
-            Camera.main.cullingMask |= 1 << 11;
+            Camera.main.cullingMask |= _hideLayerMask;
         }
     }
 }

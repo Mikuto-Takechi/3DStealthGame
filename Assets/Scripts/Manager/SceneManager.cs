@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 namespace MonstersDomain
 {
     /// <summary>
-    ///     シーンマネージャーに機能を追加
+    /// Unity標準のシーンマネージャーを継承して機能を追加したクラス
     /// </summary>
     public class SceneManager : UnityEngine.SceneManagement.SceneManager
     {
