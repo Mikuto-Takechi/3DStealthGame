@@ -161,8 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _behaviorTree: {fileID: 0}
-  _chaseSpeed: 4
-  _patrolSpeed: 1.9
+  _initialPatrolSpeed: 1.9
   _animator: {fileID: 8703901982669700890}
   _eventDispatcher: {fileID: 3961927063779357950}
   _footStepsImpulseSource: {fileID: 610652220683808141}
@@ -170,8 +169,6 @@ MonoBehaviour:
   _visionSensor: {fileID: 4715161561536392594}
   _deathTimeline: {fileID: 8013869363657174163, guid: e7a6aa18d6195bd40b5f405350d60df0, type: 3}
   _hearingSensor: {fileID: 1187928094085644989}
-  _timeUntilLoseSightOfTarget: 7
-  _distanceLoseSightOfTarget: 30
   _moveController: {fileID: 5006229279937469007}
 --- !u!195 &5981958505441211625
 NavMeshAgent:
