@@ -13,7 +13,7 @@ namespace MonstersDomain.BehaviorTree
         {
             if (_isTerminated) return BTState.Abort;
             while (true)
-                switch (_children[_activeChild].OnTick())
+                switch (Children[ActiveChild].OnTick())
                 {
                     case BTState.Running:
                         return BTState.Running;
@@ -21,10 +21,10 @@ namespace MonstersDomain.BehaviorTree
                         _isTerminated = true;
                         return BTState.Abort;
                     default:
-                        _activeChild++;
-                        if (_activeChild == _children.Count)
+                        ActiveChild++;
+                        if (ActiveChild == Children.Count)
                         {
-                            _activeChild = 0;
+                            ActiveChild = 0;
                             return BTState.Success;
                         }
 

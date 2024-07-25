@@ -8,14 +8,14 @@ namespace MonstersDomain.BehaviorTree
     [Serializable, NodeMenuItem("BehaviorTree/Action/MoveToPoint")]
     public class MoveToPoint : Node
     {
-        [Input, Vertical] public Node _input;
-        [Input] public MoveController _moveController;
-        [Input] public Vector3 _position;
+        [Input, Vertical] public Node Input;
+        [Input] public MoveController MoveController;
+        [Input] public Vector3 Position;
 
         protected override BTState Tick()
         {
-            if (!_moveController) return BTState.Failure;
-            _moveController.Agent.SetDestination(_position);
+            if (!MoveController) return BTState.Failure;
+            MoveController.Agent.SetDestination(Position);
             return BTState.Success;
             // switch (_moveController.PointAsyncMover.Current)
             // {

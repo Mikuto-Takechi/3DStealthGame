@@ -10,14 +10,14 @@ namespace MonstersDomain.BehaviorTree
     [NodeMenuItem("BehaviorTree/Composite/ParallelSelector")]
     public class ParallelSelector : Composite
     {
-        [Input, Vertical] protected Node _input;
+        [Input, Vertical] protected Node Input;
 
         protected override BTState Tick()
         {
             var shouldWait = false;
-            for (var i = 0; i < _children.Count; ++i)
+            for (var i = 0; i < Children.Count; ++i)
             {
-                var childState = _children[i].OnTick();
+                var childState = Children[i].OnTick();
                 if (childState == BTState.Running)
                     shouldWait = true;
                 else if (childState == BTState.Success) return BTState.Success;

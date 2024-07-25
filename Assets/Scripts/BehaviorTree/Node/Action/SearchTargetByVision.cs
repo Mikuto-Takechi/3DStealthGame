@@ -8,19 +8,19 @@ namespace MonstersDomain.BehaviorTree
     public class SearchTargetByVision : Node
     {
         [SerializeField] float _setTime;
-        [Input, Vertical] public Node input;
-        [Input] public VisionSensor sensor;
-        [Output] public GameObject searchedTarget;
-        [Output] public float timer;
+        [Input, Vertical] public Node Input;
+        [Input] public VisionSensor Sensor;
+        [Output] public GameObject SearchedTarget;
+        [Output] public float Timer;
 
         protected override BTState Tick()
         {
-            if (!sensor) return BTState.Failure;
+            if (!Sensor) return BTState.Failure;
             Player player = null;
-            if (sensor.InSightTarget(ref player))
+            if (Sensor.InSightTarget(ref player))
             {
-                searchedTarget = player.gameObject;
-                timer = _setTime;
+                SearchedTarget = player.gameObject;
+                Timer = _setTime;
                 ParameterPushed = true;
                 return BTState.Success;
             }

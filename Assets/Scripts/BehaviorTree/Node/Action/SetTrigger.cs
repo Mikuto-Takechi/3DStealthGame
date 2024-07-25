@@ -7,13 +7,13 @@ namespace MonstersDomain.BehaviorTree
     [Serializable, NodeMenuItem("BehaviorTree/Action/SetTrigger")]
     public class SetTrigger : Node
     {
-        [Input, Vertical] public Node _input;
+        [Input, Vertical] public Node Input;
         [SerializeField] string _triggerName;
-        [Input] public Animator animator;
+        [Input] public Animator Animator;
 
         protected override BTState Tick()
         {
-            animator.SetTrigger(_triggerName);
+            Animator.SetTrigger(_triggerName);
             return BTState.Success;
         }
     }

@@ -7,12 +7,12 @@ namespace MonstersDomain.BehaviorTree
     [Serializable, NodeMenuItem("BehaviorTree/Action/Log")]
     public class Log : Node
     {
-        [Input, Vertical] public Node parent;
-        [Input("In")] public bool input;
+        [Input, Vertical] public Node Parent;
+        [Input("In")] public bool Input;
         protected override BTState Tick()
         {
-            if (input)
-                Debug.Log($"Target is {input}");
+            if (Input)
+                Debug.Log($"Target is {Input}");
             else
                 Debug.Log("Target is null");
             return BTState.Success;

@@ -13,21 +13,21 @@ namespace MonstersDomain.BehaviorTree
     [NodeMenuItem("BehaviorTree/Composite/Selector")]
     public class Selector : Composite
     {
-        [Input, Vertical] protected Node _input;
+        [Input, Vertical] protected Node Input;
 
         protected override BTState Tick()
         {
-            var childState = _children[_activeChild].OnTick();
+            var childState = Children[ActiveChild].OnTick();
             switch (childState)
             {
                 case BTState.Success:
-                    _activeChild = 0;
+                    ActiveChild = 0;
                     return BTState.Success;
                 case BTState.Failure:
-                    _activeChild++;
-                    if (_activeChild == _children.Count)
+                    ActiveChild++;
+                    if (ActiveChild == Children.Count)
                     {
-                        _activeChild = 0;
+                        ActiveChild = 0;
                         return BTState.Failure;
                     }
 
@@ -35,7 +35,7 @@ namespace MonstersDomain.BehaviorTree
                 case BTState.Running:
                     return BTState.Running;
                 case BTState.Abort:
-                    _activeChild = 0;
+                    ActiveChild = 0;
                     return BTState.Abort;
             }
 

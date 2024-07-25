@@ -7,14 +7,14 @@ namespace MonstersDomain.BehaviorTree
     [Serializable, NodeMenuItem("BehaviorTree/Action/Patrol")]
     public class Patrol : Node
     {
-        [Input, Vertical] public Node _input;
-        [Input] public MoveController _moveController;
+        [Input, Vertical] public Node Input;
+        [Input] public MoveController MoveController;
 
         protected override BTState Tick()
         {
-            if (_moveController)
+            if (MoveController)
             {
-                _moveController.Patrol();
+                MoveController.Patrol();
                 return BTState.Success;
             }
 

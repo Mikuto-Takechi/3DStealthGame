@@ -36,12 +36,6 @@ namespace MonstersDomain.Enemy
             _copyGraph.SetParameterValue("Animator", _animator);
             _copyGraph.SetParameterValue("ImpulseSource", _roarCinemachineImpulseSource);
             _treeProcessor = new BehaviorTreeProcessor(_copyGraph);
-            
-            #if UNITY_EDITOR
-            //EditorWindow.GetWindow<BehaviorTreeGraphWindow>().InitializeGraph(_copyGraph);
-            //_treeProcessor.UnHighlight(destroyCancellationToken).Forget();
-            #endif
-            
             //  プレイヤーの居るエリアが切り替わったらそのエリアのスポーン地点にワープする
             AreaManager.Instance.SwitchAreaSubject.Subscribe(warpPoint =>
             {

@@ -8,13 +8,13 @@ namespace MonstersDomain.BehaviorTree
     [Serializable, NodeMenuItem("BehaviorTree/Action/MovePause")]
     public class MovePause : Node
     {
-        [Input, Vertical] public Node _input;
+        [Input, Vertical] public Node Input;
         [SerializeField] bool _isPause;
-        [Input] public MoveController moveController;
+        [Input] public MoveController MoveController;
 
         protected override BTState Tick()
         {
-            if (moveController) moveController.Agent.isStopped = _isPause;
+            if (MoveController) MoveController.Agent.isStopped = _isPause;
             return BTState.Success;
         }
     }

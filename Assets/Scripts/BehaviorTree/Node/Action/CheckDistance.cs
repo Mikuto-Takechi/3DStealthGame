@@ -9,17 +9,17 @@ namespace MonstersDomain.BehaviorTree
     {
         [SerializeField] float _distance;
         [SerializeField] bool _greaterThan;
-        [Input, Vertical] public Node _input;
-        [Input] public GameObject _owner;
-        [Input] public GameObject _target;
+        [Input, Vertical] public Node Input;
+        [Input] public GameObject Owner;
+        [Input] public GameObject Target;
 
         protected override BTState Tick()
         {
-            if (!_owner || !_target)
+            if (!Owner || !Target)
             {
                 return BTState.Failure;
             }
-            var sqrMagnitude = (_target.transform.position - _owner.transform.position).sqrMagnitude;
+            var sqrMagnitude = (Target.transform.position - Owner.transform.position).sqrMagnitude;
             if (_greaterThan && sqrMagnitude > _distance * _distance)
             {
                 Debug.Log("greater than");

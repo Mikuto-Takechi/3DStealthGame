@@ -12,7 +12,7 @@ namespace MonstersDomain.BehaviorTree
     {
         [SerializeField] float _seconds = 0;
         float _future = -1;
-        [Input, Vertical] public Node input;
+        [Input, Vertical] public Node Input;
 
         protected override BTState Tick()
         {

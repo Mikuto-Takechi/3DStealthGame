@@ -7,9 +7,9 @@ namespace MonstersDomain.BehaviorTree
     [Serializable, NodeMenuItem("BehaviorTree/Action/Decrease")]
     public class Decrease : Node
     {
-        [Input, Vertical] public Node input;
-        [Input] public float inputValue;
-        [Output] public float outputValue;
+        [Input, Vertical] public Node InputNode;
+        [Input] public float InputValue;
+        [Output] public float OutputValue;
         bool _isFirst = true;
         float _prevTime;
         protected override void Enable()
@@ -29,13 +29,13 @@ namespace MonstersDomain.BehaviorTree
             if (_isFirst)
             {
                 _prevTime = Time.time;
-                outputValue = inputValue;
+                OutputValue = InputValue;
                 _isFirst = false;
             }
             else
             {
                 var currentTime = Time.time;
-                outputValue = Mathf.Clamp(inputValue - (currentTime - _prevTime), 0, float.MaxValue);
+                OutputValue = Mathf.Clamp(InputValue - (currentTime - _prevTime), 0, float.MaxValue);
                 _prevTime = currentTime;
             }
 

@@ -8,22 +8,22 @@ namespace MonstersDomain.BehaviorTree
     public class CheckHeardPosition : Node
     {
         [Input] public GameObject Owner;
-        [Input] public HearingSensor _sensor;
-        [Output] public Vector3 _position;
-        [Input, Vertical] public Node _input;
+        [Input] public HearingSensor Sensor;
+        [Output] public Vector3 Position;
+        [Input, Vertical] public Node Input;
 
         protected override BTState Tick()
         {
-            if (!_sensor)
+            if (!Sensor)
             {
                 return BTState.Failure;
             }
 
-            if (_sensor.CheckLocation != Vector3.zero)
+            if (Sensor.CheckLocation != Vector3.zero)
             {
                 AudioManager.Instance.Play3DSE(SE.Bite, Owner.transform.position);
-                _position = _sensor.CheckLocation;
-                _sensor.CheckLocation = Vector3.zero;
+                Position = Sensor.CheckLocation;
+                Sensor.CheckLocation = Vector3.zero;
                 ParameterPushed = true;
                 return BTState.Success;
             }

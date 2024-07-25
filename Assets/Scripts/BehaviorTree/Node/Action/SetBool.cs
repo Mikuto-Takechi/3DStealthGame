@@ -7,7 +7,7 @@ namespace MonstersDomain.BehaviorTree
     [Serializable, NodeMenuItem("BehaviorTree/Action/SetBool")]
     public class SetBool : Node
     {
-        [Input, Vertical] public Node _input;
+        [Input, Vertical] public Node Input;
         [Output] public bool OutputValue;
         [SerializeField] bool _setBool;
 

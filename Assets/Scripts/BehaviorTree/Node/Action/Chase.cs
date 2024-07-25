@@ -8,15 +8,15 @@ namespace MonstersDomain.BehaviorTree
     [Serializable, NodeMenuItem("BehaviorTree/Action/Chase")]
     public class Chase : Node
     {
-        [Input, Vertical] public Node _input;
-        [Input] public MoveController _moveController;
-        [Input] public GameObject _target;
+        [Input, Vertical] public Node Input;
+        [Input] public MoveController MoveController;
+        [Input] public GameObject Target;
 
         protected override BTState Tick()
         {
-            if (_moveController && _target)
+            if (MoveController && Target)
             {
-                _moveController.Chase(_target.transform);
+                MoveController.Chase(Target.transform);
                 return BTState.Success;
             }
 

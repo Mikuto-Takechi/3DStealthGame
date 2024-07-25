@@ -118,7 +118,7 @@ namespace MonstersDomain
                     .First().Subscribe(_ =>
                     {
                         _disposable = null;
-                        State.Value = PlayerState.Idle;
+                        if(State.Value != PlayerState.Hide) State.Value = PlayerState.Idle;
                         _headTween?.Kill();
                         _headTween = _firstPersonViewController.Head.DOLocalMoveY(1.6f, 0.1f)
                             .OnComplete(() => _bodyCollider.isTrigger = false).SetLink(gameObject);

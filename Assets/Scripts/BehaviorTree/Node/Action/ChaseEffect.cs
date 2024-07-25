@@ -8,18 +8,18 @@ namespace MonstersDomain.BehaviorTree
     [Serializable, NodeMenuItem("BehaviorTree/Action/ChaseEffect")]
     public class ChaseEffect : Node
     {
-        [SerializeField] public bool _isStart = true;
-        [Input, Vertical] public Node _input;
-        [Input] public CinemachineImpulseSource impulseSource;
+        [SerializeField] public bool IsStart = true;
+        [Input, Vertical] public Node Input;
+        [Input] public CinemachineImpulseSource ImpulseSource;
 
         protected override BTState Tick()
         {
-            if (_isStart)
+            if (IsStart)
             {
                 AudioManager.Instance.PlaySE(SE.Roar);
                 AudioManager.Instance.PlayAmbient(Ambient.Chase);
                 GameManager.Instance.ChasePostEffect(true);
-                impulseSource.GenerateImpulse();
+                ImpulseSource.GenerateImpulse();
             }
             else
             {

@@ -6,11 +6,10 @@ namespace MonstersDomain.BehaviorTree
 {
     public abstract class Composite : Node
     {
-        protected int _activeChild;
-        protected List<Node> _children = new();
+        protected int ActiveChild;
+        protected List<Node> Children = new();
 
-        [Output(allowMultiple: true), Vertical]
-        protected Node _output;
+        [Output(allowMultiple: true), Vertical] protected Node Output;
 
         protected override void Enable()
         {
@@ -27,13 +26,13 @@ namespace MonstersDomain.BehaviorTree
 
         void UpdateChildren(SerializableEdge _)
         {
-            _children = new List<Node>();
+            Children = new List<Node>();
             var outputNodes = GetOutputNodes().OrderBy(x => x.position.x);
             foreach (var outputNode in outputNodes)
             {
                 if (outputNode is Node node)
                 {
-                    _children.Add(node);
+                    Children.Add(node);
                 }
             }
         }

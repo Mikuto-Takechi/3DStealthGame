@@ -7,12 +7,12 @@ namespace MonstersDomain.BehaviorTree
     [Serializable, NodeMenuItem("BehaviorTree/Action/HasTarget")]
     public class HasTarget : Node
     {
-        [Input, Vertical] public Node _input;
-        [Input] public GameObject target;
+        [Input, Vertical] public Node Input;
+        [Input] public GameObject Target;
 
         protected override BTState Tick()
         {
-            if (target)
+            if (Target)
             {
                 return BTState.Success;
             }
