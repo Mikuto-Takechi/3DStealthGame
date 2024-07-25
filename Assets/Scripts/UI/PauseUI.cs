@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UniRx;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,9 +15,9 @@ namespace MonstersDomain
         [SerializeField] Button _settingsButton;
         [SerializeField] Button _titleButton;
         [SerializeField] Button _quitButton;
-        List<IDisposable> _subscriptions = new();
         CanvasGroup _canvasGroup;
         Sequence _sequence;
+        readonly List<IDisposable> _subscriptions = new();
 
         void Awake()
         {
@@ -24,19 +25,17 @@ namespace MonstersDomain
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
             _canvasGroup.alpha = 0;
-            for (int i = 0; i < _pauseTweenGroups.Count; i++)
+            for (var i = 0; i < _pauseTweenGroups.Count; i++)
             {
                 if (_pauseTweenGroups[i].InitialAnchoredPosition == null)
                 {
                     var pauseTweenGroup = _pauseTweenGroups[i];
-                    pauseTweenGroup.InitialAnchoredPosition = new();
+                    pauseTweenGroup.InitialAnchoredPosition = new List<Vector2>();
                     _pauseTweenGroups[i] = pauseTweenGroup;
                 }
 
                 foreach (var t in _pauseTweenGroups[i].Elements)
-                {
                     _pauseTweenGroups[i].InitialAnchoredPosition.Add(t.anchoredPosition);
-                }
             }
         }
 
@@ -44,20 +43,22 @@ namespace MonstersDomain
         {
             _subscriptions.Add(_settingsButton.OnClickAsObservable().Subscribe(_ => _settingsUI.Switch()).AddTo(this));
             _subscriptions.Add(_titleButton.OnClickAsObservable()
-                .Subscribe(_ => SceneManager.LoadSceneFade("Title",()=> GameManager.Instance.CurrentGameState.Value = GameState.Title)).AddTo(this));
+                .Subscribe(_ =>
+                    SceneManager.LoadSceneFade("Title",
+                        () => GameManager.Instance.CurrentGameState.Value = GameState.Title)).AddTo(this));
             _subscriptions.Add(_quitButton.OnClickAsObservable().Subscribe(_ =>
             {
-                #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;//ゲームプレイ終了
-                #else
+#if UNITY_EDITOR
+                EditorApplication.isPlaying = false; //ゲームプレイ終了
+#else
                 Application.Quit();//ゲームプレイ終了
-                #endif
+#endif
             }).AddTo(this));
         }
 
         void DeRegister()
         {
-            _subscriptions?.ForEach(d=>d?.Dispose());
+            _subscriptions?.ForEach(d => d?.Dispose());
             _subscriptions.Clear();
         }
 
@@ -82,24 +83,24 @@ namespace MonstersDomain
                 temp.x -= Screen.width / 3;
                 element.anchoredPosition = temp;
             }
+
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
             _canvasGroup.alpha = 1;
-            _sequence = DOTween.Sequence().OnComplete(()=>
+            _sequence = DOTween.Sequence().OnComplete(() =>
             {
                 _sequence = null;
                 callback?.Invoke();
             }).SetLink(gameObject);
-            for (int i = _pauseTweenGroups.Count - 1; i >= 0; i--)
+            for (var i = _pauseTweenGroups.Count - 1; i >= 0; i--)
             {
-                for (int j = _pauseTweenGroups[i].Elements.Count - 1; j >= 0; j--)
-                {
+                for (var j = _pauseTweenGroups[i].Elements.Count - 1; j >= 0; j--)
                     _sequence.Join(_pauseTweenGroups[i].Elements[j]
                         .DOAnchorPosX(_pauseTweenGroups[i].InitialAnchoredPosition[j].x, 0.5f));
-                }
                 _sequence.SetDelay(0.1f);
             }
         }
+
         public void Resume(Action callback)
         {
             if (_sequence != null) return;
@@ -108,7 +109,7 @@ namespace MonstersDomain
             {
                 _settingsUI.Close(() =>
                 {
-                    _sequence = DOTween.Sequence().OnComplete(()=>
+                    _sequence = DOTween.Sequence().OnComplete(() =>
                     {
                         _sequence = null;
                         callback?.Invoke();
@@ -116,29 +117,26 @@ namespace MonstersDomain
                         _canvasGroup.blocksRaycasts = false;
                         _canvasGroup.alpha = 0;
                         foreach (var t in _pauseTweenGroups)
-                        {
-                            for (int j = 0; j < t.Elements.Count; j++)
-                            {
+                            for (var j = 0; j < t.Elements.Count; j++)
                                 t.Elements[j].anchoredPosition =
                                     t.InitialAnchoredPosition[j];
-                            }
-                        }
                     }).SetLink(gameObject);
                     foreach (var t in _pauseTweenGroups)
                     {
-                        for (int j = 0; j < t.Elements.Count; j++)
+                        for (var j = 0; j < t.Elements.Count; j++)
                         {
                             var offset = t.InitialAnchoredPosition[j].x - Screen.width / 3;
                             _sequence.Join(t.Elements[j]
                                 .DOAnchorPosX(offset, 0.5f));
                         }
+
                         _sequence.SetDelay(0.1f);
                     }
                 });
             }
             else
             {
-                _sequence = DOTween.Sequence().OnComplete(()=>
+                _sequence = DOTween.Sequence().OnComplete(() =>
                 {
                     _sequence = null;
                     callback?.Invoke();
@@ -146,22 +144,19 @@ namespace MonstersDomain
                     _canvasGroup.blocksRaycasts = false;
                     _canvasGroup.alpha = 0;
                     foreach (var t in _pauseTweenGroups)
-                    {
-                        for (int j = 0; j < t.Elements.Count; j++)
-                        {
+                        for (var j = 0; j < t.Elements.Count; j++)
                             t.Elements[j].anchoredPosition =
                                 t.InitialAnchoredPosition[j];
-                        }
-                    }
                 }).SetLink(gameObject);
                 foreach (var t in _pauseTweenGroups)
                 {
-                    for (int j = 0; j < t.Elements.Count; j++)
+                    for (var j = 0; j < t.Elements.Count; j++)
                     {
                         var offset = t.InitialAnchoredPosition[j].x - Screen.width / 3;
                         _sequence.Join(t.Elements[j]
                             .DOAnchorPosX(offset, 0.5f));
                     }
+
                     _sequence.SetDelay(0.1f);
                 }
             }
@@ -171,8 +166,7 @@ namespace MonstersDomain
     [Serializable]
     public struct PauseTweenGroup
     {
-        [field : SerializeField]
-        public List<RectTransform> Elements { get; set; }
+        [field: SerializeField] public List<RectTransform> Elements { get; set; }
 
         public List<Vector2> InitialAnchoredPosition { get; set; }
     }

@@ -2,6 +2,7 @@
 {
     public enum ItemId
     {
+        Nothing,
         FlashLight,
         KeyItem,
         Battery,

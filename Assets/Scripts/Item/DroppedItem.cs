@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace MonstersDomain
 {
@@ -8,8 +7,9 @@ namespace MonstersDomain
         void Awake()
         {
             //  SOのリストの値をコピーする。
-            CurrentParametersList = new(_itemData.DefaultParameters);
+            CurrentParametersList = new List<ItemParameter>(_itemData.DefaultParameters);
         }
+
         public void PickUp()
         {
             AudioManager.Instance.PlaySE(SE.Drop);

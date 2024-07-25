@@ -7,13 +7,17 @@ using UnityEngine.Playables;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// プレイヤーが隠れるためのロッカー。
+    /// </summary>
     public class Locker : Interactable
     {
         [SerializeField] GameObject _dummyPlayer;
         [SerializeField] PlayableDirector[] _directors;
-        Player _player;
-        bool _isInteract = false;
         IDisposable _enterSubscription, _exitSubscription;
+        bool _isInteract;
+        Player _player;
+
         void Awake()
         {
             _dummyPlayer?.SetActive(false);
@@ -32,6 +36,7 @@ namespace MonstersDomain
             InteractionMessage.Instance.WriteText(string.Empty);
             _enterSubscription?.Dispose();
         }
+
         protected override void Interact(Player player)
         {
             if (_isInteract) return;
@@ -45,23 +50,27 @@ namespace MonstersDomain
                 EnterTheLocker();
             }).AddTo(this);
         }
+
         void EnterTheLocker()
         {
-            InputProvider.Instance.CurrentBindInput &= ~(ActionType.Move | ActionType.Crouch | ActionType.Drop | ActionType.Jump);
+            InputProvider.Instance.CurrentBindInput &=
+                ~(ActionType.Move | ActionType.Crouch | ActionType.Drop | ActionType.Jump);
             _enterSubscription?.Dispose();
             _directors[0].Play();
             _directors[0].stopped += HidingInLocker;
             InteractionMessage.Instance.WriteText(string.Empty);
         }
+
         public void HidingInLocker(PlayableDirector pd)
         {
             _directors[0].stopped -= HidingInLocker;
-            _player.PovController.FreePov = false;
-            _player.PovController.SetRotation(0, transform.localEulerAngles.y);
+            _player.FirstPersonViewController.FreePov = false;
+            _player.FirstPersonViewController.SetRotation(0, transform.localEulerAngles.y);
             _directors[1].Play();
             InteractionMessage.Instance.WriteText("[E] 出る");
             _exitSubscription = InputProvider.Instance.InteractTrigger.Take(1).Subscribe(ExitFromLocker).AddTo(this);
         }
+
         void ExitFromLocker(Unit _)
         {
             _exitSubscription?.Dispose();
@@ -70,20 +79,23 @@ namespace MonstersDomain
             _directors[2].stopped += Exit;
             InteractionMessage.Instance.WriteText(string.Empty);
         }
+
         void Exit(PlayableDirector playableDirector)
         {
-            InputProvider.Instance.CurrentBindInput |= ActionType.Move | ActionType.Crouch | ActionType.Drop | ActionType.Jump;
+            InputProvider.Instance.CurrentBindInput |=
+                ActionType.Move | ActionType.Crouch | ActionType.Drop | ActionType.Jump;
             _directors[2].stopped -= Exit;
             _player.State.Value = PlayerState.Idle;
-            _player.PovController.FreePov = true;
+            _player.FirstPersonViewController.FreePov = true;
             _dummyPlayer?.SetActive(false);
             _player = null;
             _isInteract = false;
         }
+
         void BindMainCamera()
         {
-            CinemachineBrain main = Camera.main.GetComponent<CinemachineBrain>();
-            _directors.ToList().ForEach(director => 
+            var main = Camera.main.GetComponent<CinemachineBrain>();
+            _directors.ToList().ForEach(director =>
             {
                 // TimelineからCinemachineTrackのトラックへの参照を取得して
                 // MainCameraの情報を流し込む

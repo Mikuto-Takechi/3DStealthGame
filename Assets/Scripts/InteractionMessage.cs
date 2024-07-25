@@ -3,20 +3,25 @@ using UnityEngine.UI;
 
 namespace MonstersDomain
 {
+    /// <summary>
+    /// プレイヤーにメッセージを表示するためのクラス。
+    /// </summary>
     public class InteractionMessage : MonoBehaviour
     {
-        public static InteractionMessage Instance { get; private set; }
-        Text _text;
         ContentSizeFitter _csf;
+        Text _text;
+        public static InteractionMessage Instance { get; private set; }
+
         void Awake()
         {
-            if (Instance == null) 
+            if (Instance == null)
             {
                 Instance = this;
                 _csf = gameObject.GetComponent<ContentSizeFitter>();
                 _text = GetComponent<Text>();
             }
         }
+
         public void WriteText(string text)
         {
             if (Instance)

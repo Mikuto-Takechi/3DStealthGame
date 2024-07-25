@@ -6,11 +6,11 @@ namespace MonstersDomain
 {
     public class SettingsUI : MonoBehaviour
     {
-        RectTransform _rect;
         CanvasGroup _canvasGroup;
         float _initialXAnchoredPosition;
+        RectTransform _rect;
         Sequence _sequence;
-        public bool IsOpen { get; private set; } = false;
+        public bool IsOpen { get; private set; }
 
         void Awake()
         {
@@ -24,9 +24,10 @@ namespace MonstersDomain
 
         public void Switch()
         {
-            if(!IsOpen) Open();
+            if (!IsOpen) Open();
             else Close();
         }
+
         public void Open()
         {
             if (_sequence != null) return;
@@ -36,10 +37,11 @@ namespace MonstersDomain
             _rect.anchoredPosition = temp;
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
-            _sequence = DOTween.Sequence().OnComplete(()=>_sequence = null).SetLink(gameObject);
+            _sequence = DOTween.Sequence().OnComplete(() => _sequence = null).SetLink(gameObject);
             _sequence.Join(_rect.DOAnchorPosX(_initialXAnchoredPosition, 0.5f));
             _sequence.Join(DOVirtual.Float(0, 1, 0.5f, value => _canvasGroup.alpha = value));
         }
+
         public void Close(Action callback = null)
         {
             if (_sequence != null) return;
@@ -49,7 +51,7 @@ namespace MonstersDomain
             _rect.anchoredPosition = temp;
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
-            _sequence = DOTween.Sequence().OnComplete(()=>
+            _sequence = DOTween.Sequence().OnComplete(() =>
             {
                 _sequence = null;
                 callback?.Invoke();

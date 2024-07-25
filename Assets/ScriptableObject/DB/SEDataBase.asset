@@ -26,7 +26,7 @@ MonoBehaviour:
   - Name: Roar
     Clip: {fileID: 8300000, guid: e28955ee1c7e4cd45bea222e3c95773a, type: 3}
   - Name: Drop
-    Clip: {fileID: 8300000, guid: 1934545bcfae0024d9e3ea32df87c075, type: 3}
+    Clip: {fileID: 8300000, guid: 0902cdfe6bd87f8468600fd5e5760747, type: 3}
   - Name: JumpScare
     Clip: {fileID: 8300000, guid: 49e7d3a398789be45ab40eb43ca4b883, type: 3}
   - Name: Bite
@@ -39,3 +39,7 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: 6c96ffe11f9cd8b489e9f17af6ffe0ae, type: 3}
   - Name: CheckRoar
     Clip: {fileID: 8300000, guid: feb0ad48ab5e30b4a90528d85922b486, type: 3}
+  - Name: OpenDoor
+    Clip: {fileID: 8300000, guid: d3dc5bf4ab87a9a4b98fa6f25184a604, type: 3}
+  - Name: CloseDoor
+    Clip: {fileID: 8300000, guid: a2f6835f6829dc048b00c5b759cef7c1, type: 3}

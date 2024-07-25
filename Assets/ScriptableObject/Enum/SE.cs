@@ -14,4 +14,6 @@ public enum SE{
 		ButtonSubmit  = 9,
 		SelectHotbar  = 10,
 		CheckRoar     = 11,
+		OpenDoor      = 12,
+		CloseDoor     = 13,
 }
